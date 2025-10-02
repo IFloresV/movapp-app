@@ -22,8 +22,17 @@ export default function RootLayout() {
    return (
       <>
          <SafeAreaProvider>
-            <Stack>
-               <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack
+               screenOptions={{
+                  gestureEnabled: true,
+                  gestureDirection: "horizontal",
+                  headerShown: false,
+               }}
+            >
+               <Stack.Screen name="index" options={{ title: "" }} />
+               <Stack.Screen name="store" options={{ title: "" }} />
+               <Stack.Screen name="courses" options={{ title: "" }} />
+               <Stack.Screen name="profile" options={{ title: "" }} />
             </Stack>
          </SafeAreaProvider>
       </>

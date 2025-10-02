@@ -8,6 +8,7 @@ module.exports = {
          colors: {
             movapp: {
                purple: "#8149E2",
+               black: "#0F0F0E",
 
                dark: "#1e1b4b",
                light: "#f8fafc",
