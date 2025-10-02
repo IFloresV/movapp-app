@@ -29,10 +29,11 @@ export default function RootLayout() {
                   headerShown: false,
                }}
             >
-               <Stack.Screen name="index" options={{ title: "" }} />
+               {/* <Stack.Screen name="index" options={{ title: "" }} />
                <Stack.Screen name="store" options={{ title: "" }} />
                <Stack.Screen name="courses" options={{ title: "" }} />
-               <Stack.Screen name="profile" options={{ title: "" }} />
+               <Stack.Screen name="profile" options={{ title: "" }} /> */}
+               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             </Stack>
          </SafeAreaProvider>
       </>
