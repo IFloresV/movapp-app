@@ -1,22 +1,24 @@
-import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import YoutubePlayer from "react-native-youtube-iframe";
 
+import Header from "@/components/Header";
+import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 export default function MovappHomeScreen() {
    return (
       <>
          <LayoutWithNavigation>
             <ScrollView className="flex-1 bg-movapp-black">
+               <Header title="Movapp" />
                {/* Header */}
-               <View className="flex-row justify-between items-center px-4 py-3 pt-12">
+               {/* <View className="flex-row justify-between items-center px-4 py-3 pt-12">
                   <View className="w-8" />
                   <Text className="text-white text-2xl font-bold mt-8">Movapp</Text>
                   <TouchableOpacity>
                      <Ionicons name="notifications-outline" size={24} color="white" />
                   </TouchableOpacity>
-               </View>
+               </View> */}
 
                {/* Video Section - YouTube */}
                <View className="px-4 mt-4">
