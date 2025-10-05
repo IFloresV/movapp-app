@@ -7,11 +7,19 @@ module.exports = {
       extend: {
          colors: {
             movapp: {
-               purple: "#8149E2",
-               black: "#000000",
+               background: "#050505",
+               primary: "#8149E2",
+               text: "#ffffff",
 
-               dark: "#1e1b4b",
-               light: "#f8fafc",
+               linkBackgroundHome: "#030312",
+
+               linkBackground: "#01010A",
+               linkBorder: "#060114",
+
+               linkIcon: "#8149E2",
+               linkText: "#FFFFFF",
+
+               bgTabsNav: "#050505",
             },
          },
       },

@@ -1,7 +1,10 @@
+// app/(tabs)/_layout.tsx
+import DrawerMenu, { DrawerMenuItem } from "@/components/DrawerMenu";
 import { Colors } from "@/constants/Colors";
 import { Feather } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { Image } from "react-native";
+import { useState } from "react";
+import { Image, Pressable, View } from "react-native";
 
 type TabIconConfig =
    | { type: "feather"; icon: keyof typeof Feather.glyphMap; label: string }
@@ -9,22 +12,44 @@ type TabIconConfig =
 
 const TAB_CONFIG: Record<string, TabIconConfig> = {
    index: { type: "feather", icon: "home", label: "Inicio" },
-   store: { type: "feather", icon: "shopping-bag", label: "Tienda" },
    hack: {
       type: "image",
       icon: require("@/assets/icons/elhack.png"),
       label: "El Hack",
    },
-   courses: { type: "feather", icon: "book", label: "Cursos" },
-   profile: { type: "feather", icon: "user", label: "Perfil" },
 };
+
+// Configuración del menú drawer - Fácil de modificar
+const DRAWER_MENU_ITEMS: DrawerMenuItem[] = [
+   {
+      name: "profile",
+      type: "feather",
+      icon: "user",
+      label: "Perfil",
+      route: "/(tabs)/profile",
+   },
+   {
+      name: "store",
+      type: "feather",
+      icon: "shopping-bag",
+      label: "Tienda",
+      route: "/(tabs)/store",
+   },
+   {
+      name: "privacy",
+      type: "feather",
+      icon: "lock",
+      label: "Privacidad",
+      route: "/(tabs)/privacyPolicy",
+   },
+];
 
 const renderTabIcon = (config: TabIconConfig, color: string, size: number) => {
    if (config.type === "image") {
       return (
          <Image
             source={config.icon}
-            style={{ width: size + 50, height: size + 50, tintColor: color }}
+            style={{ width: size + 40, height: size + 40, tintColor: color }}
             resizeMode="contain"
          />
       );
@@ -34,29 +59,58 @@ const renderTabIcon = (config: TabIconConfig, color: string, size: number) => {
 };
 
 export default function TabsLayout() {
-   return (
-      <Tabs
-         screenOptions={({ route }) => {
-            const config = TAB_CONFIG[route.name];
+   const [drawerVisible, setDrawerVisible] = useState(false);
 
-            return {
-               headerShown: false,
-               tabBarStyle: {
-                  backgroundColor: Colors.movapp.bgTabsNav,
-                  borderTopWidth: 0,
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                  height: 100,
-               },
-               tabBarActiveTintColor: Colors.movapp.purple,
-               tabBarInactiveTintColor: "#e0e0e0",
-               tabBarIcon: ({ color, size }) => renderTabIcon(config, color, size),
-               tabBarShowLabel: false,
-            };
-         }}>
-         {Object.keys(TAB_CONFIG).map((name) => (
-            <Tabs.Screen key={name} name={name} />
-         ))}
-      </Tabs>
+   return (
+      <>
+         <Tabs
+            screenOptions={({ route }) => {
+               const config = TAB_CONFIG[route.name];
+
+               return {
+                  headerShown: false,
+                  tabBarStyle: {
+                     backgroundColor: Colors.movapp.bgTabsNav,
+                     borderTopWidth: 0,
+                     paddingTop: 10,
+                     paddingBottom: 10,
+                     height: 100,
+                  },
+                  tabBarActiveTintColor: Colors.movapp.primary,
+                  tabBarInactiveTintColor: Colors.movapp.text,
+                  tabBarIcon: ({ color, size }) => (config ? renderTabIcon(config, color, size) : null),
+                  tabBarShowLabel: false,
+               };
+            }}>
+            <Tabs.Screen name="index" />
+            <Tabs.Screen name="hack" />
+
+            {/* Botón del menú hamburguesa */}
+            <Tabs.Screen
+               name="menu"
+               options={{
+                  tabBarIcon: ({ color, size }) => <Feather name="menu" size={size} color={color} />,
+                  tabBarButton: (props) => (
+                     <View style={props.style}>
+                        <Pressable onPress={() => setDrawerVisible(true)}>{props.children}</Pressable>
+                     </View>
+                  ),
+               }}
+               listeners={{
+                  tabPress: (e) => {
+                     e.preventDefault();
+                  },
+               }}
+            />
+
+            {/* Pantallas ocultas del tab bar pero accesibles por navegación */}
+            <Tabs.Screen name="profile" options={{ href: null }} />
+            <Tabs.Screen name="store" options={{ href: null }} />
+            <Tabs.Screen name="privacyPolicy" options={{ href: null }} />
+         </Tabs>
+
+         {/* Drawer Menu Component */}
+         <DrawerMenu visible={drawerVisible} onClose={() => setDrawerVisible(false)} items={DRAWER_MENU_ITEMS} />
+      </>
    );
 }
