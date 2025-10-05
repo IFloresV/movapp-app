@@ -1,7 +1,7 @@
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 import { ScrollView, Text, View } from "react-native";
 
-export default function Store() {
+export default function StoreScreen() {
    return (
       <>
          <LayoutWithNavigation>

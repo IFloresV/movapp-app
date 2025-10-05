@@ -1,7 +1,7 @@
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 import { ScrollView, Text, View } from "react-native";
 
-export default function Hack() {
+export default function HackScreen() {
    return (
       <>
          <LayoutWithNavigation>

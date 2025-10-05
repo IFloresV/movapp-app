@@ -1,13 +1,16 @@
 // app/(tabs)/index.tsx
-import LayoutWithNavigation from "@/components/LayoutWithNavigation";
-import { Ionicons } from "@expo/vector-icons";
+import { Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React from "react";
+
+import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 import { Text, TouchableOpacity, View } from "react-native";
 import YoutubePlayer from "react-native-youtube-iframe";
 
-export default function MovappHomeScreen() {
+export default function HomeScreen() {
+   const router = useRouter();
    return (
-      <LayoutWithNavigation title="Movapp" scrollable={true}>
+      <LayoutWithNavigation scrollable={true}>
          {/* Video Section - YouTube */}
          <View className="px-4 mt-4">
             <View className="w-full h-64 rounded-lg overflow-hidden">
@@ -18,10 +21,12 @@ export default function MovappHomeScreen() {
          {/* Menu Cards */}
          <View className="px-4 mt-8 pb-8">
             {/* Colaboraciones y testimonios */}
-            <TouchableOpacity className="bg-movapp-linkBackgroundHome rounded-2xl p-5 flex-row items-center justify-between mb-4">
+            <TouchableOpacity
+               className="bg-movapp-linkBackgroundHome rounded-2xl p-5 flex-row items-center justify-between mb-4"
+               onPress={() => router.push("/colaborations")}>
                <View className="flex-row items-center flex-1">
-                  <View className="bg-purple-600/20 p-3 rounded-xl mr-4">
-                     <Ionicons name="book-outline" size={28} color="#a855f7" />
+                  <View className="bg-movapp-primary/20 p-3 rounded-xl mr-4">
+                     <FontAwesome name="handshake-o" size={24} color="#a855f7" />
                   </View>
                   <View className="flex-1">
                      <Text className="text-white text-lg font-bold mb-1">Colaboraciones y testimonios</Text>
@@ -32,10 +37,12 @@ export default function MovappHomeScreen() {
             </TouchableOpacity>
 
             {/* Preguntas frecuentes */}
-            <TouchableOpacity className="bg-movapp-linkBackgroundHome rounded-2xl p-5 flex-row items-center justify-between mb-4">
+            <TouchableOpacity
+               className="bg-movapp-linkBackgroundHome rounded-2xl p-5 flex-row items-center justify-between mb-4"
+               onPress={() => router.push("/faqs")}>
                <View className="flex-row items-center flex-1">
-                  <View className="bg-purple-600/20 p-3 rounded-xl mr-4">
-                     <Ionicons name="heart-outline" size={28} color="#a855f7" />
+                  <View className="bg-movapp-primary/20 p-3 rounded-xl mr-4">
+                     <Feather name="message-circle" size={26} color="#a855f7" />
                   </View>
                   <View className="flex-1">
                      <Text className="text-white text-lg font-bold mb-1">Preguntas frecuentes</Text>

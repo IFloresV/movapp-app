@@ -8,14 +8,22 @@ import { Image, Pressable, View } from "react-native";
 
 type TabIconConfig =
    | { type: "feather"; icon: keyof typeof Feather.glyphMap; label: string }
-   | { type: "image"; icon: any; label: string };
+   | { type: "image"; icon: any; label: string; size?: number; width?: number; height?: number };
 
 const TAB_CONFIG: Record<string, TabIconConfig> = {
-   index: { type: "feather", icon: "home", label: "Inicio" },
+   index: {
+      type: "image",
+      icon: require("@/assets/icons/movapp-m.png"),
+      label: "Inicio",
+      size: 10,
+      height: 35,
+   },
    hack: {
       type: "image",
       icon: require("@/assets/icons/elhack.png"),
       label: "El Hack",
+      size: 70,
+      height: 50,
    },
 };
 
@@ -39,22 +47,32 @@ const DRAWER_MENU_ITEMS: DrawerMenuItem[] = [
       name: "privacy",
       type: "feather",
       icon: "lock",
-      label: "Privacidad",
-      route: "/(tabs)/privacyPolicy",
+      label: "Politica de Privacidad",
+      route: "/(tabs)/privacy",
+   },
+   {
+      name: "conditions",
+      type: "feather",
+      icon: "check-circle",
+      label: "Terminos y Condiciones",
+      route: "/(tabs)/conditions",
    },
 ];
 
-const renderTabIcon = (config: TabIconConfig, color: string, size: number) => {
+const renderTabIcon = (config: TabIconConfig & { width?: number; height?: number }, color: string, size: number) => {
    if (config.type === "image") {
       return (
          <Image
             source={config.icon}
-            style={{ width: size + 40, height: size + 40, tintColor: color }}
+            style={{
+               width: config.width ?? size + 50,
+               height: config.height ?? size + 50,
+               tintColor: color,
+            }}
             resizeMode="contain"
          />
       );
    }
-
    return <Feather name={config.icon} size={size} color={color} />;
 };
 
@@ -89,7 +107,7 @@ export default function TabsLayout() {
             <Tabs.Screen
                name="menu"
                options={{
-                  tabBarIcon: ({ color, size }) => <Feather name="menu" size={size} color={color} />,
+                  tabBarIcon: ({ color, size }) => <Feather name="align-right" size={size} color={color} />,
                   tabBarButton: (props) => (
                      <View style={props.style}>
                         <Pressable onPress={() => setDrawerVisible(true)}>{props.children}</Pressable>
@@ -104,9 +122,16 @@ export default function TabsLayout() {
             />
 
             {/* Pantallas ocultas del tab bar pero accesibles por navegación */}
+            <Tabs.Screen name="car" options={{ href: null }} />
+
+            <Tabs.Screen name="colaborations" options={{ href: null }} />
+            <Tabs.Screen name="faqs" options={{ href: null }} />
+
             <Tabs.Screen name="profile" options={{ href: null }} />
             <Tabs.Screen name="store" options={{ href: null }} />
-            <Tabs.Screen name="privacyPolicy" options={{ href: null }} />
+
+            <Tabs.Screen name="privacy" options={{ href: null }} />
+            <Tabs.Screen name="conditions" options={{ href: null }} />
          </Tabs>
 
          {/* Drawer Menu Component */}
