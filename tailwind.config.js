@@ -20,6 +20,8 @@ module.exports = {
                linkText: "#FFFFFF",
 
                bgTabsNav: "#050505",
+
+               card: "#01010A",
             },
          },
       },

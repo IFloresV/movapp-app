@@ -27,7 +27,6 @@ const TAB_CONFIG: Record<string, TabIconConfig> = {
    },
 };
 
-// Configuración del menú drawer - Fácil de modificar
 const DRAWER_MENU_ITEMS: DrawerMenuItem[] = [
    {
       name: "profile",
@@ -127,6 +126,7 @@ export default function TabsLayout() {
             <Tabs.Screen name="colaborations" options={{ href: null }} />
             <Tabs.Screen name="faqs" options={{ href: null }} />
 
+            <Tabs.Screen name="mind" options={{ href: null }} />
             <Tabs.Screen name="profile" options={{ href: null }} />
             <Tabs.Screen name="store" options={{ href: null }} />
 
