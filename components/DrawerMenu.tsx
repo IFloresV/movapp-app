@@ -1,7 +1,9 @@
 // components/DrawerMenu.tsx
 import { Colors } from "@/constants/Colors";
+import UserContext from "@/context/UserContext";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useContext } from "react";
 import { Image, Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 export type DrawerMenuItem = {
@@ -20,6 +22,7 @@ interface DrawerMenuProps {
 
 export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps) {
    const router = useRouter();
+   const { dispatchUser } = useContext(UserContext)!;
 
    const handleItemPress = (route: string) => {
       onClose();
@@ -28,12 +31,23 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
       }, 300);
    };
 
+   const handleLogout = () => {
+      dispatchUser({ type: "LOGOUT" });
+
+      onClose();
+      // setTimeout(() => {
+      //    router.push("/auth/login");
+      // }, 300);
+   };
+
    return (
       <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
          <Pressable className="flex-1 bg-movapp-background/70" onPress={onClose}>
             <Pressable
                className="absolute bottom-0 left-0 right-0 bg-movapp-linkBackground rounded-t-[64px] pb-6"
-               onPress={(e) => e.stopPropagation()}>
+               style={{ height: "90%" }} // <-- Agrega esta línea
+               onPress={(e) => e.stopPropagation()}
+            >
                {/* Header */}
                <View className="flex-row justify-between items-center px-6 pt-6 pb-4 border-b bg-movapp-linkBackground border-movapp-linkBackground">
                   <Image
@@ -47,14 +61,15 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                </View>
 
                {/* Items */}
-               <ScrollView className="max-h-96 py-2">
+               <ScrollView className=" py-2">
                   {items.map((item, index) => (
                      <TouchableOpacity
                         key={item.name}
                         className={`flex-row items-center px-6 py-5 active:bg-gray-800 ${
                            index < items.length - 1 ? "border-b border-gray-800" : ""
                         }`}
-                        onPress={() => handleItemPress(item.route)}>
+                        onPress={() => handleItemPress(item.route)}
+                     >
                         {/* Icono con fondo */}
                         <View className="bg-movapp-linkIcon/20 p-3 rounded-xl mr-4">
                            {item.type === "image" ? (
@@ -79,6 +94,22 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                         <Feather name="chevron-right" size={20} color="#6b7280" />
                      </TouchableOpacity>
                   ))}
+
+                  <TouchableOpacity
+                     key={"logout"}
+                     className={`flex-row items-center px-6 py-5 mt-10 active:bg-red-800 `}
+                     onPress={() => handleLogout}
+                  >
+                     {/* Icono con fondo */}
+                     <View className="bg-red-500/30 p-3 rounded-xl mr-4">
+                        <Feather name={"log-out"} size={24} color={"#A60D14"} />
+                     </View>
+
+                     {/* Label */}
+                     <Text className="text-red-500 text-lg font-semibold flex-1">Cerrar Sesión</Text>
+
+                     {/* Flecha */}
+                  </TouchableOpacity>
                </ScrollView>
             </Pressable>
          </Pressable>

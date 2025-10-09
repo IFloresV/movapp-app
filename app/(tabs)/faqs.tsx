@@ -42,15 +42,6 @@ export default function FAQsScreen() {
             {FAQS_DATA.map((faq) => (
                <FAQItem key={faq.id} question={faq.question} answer={faq.answer} />
             ))}
-
-            {/* Footer de contacto */}
-            {/* <View className="mt-8 p-6 bg-gray-800 rounded-2xl">
-               <Text className="text-white text-lg font-bold mb-2">¿Aún tienes dudas?</Text>
-               <Text className="text-gray-300 text-base mb-4">
-                  Nuestro equipo está aquí para ayudarte. Contáctanos y te responderemos lo antes posible.
-               </Text>
-               <Text className="text-purple-400 text-base font-semibold">soporte@movapp.org</Text>
-            </View> */}
          </View>
       </LayoutWithNavigation>
    );

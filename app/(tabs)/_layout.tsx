@@ -47,14 +47,21 @@ const DRAWER_MENU_ITEMS: DrawerMenuItem[] = [
       type: "feather",
       icon: "lock",
       label: "Politica de Privacidad",
-      route: "/(tabs)/privacy",
+      route: "/(auth)/privacy",
    },
    {
       name: "conditions",
       type: "feather",
       icon: "check-circle",
       label: "Terminos y Condiciones",
-      route: "/(tabs)/conditions",
+      route: "/(auth)/conditions",
+   },
+   {
+      name: "register",
+      type: "feather",
+      icon: "check-circle",
+      label: "Registrarse",
+      route: "/(auth)/register",
    },
 ];
 
@@ -97,8 +104,10 @@ export default function TabsLayout() {
                   tabBarInactiveTintColor: Colors.movapp.text,
                   tabBarIcon: ({ color, size }) => (config ? renderTabIcon(config, color, size) : null),
                   tabBarShowLabel: false,
+                  swipeEnabled: true,
                };
-            }}>
+            }}
+         >
             <Tabs.Screen name="index" />
             <Tabs.Screen name="hack" />
 
@@ -129,9 +138,6 @@ export default function TabsLayout() {
             <Tabs.Screen name="mind" options={{ href: null }} />
             <Tabs.Screen name="profile" options={{ href: null }} />
             <Tabs.Screen name="store" options={{ href: null }} />
-
-            <Tabs.Screen name="privacy" options={{ href: null }} />
-            <Tabs.Screen name="conditions" options={{ href: null }} />
          </Tabs>
 
          {/* Drawer Menu Component */}
