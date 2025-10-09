@@ -1,7 +1,14 @@
-import LayoutWithNavigation from "@/components/LayoutWithNavigation";
+import { useContext } from "react";
 import { ScrollView, Text, View } from "react-native";
 
+import UserContext from "@/context/UserContext";
+
+import LayoutWithNavigation from "@/components/LayoutWithNavigation";
+
 export default function ReelsScreen() {
+   const { user, dispatchUser } = useContext(UserContext)!;
+   console.log("user desde REELS", user);
+
    return (
       <>
          <LayoutWithNavigation>

@@ -1,12 +1,19 @@
 // app/(auth)/register.tsx
+import { useContext, useState } from "react";
+
+import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+
+import UserContext from "@/context/UserContext";
+
 import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function LoginScreen() {
+   const { user, dispatchUser } = useContext(UserContext)!;
+   console.log("user desde login", user);
+
    const router = useRouter();
    const [formData, setFormData] = useState({
       email: "",
@@ -112,11 +119,19 @@ export default function LoginScreen() {
                </TouchableOpacity>
             </View>
 
-            <View className="flex-row justify-center mt-5">
+            <View className="flex-row justify-center mt-10">
                <Text className="text-white text-sm">¿No tienes una cuenta? </Text>
                <TouchableOpacity onPress={() => router.push("/(auth)/register")} activeOpacity={0.7}>
                   <Text className="text-md font-semibold underline" style={{ color: Colors.movapp.primary }}>
                      Regístrate
+                  </Text>
+               </TouchableOpacity>
+            </View>
+
+            <View className="flex-row justify-center mt-10">
+               <TouchableOpacity onPress={() => router.push("/")} activeOpacity={0.7}>
+                  <Text className="text-md font-semibold underline" style={{ color: Colors.movapp.primary }}>
+                     Accede sin iniciar sesión
                   </Text>
                </TouchableOpacity>
             </View>
