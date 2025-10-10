@@ -80,10 +80,10 @@ export default function ProfileScreen() {
 
          <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
             {/* Card Principal de Perfil */}
-            <View className="bg-gray-800 rounded-3xl p-6 mb-4">
-               <View className="items-center mb-6">
-                  <Text className="text-white text-xl font-bold mb-1">{userData.name}</Text>
-                  <Text className="text-gray-400 text-sm mb-4">{userData.email}</Text>
+            <View className="bg-gray-800 rounded-3xl p-2 mb-4">
+               <View className="items-center m-2">
+                  {/* <Text className="text-white text-xl font-bold mb-1">{userData.name}</Text>
+                  <Text className="text-gray-400 text-sm mb-4">{userData.email}</Text> */}
                   {/* <TouchableOpacity
                       onPress={() => router.push("/(tabs)/editProfile")}
                      className="px-8 py-2.5 rounded-xl border border-purple-500"
@@ -96,7 +96,7 @@ export default function ProfileScreen() {
                {/* Información Personal */}
                <View className="bg-gray-900 rounded-2xl p-4">
                   <Text className="text-white text-base font-bold mb-4">Información Personal</Text>
-
+                  <Text className="text-white text-xl font-bold mb-1">{userData.name}</Text>
                   {/* Teléfono */}
                   <View className="flex-row items-center mb-4">
                      <Feather name="phone" size={16} color="#9ca3af" />
