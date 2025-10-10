@@ -22,6 +22,10 @@ module.exports = {
                bgTabsNav: "#050505",
 
                card: "#01010A",
+
+               cardProfile: "#060114",
+
+               borderCard: "#374151",
             },
          },
       },
