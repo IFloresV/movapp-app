@@ -1,9 +1,11 @@
 // app/(tabs)/hack.tsx
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 export default function HackScreen() {
+   const router = useRouter();
    const [hackCount, setHackCount] = useState(1);
    const pricePerHack = 500;
 
@@ -78,7 +80,8 @@ export default function HackScreen() {
                   className="bg-movapp-primary py-4 rounded-xl items-center"
                   activeOpacity={0.8}
                   onPress={() => {
-                     console.log(`Comprando ${hackCount} hacks por $${totalPrice} MXN`);
+                     // console.log(`Comprando ${hackCount} hacks por $${totalPrice} MXN`);
+                     router.push("/car");
                   }}>
                   <Text className="text-white text-lg font-bold">Comprar</Text>
                </TouchableOpacity>

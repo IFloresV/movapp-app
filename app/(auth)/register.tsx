@@ -21,6 +21,8 @@ export default function RegisterScreen() {
       confirmPassword: "",
    });
    const [acceptedTerms, setAcceptedTerms] = useState(false);
+   const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
+
    const [showPassword, setShowPassword] = useState(false);
    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -164,8 +166,7 @@ export default function RegisterScreen() {
                      />
                      <TouchableOpacity
                         onPress={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-3"
-                     >
+                        className="absolute right-4 top-3">
                         <Feather name={showPassword ? "eye-off" : "eye"} size={20} color="#6b7280" />
                      </TouchableOpacity>
                   </View>
@@ -185,8 +186,7 @@ export default function RegisterScreen() {
                      />
                      <TouchableOpacity
                         onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-4 top-3"
-                     >
+                        className="absolute right-4 top-3">
                         <Feather name={showConfirmPassword ? "eye-off" : "eye"} size={20} color="#6b7280" />
                      </TouchableOpacity>
                   </View>
@@ -196,15 +196,13 @@ export default function RegisterScreen() {
                <TouchableOpacity
                   onPress={() => setAcceptedTerms(!acceptedTerms)}
                   className="flex-row items-start mb-6"
-                  activeOpacity={0.7}
-               >
+                  activeOpacity={0.7}>
                   <View
                      className="w-5 h-5 rounded border-2 items-center justify-center mr-3 mt-0.5"
                      style={{
                         borderColor: acceptedTerms ? Colors.movapp.primary : "#6b7280",
                         backgroundColor: acceptedTerms ? Colors.movapp.primary : "transparent",
-                     }}
-                  >
+                     }}>
                      {acceptedTerms && <Feather name="check" size={14} color="white" />}
                   </View>
                   <View className="flex-1">
@@ -213,9 +211,32 @@ export default function RegisterScreen() {
                         <Text
                            className="font-semibold underline"
                            style={{ color: Colors.movapp.primary }}
-                           onPress={() => router.push("/(auth)/conditions")}
-                        >
+                           onPress={() => router.push("/(auth)/conditions")}>
                            Términos y Condiciones
+                        </Text>
+                     </Text>
+                  </View>
+               </TouchableOpacity>
+               <TouchableOpacity
+                  onPress={() => setAcceptedPrivacy(!acceptedPrivacy)}
+                  className="flex-row items-start mb-6"
+                  activeOpacity={0.7}>
+                  <View
+                     className="w-5 h-5 rounded border-2 items-center justify-center mr-3 mt-0.5"
+                     style={{
+                        borderColor: acceptedTerms ? Colors.movapp.primary : "#6b7280",
+                        backgroundColor: acceptedTerms ? Colors.movapp.primary : "transparent",
+                     }}>
+                     {acceptedTerms && <Feather name="check" size={14} color="white" />}
+                  </View>
+                  <View className="flex-1">
+                     <Text className="text-white text-sm leading-5">
+                        Acepto la{" "}
+                        <Text
+                           className="font-semibold underline"
+                           style={{ color: Colors.movapp.primary }}
+                           onPress={() => router.push("/(auth)/privacy")}>
+                           Política de Privacidad
                         </Text>
                      </Text>
                   </View>
@@ -226,8 +247,7 @@ export default function RegisterScreen() {
                   onPress={handleRegister}
                   className="py-4 rounded-xl items-center mb-4"
                   style={{ backgroundColor: Colors.movapp.primary }}
-                  activeOpacity={0.8}
-               >
+                  activeOpacity={0.8}>
                   <Text className="text-white text-base font-bold">Registrarse</Text>
                </TouchableOpacity>
 

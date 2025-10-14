@@ -42,20 +42,20 @@ const DRAWER_MENU_ITEMS: DrawerMenuItem[] = [
       label: "Tienda",
       route: "/(tabs)/store",
    },
-   {
-      name: "privacy",
-      type: "feather",
-      icon: "lock",
-      label: "Politica de Privacidad",
-      route: "/(auth)/privacy",
-   },
-   {
-      name: "conditions",
-      type: "feather",
-      icon: "check-circle",
-      label: "Terminos y Condiciones",
-      route: "/(auth)/conditions",
-   },
+   // {
+   //    name: "privacy",
+   //    type: "feather",
+   //    icon: "lock",
+   //    label: "Politica de Privacidad",
+   //    route: "/(auth)/privacy",
+   // },
+   // {
+   //    name: "conditions",
+   //    type: "feather",
+   //    icon: "check-circle",
+   //    label: "Terminos y Condiciones",
+   //    route: "/(auth)/conditions",
+   // },
    {
       name: "register",
       type: "feather",
@@ -106,8 +106,7 @@ export default function TabsLayout() {
                   tabBarShowLabel: false,
                   swipeEnabled: true,
                };
-            }}
-         >
+            }}>
             <Tabs.Screen name="index" />
             <Tabs.Screen name="hack" />
 
