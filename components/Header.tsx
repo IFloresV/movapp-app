@@ -28,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = tr
                {/* Logo centrado */}
                <View className="items-center justify-center flex-1">
                   <Image
-                     source={require("@/assets/images/Movapp.png")}
+                     source={require("@/assets/images/MovappBl.png")}
                      style={{ width: 100, height: 40 }}
                      resizeMode="contain"
                   />

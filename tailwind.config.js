@@ -8,6 +8,7 @@ module.exports = {
          colors: {
             movapp: {
                background: "#050505",
+               backgroundButton: "#8149E2",
                primary: "#8149E2",
                text: "#ffffff",
 

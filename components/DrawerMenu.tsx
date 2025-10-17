@@ -46,8 +46,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
             <Pressable
                className="absolute bottom-0 left-0 right-0 bg-movapp-linkBackground rounded-t-[64px] pb-6"
                style={{ height: "90%" }} // <-- Agrega esta línea
-               onPress={(e) => e.stopPropagation()}
-            >
+               onPress={(e) => e.stopPropagation()}>
                {/* Header */}
                <View className="flex-row justify-between items-center px-6 pt-6 pb-4 border-b bg-movapp-linkBackground border-movapp-linkBackground">
                   <Image
@@ -68,8 +67,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                         className={`flex-row items-center px-6 py-5 active:bg-gray-800 ${
                            index < items.length - 1 ? "border-b border-gray-800" : ""
                         }`}
-                        onPress={() => handleItemPress(item.route)}
-                     >
+                        onPress={() => handleItemPress(item.route)}>
                         {/* Icono con fondo */}
                         <View className="bg-movapp-linkIcon/20 p-3 rounded-xl mr-4">
                            {item.type === "image" ? (
@@ -98,8 +96,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                   <TouchableOpacity
                      key={"logout"}
                      className={`flex-row items-center px-6 py-5 mt-10 active:bg-red-800 `}
-                     onPress={() => handleLogout}
-                  >
+                     onPress={() => handleLogout}>
                      {/* Icono con fondo */}
                      <View className="bg-red-500/30 p-3 rounded-xl mr-4">
                         <Feather name={"log-out"} size={24} color={"#A60D14"} />

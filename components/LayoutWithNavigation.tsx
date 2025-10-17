@@ -1,6 +1,7 @@
 // components/LayoutWithNavigation.tsx
 import Header from "@/components/Header";
-import { ScrollView, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { ScrollView } from "react-native";
 
 interface LayoutWithNavigationProps {
    children: React.ReactNode;
@@ -10,25 +11,19 @@ interface LayoutWithNavigationProps {
 
 export default function LayoutWithNavigation({
    children,
-
    showHeader = true,
    scrollable = true,
 }: LayoutWithNavigationProps) {
-   const content = (
-      <View className="flex-1 bg-movapp-background">
+   return (
+      <LinearGradient colors={["#8149E2", "#000000"]} start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }} style={{ flex: 1 }}>
          {showHeader && <Header />}
-         {children}
-      </View>
+         {scrollable ? (
+            <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+               {children}
+            </ScrollView>
+         ) : (
+            children
+         )}
+      </LinearGradient>
    );
-
-   if (scrollable) {
-      return (
-         <ScrollView className="flex-1 bg-movapp-background" showsVerticalScrollIndicator={false}>
-            {showHeader && <Header />}
-            {children}
-         </ScrollView>
-      );
-   }
-
-   return content;
 }
