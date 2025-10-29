@@ -7,20 +7,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 interface HeaderProps {
    showNotifications?: boolean;
    showCart?: boolean;
+   logoType?: 1 | 2;
 }
 
-const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = true }) => {
+const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = true, logoType = 1 }) => {
    const router = useRouter();
 
    return (
       <>
-         {/* 👇 Asegura que la barra de estado se vea en iOS */}
          <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
 
-         <SafeAreaView
-            className="bg-transparent"
-            edges={["top", "left", "right"]} // 👈 Importante en iOS
-         >
+         <SafeAreaView className="bg-transparent" edges={["top", "left", "right"]}>
             <View className="flex-row items-center justify-between px-4 pt-2 pb-3">
                {/* Espaciador izquierdo (mismo ancho que los iconos) */}
                <View style={{ width: 72 }} />
@@ -28,7 +25,9 @@ const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = tr
                {/* Logo centrado */}
                <View className="items-center justify-center flex-1">
                   <Image
-                     source={require("@/assets/images/MovappBl.png")}
+                     source={
+                        logoType === 1 ? require("@/assets/images/MovappBl.png") : require("@/assets/images/Movapp.png")
+                     }
                      style={{ width: 100, height: 40 }}
                      resizeMode="contain"
                   />

@@ -11,6 +11,7 @@ import { Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
 import YoutubePlayer from "react-native-youtube-iframe";
 
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
+import { Colors } from "@/constants/Colors";
 
 export default function HomeScreen() {
    const { user } = useContext(UserContext)!;
@@ -66,7 +67,7 @@ export default function HomeScreen() {
             >
                <View className="flex-row items-center flex-1">
                   <View className="bg-movapp-primary/20 p-3 rounded-xl mr-4">
-                     <Feather name="heart" size={26} color="#a855f7" />
+                     <Feather name="heart" size={26} color={Colors.movapp.icon} />
                   </View>
                   <View className="flex-1">
                      <Text className="text-white text-lg font-bold mb-1">Mente digital</Text>

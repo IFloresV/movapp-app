@@ -1,13 +1,18 @@
 export const Colors = {
    movapp: {
       background: "#050505",
+      backgroundTop: "#8149E2", //Color movapp
+      backgroundButton: "#050505",
+
       primary: "#8149E2",
       text: "#ffffff",
 
-      linkBackgroundHome: "#030312",
+      linkBackgroundHome: "#0A0316",
 
-      linkBackground: "#01010A",
-      linkBorder: "#060114",
+      linkBackground: "#050505",
+      linkBorder: "#050505",
+
+      icon: "#a855f7",
 
       linkIcon: "#8149E2",
       linkText: "#FFFFFF",
@@ -15,9 +20,7 @@ export const Colors = {
       bgTabsNav: "#050505",
 
       card: "#01010A",
-
       cardProfile: "#060114",
-
       borderCard: "#374151",
    },
 } as const;
