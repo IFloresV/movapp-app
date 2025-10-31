@@ -19,7 +19,7 @@ export default function LayoutWithNavigation({
       <LinearGradient
          colors={[Colors.movapp.backgroundTop, Colors.movapp.backgroundButton]}
          start={{ x: 0, y: 0 }}
-         end={{ x: 0, y: 0.9 }}
+         end={{ x: 0, y: 0.4 }}
          style={{ flex: 1 }}
       >
          {showHeader && <Header />}

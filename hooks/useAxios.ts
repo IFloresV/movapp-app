@@ -1,57 +1,64 @@
 import { useState } from "react";
-// import { useLogOut } from "./useLogOut";
+
+type ApiError = {
+   path?: string;
+   msg?: string;
+   [key: string]: any;
+};
 
 type ApiResponse = {
    success?: boolean;
    message?: string;
    data?: any;
+   errors?: ApiError[];
 };
 
 type EndpointFn = (...args: any[]) => Promise<{ data: ApiResponse }>;
 
 export const useAxios = (endpoint: EndpointFn, timeout = 0) => {
    const [data, setData] = useState<any>(null);
-   const [error, setError] = useState<string>("");
+   const [error, setError] = useState<string>(""); // mensaje general
+   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({}); // errores por campo
    const [loading, setLoading] = useState<boolean>(false);
-   // const { setLogOut } = useLogOut();
 
    const resetData = () => {
       setData(null);
       setError("");
+      setFieldErrors({});
       setLoading(false);
    };
-
    const fetchData = async (...args: any[]) => {
       try {
          setLoading(true);
          const response = await endpoint(...args);
-         const result = response.data;
-         // console.log("result API", result);
-         setData(result);
+         setData(response.data);
 
-         if (!result?.success) {
-            if (result?.message) setError(result.message);
-            else if (Array.isArray(result?.data) && result.data.length > 0 && result.data[0]?.Mensaje)
-               setError(result.data[0].Mensaje);
-            else setError("Error desconocido en la respuesta del servidor.");
+         if (!response.data?.success) {
+            if (response.data?.errors && Array.isArray(response.data.errors)) {
+               const messages = response.data.errors.map((e) => e.msg || "Error desconocido");
+               setError(messages.join("\n"));
+            } else {
+               setError(response.data?.message || "Error desconocido");
+            }
          } else {
             setError("");
          }
+
+         return response.data;
       } catch (err: any) {
-         console.log(err);
-         if (err?.response?.data) {
-            setError(err.response.data.type?.toString() || "Error en la API");
+         if (err?.response?.data?.errors) {
+            const messages = err.response.data.errors.map((e: any) => e.msg || "Error desconocido");
+            setError(messages.join("\n"));
+         } else if (err?.response?.data?.message) {
+            setError(err.response.data.message);
          } else {
-            setError("Ocurrió un error inesperado.");
+            setError("Error al conectar con el servidor");
          }
-         if (err?.response?.status === 401) {
-            // setLogOut(true);
-         }
+         return { success: false, errors: err?.response?.data?.errors || [] };
       } finally {
-         if (timeout > 0) setTimeout(() => setLoading(false), timeout);
-         else setLoading(false);
+         setLoading(false);
       }
    };
 
-   return [fetchData, data, error, loading, setError, resetData] as const;
+   return [fetchData, data, error, fieldErrors, loading, setError, resetData] as const;
 };

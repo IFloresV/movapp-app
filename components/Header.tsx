@@ -4,6 +4,9 @@ import React from "react";
 import { Image, StatusBar, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import UserContext from "@/context/UserContext";
+import { useContext } from "react";
+
 interface HeaderProps {
    showNotifications?: boolean;
    showCart?: boolean;
@@ -12,6 +15,8 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = true, logoType = 1 }) => {
    const router = useRouter();
+
+   const { user } = useContext(UserContext)!;
 
    return (
       <>
@@ -35,12 +40,12 @@ const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = tr
 
                {/* Iconos a la derecha */}
                <View style={{ width: 72 }} className="flex-row justify-end items-center space-x-6">
-                  {showNotifications && (
+                  {showNotifications && user.logged && (
                      <TouchableOpacity className="mr-4">
                         <Ionicons name="notifications-outline" size={24} color="white" />
                      </TouchableOpacity>
                   )}
-                  {showCart && (
+                  {showCart && user.logged && (
                      <TouchableOpacity onPress={() => router.push("/car")}>
                         <Ionicons name="cart-outline" size={24} color="white" />
                      </TouchableOpacity>

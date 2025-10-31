@@ -1,9 +1,10 @@
 export interface UserInfo {
    id?: string;
-   name?: string;
+   user_uuid?: string;
+   nombre?: string;
    email?: string;
-   phone?: string;
-   pais?: string;
+   telefono?: string;
+   pais_id?: number;
 }
 
 export interface UserState {

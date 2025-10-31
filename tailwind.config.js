@@ -29,6 +29,11 @@ module.exports = {
                card: "#01010A",
                cardProfile: "#060114",
                borderCard: "#374151",
+
+               placeholderTextColor: "#6b7280",
+               inputBackground: "#2A313D",
+
+               logoutButton: "#A60D14",
             },
          },
       },

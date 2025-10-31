@@ -8,7 +8,6 @@ export const Colors = {
       text: "#ffffff",
 
       linkBackgroundHome: "#0A0316",
-
       linkBackground: "#050505",
       linkBorder: "#050505",
 
@@ -22,5 +21,10 @@ export const Colors = {
       card: "#01010A",
       cardProfile: "#060114",
       borderCard: "#374151",
+
+      placeholderTextColor: "#6b7280",
+      inputBackground: "#2A313D",
+
+      logoutButton: "#A60D14",
    },
 } as const;

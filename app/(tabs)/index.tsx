@@ -15,8 +15,10 @@ import { Colors } from "@/constants/Colors";
 
 export default function HomeScreen() {
    const { user } = useContext(UserContext)!;
+
    console.log("user desde home", user);
    const router = useRouter();
+
    return (
       <LayoutWithNavigation scrollable={true}>
          {/* Video Section - YouTube */}

@@ -1,5 +1,6 @@
 // app/(tabs)/conditions.tsx
 import { Colors } from "@/constants/Colors";
+import { useRegister } from "@/context/RegisterContext";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -8,15 +9,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ConditionsScreen() {
    const router = useRouter();
+   const { setAcceptedTerms } = useRegister();
 
    const handleAccept = () => {
-      // Lógica para aceptar términos
-      console.log("Términos aceptados");
+      setAcceptedTerms(true);
       router.back();
    };
 
    const handleReject = () => {
-      console.log("Términos rechazados");
+      setAcceptedTerms(false);
       router.back();
    };
 

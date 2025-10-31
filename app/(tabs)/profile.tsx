@@ -1,8 +1,11 @@
 // app/(tabs)/profile.tsx
 import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
+import UserContext from "@/context/UserContext";
+import { useLogOut } from "@/hooks/useLogOut";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useContext, useEffect } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 interface Purchase {
@@ -16,6 +19,20 @@ interface Purchase {
 
 export default function ProfileScreen() {
    const router = useRouter();
+   const { user } = useContext(UserContext)!;
+   const { setLogOut } = useLogOut();
+
+   useEffect(() => {
+      if (user) {
+         // Aquí puedes realizar acciones adicionales con los datos del usuario
+         console.log("Datos del usuario:", user.infoUser.nombre);
+      }
+   }, [user]);
+
+   const handleLogout = () => {
+      console.log("\x1b[34m", "Logging out...");
+      setLogOut(true);
+   };
 
    // Datos de ejemplo - reemplazar con datos reales del usuario
    const userData = {
@@ -80,7 +97,7 @@ export default function ProfileScreen() {
                      <Feather name="user" size={16} color={Colors.movapp.primary} />
                      <View className="ml-3 flex-1">
                         <Text className="text-gray-400 text-xs mb-0.5">Nombre</Text>
-                        <Text className="text-white text-sm font-medium">{userData.name}</Text>
+                        <Text className="text-white text-sm font-medium">{user?.infoUser.nombre}</Text>
                      </View>
                   </View>
 
@@ -89,7 +106,7 @@ export default function ProfileScreen() {
                      <Feather name="phone" size={16} color={Colors.movapp.primary} />
                      <View className="ml-3 flex-1">
                         <Text className="text-gray-400 text-xs mb-0.5">Teléfono</Text>
-                        <Text className="text-white text-sm font-medium">{userData.phone}</Text>
+                        <Text className="text-white text-sm font-medium">{user?.infoUser.telefono}</Text>
                      </View>
                   </View>
 
@@ -98,7 +115,7 @@ export default function ProfileScreen() {
                      <Feather name="mail" size={16} color={Colors.movapp.primary} />
                      <View className="ml-3 flex-1">
                         <Text className="text-gray-400 text-xs mb-0.5">Correo electrónico</Text>
-                        <Text className="text-white text-sm font-medium">{userData.email}</Text>
+                        <Text className="text-white text-sm font-medium">{user?.infoUser.email}</Text>
                      </View>
                   </View>
                </View>
@@ -114,7 +131,6 @@ export default function ProfileScreen() {
                      className={`flex-row items-center ${index < purchases.length - 1 ? "mb-3" : ""}`}
                      activeOpacity={0.7}
                   >
-                     {/* Icono con emoji */}
                      <View
                         className="w-14 h-14 rounded-2xl items-center justify-center mr-3"
                         style={{ backgroundColor: purchase.bgColor }}
@@ -122,7 +138,6 @@ export default function ProfileScreen() {
                         <Image source={getImage(purchase.img)} className="w-12 h-12" />
                      </View>
 
-                     {/* Info del curso */}
                      <View className="flex-1">
                         <Text className="text-white text-sm font-semibold mb-1" numberOfLines={1}>
                            {purchase.title}
@@ -130,7 +145,6 @@ export default function ProfileScreen() {
                         <Text className="text-gray-400 text-xs">{purchase.date}</Text>
                      </View>
 
-                     {/* Precio */}
                      <Text className="text-purple-400 text-base font-bold ml-2">{purchase.price}</Text>
                   </TouchableOpacity>
                ))}
@@ -140,7 +154,6 @@ export default function ProfileScreen() {
             <View className="bg-movapp-card rounded-3xl p-6 mb-2 border border-movapp-borderCard border-opacity-50">
                <Text className="text-white text-base font-bold mb-2">Configuración</Text>
 
-               {/* Preferencias de Notificación */}
                <TouchableOpacity
                   className="flex-row items-center justify-between py-3.5"
                   activeOpacity={0.7}
@@ -157,8 +170,7 @@ export default function ProfileScreen() {
                </TouchableOpacity>
 
                {/* Privacidad y Seguridad */}
-               <TouchableOpacity
-                  // onPress={() => router.push("/(tabs)/privacy")}
+               {/* <TouchableOpacity
                   className="flex-row items-center justify-between py-3.5"
                   activeOpacity={0.7}
                >
@@ -170,7 +182,7 @@ export default function ProfileScreen() {
                      <Text className="text-gray-400 text-xs mr-2">Gestionar</Text>
                      <Feather name="chevron-right" size={18} color="#6b7280" />
                   </View>
-               </TouchableOpacity>
+               </TouchableOpacity> */}
             </View>
 
             {/* Botón Cerrar Sesión */}
@@ -178,9 +190,7 @@ export default function ProfileScreen() {
             <TouchableOpacity
                className="bg-red-700/70  py-4 rounded-xl items-center"
                activeOpacity={0.8}
-               onPress={() => {
-                  console.log(`Cierra sesion`);
-               }}
+               onPress={handleLogout}
             >
                <Text className="text-white text-lg font-bold">Cerrar Sesión</Text>
             </TouchableOpacity>

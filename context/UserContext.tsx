@@ -2,9 +2,11 @@
 import { createContext, ReactNode, useReducer } from "react";
 import { UserContextType, UserState } from "../interfaces/user.interfaces";
 
+// ACTION TYPES
 const LOGIN = "LOGIN";
 const LOGOUT = "LOGOUT";
 
+// INITIAL STATE
 const initUser = (): UserState => {
    return {
       logged: false,
@@ -17,6 +19,7 @@ const initialState: UserState = {
    infoUser: {},
 };
 
+// REDUCER
 const userReducer = (state: UserState = initialState, action: any): UserState => {
    switch (action.type) {
       case LOGIN:
@@ -34,6 +37,7 @@ const userReducer = (state: UserState = initialState, action: any): UserState =>
    }
 };
 
+// CONTEXT
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 interface UserProviderProps {

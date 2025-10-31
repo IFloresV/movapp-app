@@ -2,20 +2,24 @@
 import { Colors } from "@/constants/Colors";
 import { Feather } from "@expo/vector-icons";
 
+import { useRegister } from "@/context/RegisterContext";
 import { useRouter } from "expo-router";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function PrivacyScreen() {
    const router = useRouter();
+   const { setAcceptedPrivacy } = useRegister();
+
    const handleAccept = () => {
-      // Lógica para aceptar términos
       console.log("Términos aceptados");
+      setAcceptedPrivacy(true);
       router.back();
    };
 
    const handleReject = () => {
       console.log("Términos rechazados");
+      setAcceptedPrivacy(false);
       router.back();
    };
 

@@ -3,8 +3,10 @@ import DrawerMenu, { DrawerMenuItem } from "@/components/DrawerMenu";
 import { Colors } from "@/constants/Colors";
 import { Feather } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Image, Pressable, View } from "react-native";
+
+import UserContext from "@/context/UserContext";
 
 type TabIconConfig =
    | { type: "feather"; icon: keyof typeof Feather.glyphMap; label: string }
@@ -42,26 +44,19 @@ const DRAWER_MENU_ITEMS: DrawerMenuItem[] = [
       label: "Tienda",
       route: "/(tabs)/store",
    },
-   // {
-   //    name: "privacy",
-   //    type: "feather",
-   //    icon: "lock",
-   //    label: "Politica de Privacidad",
-   //    route: "/(auth)/privacy",
-   // },
-   // {
-   //    name: "conditions",
-   //    type: "feather",
-   //    icon: "check-circle",
-   //    label: "Terminos y Condiciones",
-   //    route: "/(auth)/conditions",
-   // },
    {
       name: "register",
       type: "feather",
       icon: "check-circle",
       label: "Registrarse",
       route: "/(auth)/register",
+   },
+   {
+      name: "login",
+      type: "feather",
+      icon: "log-in",
+      label: "Login",
+      route: "/(auth)/login",
    },
 ];
 
@@ -84,6 +79,14 @@ const renderTabIcon = (config: TabIconConfig & { width?: number; height?: number
 
 export default function TabsLayout() {
    const [drawerVisible, setDrawerVisible] = useState(false);
+   const { user } = useContext(UserContext)!;
+
+   const filteredDrawerItems = DRAWER_MENU_ITEMS.filter((item) => {
+      if (!user?.logged && item.name === "profile") return false;
+      if (user?.logged && item.name === "register") return false;
+      if (user?.logged && item.name === "login") return false;
+      return true;
+   });
 
    return (
       <>
@@ -106,7 +109,8 @@ export default function TabsLayout() {
                   tabBarShowLabel: false,
                   swipeEnabled: true,
                };
-            }}>
+            }}
+         >
             <Tabs.Screen name="index" />
             <Tabs.Screen name="hack" />
 
@@ -140,7 +144,7 @@ export default function TabsLayout() {
          </Tabs>
 
          {/* Drawer Menu Component */}
-         <DrawerMenu visible={drawerVisible} onClose={() => setDrawerVisible(false)} items={DRAWER_MENU_ITEMS} />
+         <DrawerMenu visible={drawerVisible} onClose={() => setDrawerVisible(false)} items={filteredDrawerItems} />
       </>
    );
 }
