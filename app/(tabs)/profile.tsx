@@ -5,7 +5,7 @@ import UserContext from "@/context/UserContext";
 import { useLogOut } from "@/hooks/useLogOut";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 interface Purchase {
@@ -22,12 +22,12 @@ export default function ProfileScreen() {
    const { user } = useContext(UserContext)!;
    const { setLogOut } = useLogOut();
 
-   useEffect(() => {
-      if (user) {
-         // Aquí puedes realizar acciones adicionales con los datos del usuario
-         console.log("Datos del usuario:", user.infoUser.nombre);
-      }
-   }, [user]);
+   // useEffect(() => {
+   //    if (user) {
+   //       // Aquí puedes realizar acciones adicionales con los datos del usuario
+   //       console.log("Datos del usuario:", user.infoUser.nombre);
+   //    }
+   // }, [user]);
 
    const handleLogout = () => {
       console.log("\x1b[34m", "Logging out...");
@@ -55,16 +55,16 @@ export default function ProfileScreen() {
          title: "Guía de Meditación Consciente",
          price: "$250.00",
          date: "12 de Junio, 2025",
-         img: "guia_meditacion",
-         bgColor: "#F9A8D4",
+         img: "guiameditacion",
+         bgColor: "#00000",
       },
       {
          id: "3",
          title: "Taller de Inteligencia Emocional",
          price: "$250.00",
          date: "05 de Agosto, 2025",
-         img: "taller_inteligencia_emocional",
-         bgColor: "#FCA5A5",
+         img: "tallerinteligencia",
+         bgColor: "#00000",
       },
    ];
 
@@ -72,10 +72,10 @@ export default function ProfileScreen() {
       switch (name) {
          case "elhack":
             return require("@/assets/images/elhack.png");
-         case "guia_meditacion":
-            return require("@/assets/images/guia_meditacion.png");
-         case "taller_inteligencia_emocional":
-            return require("@/assets/images/taller_inteligencia_emocional.png");
+         case "guiameditacion":
+            return require("@/assets/images/elhack.png");
+         case "tallerinteligencia":
+            return require("@/assets/images/tallerinteligencia.png");
          default:
             return require("@/assets/images/elhack.png");
       }

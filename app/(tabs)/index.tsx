@@ -16,7 +16,7 @@ import { Colors } from "@/constants/Colors";
 export default function HomeScreen() {
    const { user } = useContext(UserContext)!;
 
-   console.log("user desde home", user);
+   // console.log("user desde home", user);
    const router = useRouter();
 
    return (

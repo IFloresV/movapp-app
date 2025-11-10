@@ -1,0 +1,42 @@
+{
+   "cli": {
+      "version": ">= 16.26.0",
+      "appVersionSource": "remote"
+   },
+   "build": {
+      "preview": {
+         "distribution": "internal",
+         "channel": "preview",
+         "ios": {
+            "simulator": false
+         },
+         "android": {
+            "buildType": "apk"
+         }
+      },
+      "production": {
+         "autoIncrement": true,
+         "channel": "production",
+         "ios": {
+            "simulator": false
+         },
+         "android": {
+            "buildType": "app-bundle"
+         }
+      }
+   },
+   "submit": {
+      "preview": {
+         "ios": {
+            "appleId": "developer.movapp@gmail.com",
+            "ascAppId": "6755009066"
+         }
+      },
+      "production": {
+         "ios": {
+            "appleId": "developer.movapp@gmail.com",
+            "ascAppId": "6755009066"
+         }
+      }
+   }
+}
