@@ -15,4 +15,6 @@ export interface UserState {
 export interface UserContextType {
    user: UserState;
    dispatchUser: React.Dispatch<any>;
+   login: (userData: any) => Promise<void>;
+   logout: () => Promise<void>;
 }

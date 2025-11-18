@@ -1,77 +1,77 @@
 {
-  "expo": {
-    "name": "Movapp",
-    "slug": "movapp-app",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icons/icon.png",
-    "scheme": "movapp",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.movapp.mobile",
-      "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
-      }
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/icon.png",
-        "backgroundColor": "#050505"
+   "expo": {
+      "name": "Movapp",
+      "slug": "movapp-app",
+      "version": "1.0.0",
+      "orientation": "portrait",
+      "icon": "./assets/icons/icon.png",
+      "scheme": "movapp",
+      "userInterfaceStyle": "automatic",
+      "newArchEnabled": true,
+      "ios": {
+         "supportsTablet": true,
+         "bundleIdentifier": "com.movapp.mobile",
+         "infoPlist": {
+            "ITSAppUsesNonExemptEncryption": false
+         }
       },
-      "edgeToEdgeEnabled": true,
-      "package": "com.movapp.mobile"
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/icons/movapp.png"
-    },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/elhack.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#050505"
-        }
+      "android": {
+         "adaptiveIcon": {
+            "foregroundImage": "./assets/icons/icon.png",
+            "backgroundColor": "#050505"
+         },
+         "edgeToEdgeEnabled": true,
+         "package": "com.movapp.mobile"
+      },
+      "web": {
+         "bundler": "metro",
+         "output": "static",
+         "favicon": "./assets/icons/movapp.png"
+      },
+      "plugins": [
+         "expo-router",
+         [
+            "expo-splash-screen",
+            {
+               "image": "./assets/images/elhack.png",
+               "imageWidth": 200,
+               "resizeMode": "contain",
+               "backgroundColor": "#050505"
+            }
+         ],
+         [
+            "expo-build-properties",
+            {
+               "android": {
+                  "newArchEnabled": true
+               },
+               "ios": {
+                  "newArchEnabled": true
+               }
+            }
+         ],
+         "expo-font",
+         "expo-secure-store",
+         "expo-web-browser"
       ],
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "newArchEnabled": true
-          },
-          "ios": {
-            "newArchEnabled": true
-          }
-        }
-      ],
-      "expo-font",
-      "expo-secure-store",
-      "expo-web-browser"
-    ],
-    "experiments": {
-      "typedRoutes": true
-    },
-    "extra": {
-      "API_URL": "https://api-stage.movapp.org/",
-      "router": {},
-      "eas": {
-        "projectId": "197eaaeb-4090-4e85-b082-35f3420991da"
+      "experiments": {
+         "typedRoutes": true
+      },
+      "extra": {
+         "API_URL": "http://192.168.3.31:5004/",
+         "router": {},
+         "eas": {
+            "projectId": "197eaaeb-4090-4e85-b082-35f3420991da"
+         }
+      },
+      "runtimeVersion": {
+         "policy": "appVersion"
+      },
+      "updates": {
+         "enabled": true,
+         "url": "https://u.expo.dev/197eaaeb-4090-4e85-b082-35f3420991da",
+         "fallbackToCacheTimeout": 0,
+         "checkAutomatically": "ON_LOAD"
       }
-    },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "enabled": true,
-      "url": "https://u.expo.dev/197eaaeb-4090-4e85-b082-35f3420991da",
-      "fallbackToCacheTimeout": 0,
-      "checkAutomatically": "ON_LOAD"
-    }
-  }
+   }
 }

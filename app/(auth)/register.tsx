@@ -13,12 +13,12 @@ import {
    FlatList,
    Modal,
    Platform,
-   ScrollView,
    Text,
    TextInput,
    TouchableOpacity,
    View,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import Service from "@/api/AuthService";
 import { useConfig } from "@/context/ConfigContext";
@@ -159,7 +159,15 @@ export default function RegisterScreen() {
    return (
       <View className="flex-1 bg-black">
          <Header showNotifications={false} showCart={false} logoType={2} />
-         <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+
+         <KeyboardAwareScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            enableOnAndroid={true}
+            enableAutomaticScroll={true}
+            extraScrollHeight={20}
+            contentContainerStyle={{ flexGrow: 1 }}
+         >
             <View className="items-center pt-2 pb-4">
                <Text className="text-white text-2xl font-bold mt-3">Crea tu cuenta</Text>
             </View>
@@ -229,13 +237,14 @@ export default function RegisterScreen() {
                      />
                   </View>
                </View>
+
                {/* Teléfono */}
                <View className="mb-4">
                   <Text className="text-white text-sm font-semibold mb-2">Número de Teléfono</Text>
                   <TextInput
                      className="bg-movapp-inputBackground text-white px-4 py-3 rounded-xl"
                      value={formData.phone}
-                     onChangeText={(text) => handleChange("phone", text.replace(/[^0-9]/g, ""))} // Solo números
+                     onChangeText={(text) => handleChange("phone", text.replace(/[^0-9]/g, ""))}
                      placeholder={
                         selectedCountry?.codigo_telefono
                            ? `(${selectedCountry.codigo_telefono}) 5511223344`
@@ -371,7 +380,7 @@ export default function RegisterScreen() {
                   </Text>
                </TouchableOpacity>
             </View>
-         </ScrollView>
+         </KeyboardAwareScrollView>
 
          {/* Modal de Selección de País */}
          <Modal

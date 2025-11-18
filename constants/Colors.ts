@@ -1,4 +1,5 @@
 export const Colors = {
+   //Color movapp  8149E2
    movapp: {
       background: "#050505",
       backgroundTop: "#8149E2", //Color movapp

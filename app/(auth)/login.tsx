@@ -15,7 +15,7 @@ import Constants from "expo-constants";
 import * as Device from "expo-device";
 
 export default function LoginScreen() {
-   const { dispatchUser } = useContext(UserContext)!;
+   const { login } = useContext(UserContext)!;
    const router = useRouter();
 
    const [formData, setFormData] = useState({
@@ -30,7 +30,8 @@ export default function LoginScreen() {
       if (!data) return;
       if (data.success) {
          (async () => {
-            dispatchUser({ type: "LOGIN", payload: data.user });
+            // dispatchUser({ type: "LOGIN", payload: data.user });
+            login(data.user);
 
             Alert.alert("¡Bienvenido de nuevo!", "Has iniciado sesión exitosamente", [
                { text: "Comenzar", onPress: () => router.replace("/") },
