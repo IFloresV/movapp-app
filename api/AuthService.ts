@@ -64,6 +64,52 @@ const Service = {
          throw error;
       }
    },
+
+   recover: async (data: RequestData) => {
+      console.log("Enviando a /auth/recover:", { email: data.email }); // <-- Consola para validar el payload
+
+      try {
+         const response = await axios.post(`${API_URL}auth/recover`, data, {
+            headers: { "Content-Type": "application/json" },
+            validateStatus: () => true,
+         });
+
+         console.log("Respuesta /auth/recover:", response.data); // <-- Consola para validar la respuesta
+
+         if (response.data?.accessToken) {
+            await saveToken(response.data.accessToken);
+         }
+         if (response.data?.device?.refresh_hash) {
+            await saveRefreshToken(response.data.device.refresh_hash);
+         }
+
+         return response;
+      } catch (error) {
+         console.error("❌ Error de red en login:", error);
+         throw error;
+      }
+   },
+
+   resetPassword: async (data: RequestData) => {
+      try {
+         const response = await axios.post(`${API_URL}auth/reset-password`, data, {
+            headers: { "Content-Type": "application/json" },
+            validateStatus: () => true,
+         });
+
+         if (response.data?.accessToken) {
+            await saveToken(response.data.accessToken);
+         }
+         if (response.data?.device?.refresh_hash) {
+            await saveRefreshToken(response.data.device.refresh_hash);
+         }
+
+         return response;
+      } catch (error) {
+         console.error("❌ Error de red en login:", error);
+         throw error;
+      }
+   },
 };
 
 export default Service;

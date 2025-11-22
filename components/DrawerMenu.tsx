@@ -7,7 +7,7 @@ import { useLogOut } from "@/hooks/useLogOut";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useContext } from "react";
-import { Image, Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 export type DrawerMenuItem = {
    name: string;
@@ -38,6 +38,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
    const handleLogout = () => {
       console.log("\x1b[34m", "Logging out...");
       setLogOut(true);
+      Alert.alert("Sesión cerrada", "Has cerrado tu sesión.");
       onClose();
    };
 

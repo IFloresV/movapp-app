@@ -1,12 +1,15 @@
 // app/(tabs)/profile.tsx
 import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
+import { useConfig } from "@/context/ConfigContext";
 import UserContext from "@/context/UserContext";
+
 import { useLogOut } from "@/hooks/useLogOut";
+import { getFlag } from "@/utils/Flags";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useContext } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 interface Purchase {
    id: string;
@@ -20,7 +23,10 @@ interface Purchase {
 export default function ProfileScreen() {
    const router = useRouter();
    const { user } = useContext(UserContext)!;
+   const { config } = useConfig();
    const { setLogOut } = useLogOut();
+
+   const paises = config.paises || [];
 
    // useEffect(() => {
    //    if (user) {
@@ -31,6 +37,8 @@ export default function ProfileScreen() {
 
    const handleLogout = () => {
       console.log("\x1b[34m", "Logging out...");
+      Alert.alert("Sesión cerrada", "Has cerrado tu sesión.");
+
       setLogOut(true);
    };
 
@@ -66,6 +74,30 @@ export default function ProfileScreen() {
          img: "tallerinteligencia",
          bgColor: "#00000",
       },
+      {
+         id: "4",
+         title: "Taller de Inteligencia Emocional",
+         price: "$250.00",
+         date: "05 de Agosto, 2025",
+         img: "tallerinteligencia",
+         bgColor: "#00000",
+      },
+      {
+         id: "5",
+         title: "Taller de Inteligencia Emocional",
+         price: "$250.00",
+         date: "05 de Agosto, 2025",
+         img: "tallerinteligencia",
+         bgColor: "#00000",
+      },
+      {
+         id: "6",
+         title: "Taller de Inteligencia Emocional",
+         price: "$250.00",
+         date: "05 de Agosto, 2025",
+         img: "tallerinteligencia",
+         bgColor: "#00000",
+      },
    ];
 
    const getImage = (name: string) => {
@@ -80,6 +112,10 @@ export default function ProfileScreen() {
             return require("@/assets/images/elhack.png");
       }
    };
+
+   const selectedCountry = paises.find((p) => p.id === user?.infoUser?.pais_id);
+   const countryCode = selectedCountry?.codigo_pais || "MX";
+   const country = selectedCountry?.pais || "-";
 
    return (
       // <LayoutWithNavigation scrollable={false}>
@@ -111,43 +147,57 @@ export default function ProfileScreen() {
                   </View>
 
                   {/* Correo */}
-                  <View className="flex-row items-center">
+                  <View className="flex-row items-center mb-2">
                      <Feather name="mail" size={16} color={Colors.movapp.primary} />
                      <View className="ml-3 flex-1">
                         <Text className="text-gray-400 text-xs mb-0.5">Correo electrónico</Text>
                         <Text className="text-white text-sm font-medium">{user?.infoUser.email}</Text>
                      </View>
                   </View>
+                  {/* Pais */}
+                  <View className="flex-row items-center">
+                     <Feather name="flag" size={16} color={Colors.movapp.primary} />
+                     <View className="ml-3 flex-1 flex-row items-center">
+                        <Text style={{ fontSize: 20, marginRight: 8 }}>{getFlag(countryCode)}</Text>
+                        <Text style={{ fontSize: 16, color: "#fff" }}>- {country}</Text>
+                     </View>
+                  </View>
                </View>
             </View>
 
             {/* Historial de Compras */}
-            <View className="bg-movapp-card rounded-3xl p-6 mb-2 border border-movapp-borderCard border-opacity-50">
+            <View
+               className="bg-movapp-card rounded-3xl p-6 mb-2 border border-movapp-borderCard border-opacity-50"
+               style={{ height: 260 }} // Altura fija, ajusta según tu diseño
+            >
                <Text className="text-white text-base font-bold mb-4">Historial de Compras</Text>
-
-               {purchases.map((purchase, index) => (
-                  <TouchableOpacity
-                     key={purchase.id}
-                     className={`flex-row items-center ${index < purchases.length - 1 ? "mb-3" : ""}`}
-                     activeOpacity={0.7}
-                  >
-                     <View
-                        className="w-14 h-14 rounded-2xl items-center justify-center mr-3"
-                        style={{ backgroundColor: purchase.bgColor }}
+               <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  style={{ flex: 1 }}
+                  contentContainerStyle={{ paddingBottom: 8 }}
+               >
+                  {purchases.map((purchase, index) => (
+                     <TouchableOpacity
+                        key={purchase.id}
+                        className={`flex-row items-center ${index < purchases.length - 1 ? "mb-3" : ""}`}
+                        activeOpacity={0.7}
                      >
-                        <Image source={getImage(purchase.img)} className="w-12 h-12" />
-                     </View>
-
-                     <View className="flex-1">
-                        <Text className="text-white text-sm font-semibold mb-1" numberOfLines={1}>
-                           {purchase.title}
-                        </Text>
-                        <Text className="text-gray-400 text-xs">{purchase.date}</Text>
-                     </View>
-
-                     <Text className="text-purple-400 text-base font-bold ml-2">{purchase.price}</Text>
-                  </TouchableOpacity>
-               ))}
+                        <View
+                           className="w-14 h-14 rounded-2xl items-center justify-center mr-3"
+                           style={{ backgroundColor: purchase.bgColor }}
+                        >
+                           <Image source={getImage(purchase.img)} className="w-12 h-12" />
+                        </View>
+                        <View className="flex-1">
+                           <Text className="text-white text-sm font-semibold mb-1" numberOfLines={1}>
+                              {purchase.title}
+                           </Text>
+                           <Text className="text-gray-400 text-xs">{purchase.date}</Text>
+                        </View>
+                        <Text className="text-purple-400 text-base font-bold ml-2">{purchase.price}</Text>
+                     </TouchableOpacity>
+                  ))}
+               </ScrollView>
             </View>
 
             {/* Configuración */}
@@ -156,8 +206,7 @@ export default function ProfileScreen() {
 
                <TouchableOpacity
                   className="flex-row items-center justify-between py-3.5"
-                  activeOpacity={0.7}
-                  style={{ borderBottomWidth: 1, borderBottomColor: "#374151" }}
+                  // style={{ borderBottomWidth: 1, borderBottomColor: Colors.movapp.borderCard }}
                >
                   <View className="flex-row items-center flex-1">
                      <Feather name="bell" size={20} color={Colors.movapp.primary} />
@@ -165,24 +214,9 @@ export default function ProfileScreen() {
                   </View>
                   <View className="flex-row items-center">
                      <Text className="text-gray-400 text-xs mr-2">Activadas</Text>
-                     <Feather name="chevron-right" size={18} color="#6b7280" />
+                     <Feather name="chevron-right" size={18} color={Colors.movapp.backgroundTop} />
                   </View>
                </TouchableOpacity>
-
-               {/* Privacidad y Seguridad */}
-               {/* <TouchableOpacity
-                  className="flex-row items-center justify-between py-3.5"
-                  activeOpacity={0.7}
-               >
-                  <View className="flex-row items-center flex-1">
-                     <Feather name="shield" size={20} color={Colors.movapp.primary} />
-                     <Text className="text-white text-sm font-medium ml-3">Privacidad y Seguridad</Text>
-                  </View>
-                  <View className="flex-row items-center">
-                     <Text className="text-gray-400 text-xs mr-2">Gestionar</Text>
-                     <Feather name="chevron-right" size={18} color="#6b7280" />
-                  </View>
-               </TouchableOpacity> */}
             </View>
 
             {/* Botón Cerrar Sesión */}

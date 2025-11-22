@@ -26,6 +26,8 @@ import { useRegister } from "@/context/RegisterContext";
 import UserContext from "@/context/UserContext";
 import { useAxios } from "@/hooks/useAxios";
 
+import { getFlag } from "@/utils/Flags";
+
 export default function RegisterScreen() {
    const { dispatchUser } = useContext(UserContext)!;
    const { acceptedTerms, setAcceptedTerms, acceptedPrivacy, setAcceptedPrivacy } = useRegister();
@@ -71,6 +73,7 @@ export default function RegisterScreen() {
       if (data.success) {
          (async () => {
             dispatchUser({ type: "LOGIN", payload: data.user });
+            clearStates();
 
             Alert.alert("Registro exitoso", "¡Bienvenido a Movapp!", [
                { text: "Comenzar", onPress: () => router.replace("/") },
@@ -84,6 +87,20 @@ export default function RegisterScreen() {
          resetData();
       }
    }, [data]);
+
+   const clearStates = () => {
+      setFormData({
+         fullName: "",
+         email: "",
+         phone: "",
+         countryId: 1,
+         postalCode: "",
+         password: "",
+         confirmPassword: "",
+      });
+      setAcceptedTerms(false);
+      setAcceptedPrivacy(false);
+   };
 
    const getDeviceId = async (): Promise<string> => {
       let deviceId = await SecureStore.getItemAsync("deviceId");
@@ -148,13 +165,13 @@ export default function RegisterScreen() {
 
    const selectedCountry = paises.find((p) => p.id === formData.countryId);
 
-   const getFlag = (countryCode: string) => {
-      const codePoints = countryCode
-         .toUpperCase()
-         .split("")
-         .map((char) => 127397 + char.charCodeAt(0));
-      return String.fromCodePoint(...codePoints);
-   };
+   // const getFlag = (countryCode: string) => {
+   //    const codePoints = countryCode
+   //       .toUpperCase()
+   //       .split("")
+   //       .map((char) => 127397 + char.charCodeAt(0));
+   //    return String.fromCodePoint(...codePoints);
+   // };
 
    return (
       <View className="flex-1 bg-black">

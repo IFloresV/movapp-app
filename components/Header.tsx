@@ -45,11 +45,11 @@ const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = tr
                         <Ionicons name="notifications-outline" size={24} color="white" />
                      </TouchableOpacity>
                   )}
-                  {showCart && user.logged && (
+                  {/* {showCart && user.logged && (
                      <TouchableOpacity onPress={() => router.push("/car")}>
                         <Ionicons name="cart-outline" size={24} color="white" />
                      </TouchableOpacity>
-                  )}
+                  )} */}
                </View>
             </View>
          </SafeAreaView>
