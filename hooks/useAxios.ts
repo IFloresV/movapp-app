@@ -28,9 +28,14 @@ export const useAxios = (endpoint: EndpointFn, timeout = 0) => {
       setLoading(false);
    };
    const fetchData = async (...args: any[]) => {
+      setLoading(true);
+      setError("");
       try {
-         setLoading(true);
+         console.log("\x1b[35m", "Enviando solicitud con useAxios:", ...args);
+
          const response = await endpoint(...args);
+         console.log("\x1b[34m", "Respuesta recibida en useAxios:", response.data);
+
          setData(response.data);
 
          if (!response.data?.success) {
@@ -46,6 +51,8 @@ export const useAxios = (endpoint: EndpointFn, timeout = 0) => {
 
          return response.data;
       } catch (err: any) {
+         console.error("\x1b[31m", "Error en useAxios:", err);
+
          if (err?.response?.data?.errors) {
             const messages = err.response.data.errors.map((e: any) => e.msg || "Error desconocido");
             setError(messages.join("\n"));

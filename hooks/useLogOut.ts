@@ -1,29 +1,23 @@
 import ConfigContext from "@/context/ConfigContext";
 import UserContext from "@/context/UserContext";
 import { useRouter } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext } from "react";
 
 export const useLogOut = () => {
    const { logout } = useContext(UserContext)!;
    const { dispatchConfig } = useContext(ConfigContext)!;
-   const [logOut, setLogOut] = useState(false);
    const router = useRouter();
 
-   useEffect(() => {
-      const LogoutAsync = async () => {
-         if (!logOut) return;
+   const handleLogout = useCallback(async () => {
+      // limpiar config
+      dispatchConfig({ type: "CLEAR_CONFIG" });
 
-         // limpiamos config
-         dispatchConfig({ type: "CLEAR_CONFIG" });
+      // cerrar sesión + SecureStore
+      await logout();
 
-         // limpiamos usuario + SecureStore
-         await logout();
+      // redirigir
+      router.replace("/");
+   }, [dispatchConfig, logout, router]);
 
-         router.replace("/");
-      };
-
-      LogoutAsync();
-   }, [logOut]);
-
-   return { setLogOut };
+   return { logout: handleLogout };
 };

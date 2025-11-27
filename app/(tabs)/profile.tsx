@@ -7,8 +7,7 @@ import UserContext from "@/context/UserContext";
 import { useLogOut } from "@/hooks/useLogOut";
 import { getFlag } from "@/utils/Flags";
 import { Feather } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 interface Purchase {
@@ -21,12 +20,16 @@ interface Purchase {
 }
 
 export default function ProfileScreen() {
-   const router = useRouter();
    const { user } = useContext(UserContext)!;
    const { config } = useConfig();
-   const { setLogOut } = useLogOut();
+   const { logout } = useLogOut();
 
    const paises = config.paises || [];
+   const precios = config.precios || [];
+
+   useEffect(() => {
+      console.log("\x1b[33m", "PRECIOS PERFIL =>", precios);
+   }, [precios]);
 
    // useEffect(() => {
    //    if (user) {
@@ -38,8 +41,7 @@ export default function ProfileScreen() {
    const handleLogout = () => {
       console.log("\x1b[34m", "Logging out...");
       Alert.alert("Sesión cerrada", "Has cerrado tu sesión.");
-
-      setLogOut(true);
+      logout();
    };
 
    // Datos de ejemplo - reemplazar con datos reales del usuario
@@ -55,7 +57,7 @@ export default function ProfileScreen() {
          title: "El Hack",
          price: "$500.00",
          date: "08 de Julio, 2025",
-         img: "elhack",
+         img: "PROD-001",
          bgColor: "#00000",
       },
       {
@@ -63,7 +65,7 @@ export default function ProfileScreen() {
          title: "Guía de Meditación Consciente",
          price: "$250.00",
          date: "12 de Junio, 2025",
-         img: "guiameditacion",
+         img: "PROD-002",
          bgColor: "#00000",
       },
       {
@@ -71,7 +73,7 @@ export default function ProfileScreen() {
          title: "Taller de Inteligencia Emocional",
          price: "$250.00",
          date: "05 de Agosto, 2025",
-         img: "tallerinteligencia",
+         img: "PROD-003",
          bgColor: "#00000",
       },
       {
@@ -79,7 +81,7 @@ export default function ProfileScreen() {
          title: "Taller de Inteligencia Emocional",
          price: "$250.00",
          date: "05 de Agosto, 2025",
-         img: "tallerinteligencia",
+         img: "PROD-003",
          bgColor: "#00000",
       },
       {
@@ -87,7 +89,7 @@ export default function ProfileScreen() {
          title: "Taller de Inteligencia Emocional",
          price: "$250.00",
          date: "05 de Agosto, 2025",
-         img: "tallerinteligencia",
+         img: "PROD-002",
          bgColor: "#00000",
       },
       {
@@ -95,21 +97,21 @@ export default function ProfileScreen() {
          title: "Taller de Inteligencia Emocional",
          price: "$250.00",
          date: "05 de Agosto, 2025",
-         img: "tallerinteligencia",
+         img: "PROD-001",
          bgColor: "#00000",
       },
    ];
 
    const getImage = (name: string) => {
       switch (name) {
-         case "elhack":
-            return require("@/assets/images/elhack.png");
-         case "guiameditacion":
-            return require("@/assets/images/elhack.png");
-         case "tallerinteligencia":
-            return require("@/assets/images/tallerinteligencia.png");
+         case "PROD-001":
+            return require("@/assets/images/PROD-001.png");
+         case "PROD-002":
+            return require("@/assets/images/PROD-002.png");
+         case "PROD-003":
+            return require("@/assets/images/PROD-003.png");
          default:
-            return require("@/assets/images/elhack.png");
+            return require("@/assets/images/PROD-001.png");
       }
    };
 

@@ -1,93 +1,147 @@
 // src/context/ConfigContext.tsx
-import { createContext, ReactNode, useContext, useEffect, useReducer } from "react";
-import { ConfigContextType, ConfigState } from "../interfaces/config.interfaces";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useReducer, useState } from "react";
 
 import Service from "@/api/ConfigService";
 import { useAxios } from "@/hooks/useAxios";
+import { ConfigContextType, ConfigState } from "../interfaces/config.interfaces";
+
+import { useRef } from "react";
+import { Pais, Precio } from "../interfaces/config.interfaces";
 
 // ACTION TYPES
 const SET_PAISES = "SET_PAISES";
+const SET_PRECIOS_PAIS = "SET_PRECIOS_PAIS";
 const CLEAR_CONFIG = "CLEAR_CONFIG";
 
-// INITIAL STATE
-const initConfig = (): ConfigState => {
-   return {
-      loaded: false,
-      paises: [],
-   };
-};
+// CACHE KEY + VERSION
+const CACHE_KEY = "CONFIG_CACHE_V1";
 
 const initialState: ConfigState = {
    loaded: false,
    paises: [],
+   precios: [],
 };
 
-// REDUCER
-const configReducer = (state: ConfigState = initialState, action: any): ConfigState => {
+const configReducer = (state: ConfigState, action: any): ConfigState => {
    switch (action.type) {
       case SET_PAISES:
-         return {
-            ...state,
-            loaded: true,
-            paises: action.payload || [],
-         };
-
+         return { ...state, loaded: true, paises: action.payload || [] };
+      case SET_PRECIOS_PAIS:
+         return { ...state, precios: action.payload || [] };
       case CLEAR_CONFIG:
-         return {
-            loaded: false,
-            paises: [],
-         };
-
+         return initialState;
       default:
          return state;
    }
 };
 
-// CONTEXT
 const ConfigContext = createContext<ConfigContextType | undefined>(undefined);
 
-interface ConfigProviderProps {
-   children: ReactNode;
-}
+export const ConfigProvider = ({ children }: { children: ReactNode }) => {
+   const [config, dispatchConfig] = useReducer(configReducer, initialState);
 
-export const ConfigProvider = ({ children }: ConfigProviderProps) => {
-   const [config, dispatchConfig] = useReducer(configReducer, initialState, initConfig);
-   const [fetchPaises, data] = useAxios(Service.getCountries);
+   const [fetchPaises, dataPaises] = useAxios(Service.getCountries);
+   const [isHydrated, setIsHydrated] = useState(false);
 
-   useEffect(() => {
-      if (!data) return;
-      if (data.success && Array.isArray(data.paises)) {
-         dispatchConfig({ type: SET_PAISES, payload: data.paises });
-      } else if (Array.isArray(data)) {
-         dispatchConfig({ type: SET_PAISES, payload: data });
-      } else {
-         console.error("Error en respuesta de países:", data.message || data.errors);
-      }
-   }, [data]);
-
-   const reloadPaises = async () => {
-      try {
-         console.log("\x1b[35m", "reloadPaises");
-         await fetchPaises();
-      } catch (err) {
-         console.error("Error al recargar países:", err);
-      }
-   };
+   const lastSavedConfig = useRef<{ paises: Pais[]; precios?: Precio[] }>({ paises: [], precios: [] });
 
    useEffect(() => {
-      fetchPaises();
+      (async () => {
+         try {
+            const raw = await AsyncStorage.getItem(CACHE_KEY);
+            if (raw) {
+               const parsed = JSON.parse(raw);
+               if (parsed?.paises) {
+                  dispatchConfig({ type: SET_PAISES, payload: parsed.paises });
+               }
+               if (parsed?.precios) {
+                  dispatchConfig({ type: SET_PRECIOS_PAIS, payload: parsed.precios });
+               }
+               console.log("Config cache loaded");
+               setIsHydrated(true);
+               return;
+            }
+
+            await fetchPaises();
+            setIsHydrated(true);
+         } catch (err) {
+            console.error("Error loading config cache:", err);
+            await fetchPaises();
+            setIsHydrated(true);
+         }
+      })();
    }, []);
 
-   return <ConfigContext.Provider value={{ config, dispatchConfig, reloadPaises }}>{children}</ConfigContext.Provider>;
+   useEffect(() => {
+      if (!dataPaises) return;
+      if (dataPaises.success) {
+         const countries = dataPaises.countries ?? dataPaises;
+         dispatchConfig({ type: SET_PAISES, payload: countries });
+      }
+   }, [dataPaises]);
+
+   useEffect(() => {
+      if (!isHydrated) return;
+
+      const persist = async () => {
+         const hasChanged =
+            JSON.stringify(lastSavedConfig.current.paises) !== JSON.stringify(config.paises) ||
+            JSON.stringify(lastSavedConfig.current.precios) !== JSON.stringify(config.precios ?? []);
+
+         if (!hasChanged) return;
+
+         try {
+            const payload = {
+               paises: config.paises,
+               precios: config.precios,
+               version: 1,
+               updatedAt: Date.now(),
+            };
+            await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(payload));
+
+            lastSavedConfig.current = {
+               paises: config.paises,
+               precios: config.precios ?? [],
+            };
+         } catch (err) {
+            console.error("Error saving config cache:", err);
+         }
+      };
+
+      persist();
+   }, [config.paises, config.precios, isHydrated]);
+
+   const reloadPaises = useCallback(async () => {
+      await fetchPaises();
+   }, [fetchPaises]);
+
+   const setPrecios = useCallback((items: any[]) => {
+      dispatchConfig({ type: SET_PRECIOS_PAIS, payload: items });
+   }, []);
+
+   const clearConfig = useCallback(async () => {
+      dispatchConfig({ type: CLEAR_CONFIG });
+   }, []);
+
+   const contextValue = useMemo(
+      () => ({
+         config,
+         dispatchConfig,
+         reloadPaises,
+         setPrecios,
+         clearConfig,
+      }),
+      [config, reloadPaises, setPrecios, clearConfig],
+   );
+
+   return <ConfigContext.Provider value={contextValue}>{children}</ConfigContext.Provider>;
 };
 
-// HOOK
 export const useConfig = () => {
-   const context = useContext(ConfigContext);
-   if (context === undefined) {
-      throw new Error("useConfig debe ser usado dentro de un ConfigProvider");
-   }
-   return context;
+   const ctx = useContext(ConfigContext);
+   if (!ctx) throw new Error("useConfig debe usarse dentro de ConfigProvider");
+   return ctx;
 };
 
 export default ConfigContext;

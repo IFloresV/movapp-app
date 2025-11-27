@@ -33,7 +33,7 @@ export default function RegisterScreen() {
    const { acceptedTerms, setAcceptedTerms, acceptedPrivacy, setAcceptedPrivacy } = useRegister();
 
    const { config, reloadPaises } = useConfig();
-   const { paises } = config;
+   const { paises, precios } = config;
    const router = useRouter();
 
    const [formData, setFormData] = useState({

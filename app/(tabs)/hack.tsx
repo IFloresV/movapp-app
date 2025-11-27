@@ -1,13 +1,20 @@
 // app/(tabs)/hack.tsx
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
+import { useConfig } from "@/context/ConfigContext";
+
 export default function HackScreen() {
+   const { config } = useConfig();
    const router = useRouter();
    const [hackCount, setHackCount] = useState(1);
    const pricePerHack = 500;
+
+   useEffect(() => {
+      console.log("\x1b[34m", "PRECIOS HACK=>", config.precios);
+   }, []);
 
    const increment = () => setHackCount(hackCount + 1);
    const decrement = () => {
@@ -40,7 +47,8 @@ export default function HackScreen() {
                      className="bg-movapp-primary w-14 h-14 rounded-xl items-center justify-center"
                      activeOpacity={0.7}
                      disabled={hackCount <= 1}
-                     style={{ opacity: hackCount <= 1 ? 0.5 : 1 }}>
+                     style={{ opacity: hackCount <= 1 ? 0.5 : 1 }}
+                  >
                      <Text className="text-white text-2xl font-bold">-</Text>
                   </TouchableOpacity>
 
@@ -51,7 +59,8 @@ export default function HackScreen() {
                   <TouchableOpacity
                      onPress={increment}
                      className="bg-movapp-primary w-14 h-14 rounded-xl items-center justify-center"
-                     activeOpacity={0.7}>
+                     activeOpacity={0.7}
+                  >
                      <Text className="text-white text-2xl font-bold">+</Text>
                   </TouchableOpacity>
                </View>
@@ -82,7 +91,8 @@ export default function HackScreen() {
                   onPress={() => {
                      // console.log(`Comprando ${hackCount} hacks por $${totalPrice} MXN`);
                      router.push("/car");
-                  }}>
+                  }}
+               >
                   <Text className="text-white text-lg font-bold">Comprar</Text>
                </TouchableOpacity>
             </View>

@@ -9,13 +9,26 @@ export interface Pais {
    codigo_telefono: string;
 }
 
+export interface Precio {
+   producto_id: number;
+   sku: string;
+   nombre: string;
+   descripcion: string;
+   precio: string;
+   precio_mx: string;
+   moneda: string;
+   simbolo: string;
+}
+
 export interface ConfigState {
-   loaded: boolean; // ✅ Indica si los datos ya fueron cargados
+   loaded: boolean;
    paises: Pais[];
+   precios?: Precio[];
 }
 
 export interface ConfigContextType {
    config: ConfigState;
    dispatchConfig: React.Dispatch<any>;
    reloadPaises: () => Promise<void>;
+   setPrecios: (preciosData: Precio[]) => void;
 }

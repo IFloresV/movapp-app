@@ -26,7 +26,7 @@ interface DrawerMenuProps {
 export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps) {
    const router = useRouter();
    const { user } = useContext(UserContext)!;
-   const { setLogOut } = useLogOut();
+   const { logout } = useLogOut();
 
    const handleItemPress = (route: string) => {
       onClose();
@@ -37,7 +37,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
 
    const handleLogout = () => {
       console.log("\x1b[34m", "Logging out...");
-      setLogOut(true);
+      logout();
       Alert.alert("Sesión cerrada", "Has cerrado tu sesión.");
       onClose();
    };

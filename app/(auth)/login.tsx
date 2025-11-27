@@ -5,10 +5,15 @@ import * as SecureStore from "expo-secure-store";
 import { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
-import Service from "@/api/AuthService";
+import { useConfig } from "@/context/ConfigContext";
+import UserContext from "@/context/UserContext";
+
+import AuthService from "@/api/AuthService";
+import ConfigService from "@/api/ConfigService";
+
 import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
-import UserContext from "@/context/UserContext";
+
 import { useAxios } from "@/hooks/useAxios";
 
 import Constants from "expo-constants";
@@ -16,6 +21,7 @@ import * as Device from "expo-device";
 
 export default function LoginScreen() {
    const { login } = useContext(UserContext)!;
+   const { setPrecios } = useConfig();
    const router = useRouter();
 
    const [formData, setFormData] = useState({
@@ -24,14 +30,17 @@ export default function LoginScreen() {
    });
    const [showPassword, setShowPassword] = useState(false);
 
-   const [loginFetch, data, error, , loading, , resetData] = useAxios(Service.login);
+   const [loginFetch, data, error, , loading, , resetData] = useAxios(AuthService.login);
+   const [pricesFetch, dataPrices, , , , , resetPricesData] = useAxios(ConfigService.getPrices);
 
    useEffect(() => {
       if (!data) return;
       if (data.success) {
          (async () => {
-            // dispatchUser({ type: "LOGIN", payload: data.user });
             login(data.user);
+            console.log("\x1b[34m", "USER =>", data.user);
+            const idcountry = data.user?.pais_id;
+            await pricesFetch(idcountry);
 
             Alert.alert("¡Bienvenido de nuevo!", "Has iniciado sesión exitosamente", [
                { text: "Comenzar", onPress: () => router.replace("/") },
@@ -48,6 +57,16 @@ export default function LoginScreen() {
          resetData();
       }
    }, [data]);
+
+   useEffect(() => {
+      if (!dataPrices) return;
+      console.log("\x1b[33m", "precios =>", dataPrices);
+      if (dataPrices.success) {
+         console.log("Precios recibidos:", dataPrices.prices);
+         setPrecios(dataPrices.prices);
+         resetPricesData();
+      }
+   }, [dataPrices]);
 
    const getDeviceId = async (): Promise<string> => {
       let deviceId = await SecureStore.getItemAsync("deviceId");

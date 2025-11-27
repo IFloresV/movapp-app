@@ -15,7 +15,6 @@ export default function CarScreen() {
 
    const total = useMemo(() => hackCount * pricePerHack, [hackCount, pricePerHack]);
 
-   // Formateador para MXN (muestra separador de miles y 2 decimales)
    const fmt = useMemo(
       () =>
          new Intl.NumberFormat("es-MX", {
