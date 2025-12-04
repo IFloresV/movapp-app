@@ -27,5 +27,8 @@ export const Colors = {
       inputBackground: "#2A313D",
 
       logoutButton: "#A60D14",
+
+      red: "#CF192E",
+      green: "#00FF00",
    },
 } as const;

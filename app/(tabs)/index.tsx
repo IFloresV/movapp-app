@@ -24,7 +24,7 @@ export default function HomeScreen() {
          {/* Video Section - YouTube */}
          <View className="px-4 mt-4">
             <View className="w-full h-64 rounded-lg overflow-hidden">
-               <YoutubePlayer height={256} videoId="vNZxLXI75_U" play={false} />
+               <YoutubePlayer height={256} videoId="jQ5_wLifuAU" play={false} />
             </View>
          </View>
 

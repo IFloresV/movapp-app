@@ -1,10 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, StatusBar, TouchableOpacity, View } from "react-native";
+import { Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { Colors } from "@/constants/Colors";
+import { CartContext } from "@/context/CartContext";
 import UserContext from "@/context/UserContext";
+
 import { useContext } from "react";
 
 interface HeaderProps {
@@ -17,6 +20,10 @@ const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = tr
    const router = useRouter();
 
    const { user } = useContext(UserContext)!;
+   const { cart } = useContext(CartContext)!;
+
+   // calcular cantidad de productos en carrito de forma segura
+   const itemsCount = Array.isArray(cart) ? cart.length : 0;
 
    return (
       <>
@@ -39,17 +46,41 @@ const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = tr
                </View>
 
                {/* Iconos a la derecha */}
-               <View style={{ width: 72 }} className="flex-row justify-end items-center space-x-6">
+               <View style={{ width: 72 }} className="flex-row justify-end items-center space-x-2">
                   {showNotifications && user.logged && (
                      <TouchableOpacity className="mr-4">
                         <Ionicons name="notifications-outline" size={24} color="white" />
                      </TouchableOpacity>
                   )}
-                  {/* {showCart && user.logged && (
-                     <TouchableOpacity onPress={() => router.push("/car")}>
-                        <Ionicons name="cart-outline" size={24} color="white" />
+
+                  {/* mostrar icono de carrito solo si usuario logueado y carrito tiene items */}
+                  {showCart && user.logged && itemsCount > 0 && (
+                     <TouchableOpacity onPress={() => router.push("/car")} style={{ marginLeft: 8 }}>
+                        <View>
+                           <Ionicons name="cart-outline" size={28} color="white" />
+                           <View
+                              style={{
+                                 position: "absolute",
+                                 right: -6,
+                                 top: -6,
+                                 backgroundColor: Colors.movapp.red || "#A78BFA",
+                                 borderRadius: 10,
+                                 minWidth: 18,
+                                 height: 18,
+                                 paddingHorizontal: 4,
+                                 alignItems: "center",
+                                 justifyContent: "center",
+                                 borderWidth: 1,
+                                 borderColor: "rgba(255,255,255,0.12)",
+                              }}
+                           >
+                              <Text style={{ color: "#fff", fontSize: 11, fontWeight: "700" }}>
+                                 {itemsCount > 99 ? "99+" : itemsCount}
+                              </Text>
+                           </View>
+                        </View>
                      </TouchableOpacity>
-                  )} */}
+                  )}
                </View>
             </View>
          </SafeAreaView>

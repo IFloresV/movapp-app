@@ -54,7 +54,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                   <View
                      style={{
                         height: 48,
-                        backgroundColor: "#050505",
+                        backgroundColor: Colors.movapp.background,
                         borderTopLeftRadius: 10,
                         borderTopRightRadius: 10,
                      }}
