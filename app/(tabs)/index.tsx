@@ -40,7 +40,7 @@ export default function HomeScreen() {
                      <FontAwesome name="handshake-o" size={24} color="#a855f7" />
                   </View>
                   <View className="flex-1">
-                     <Text className="text-white text-lg font-bold mb-1">Colaboraciones y testimonios</Text>
+                     <Text className="text-white text-lg font-bold mb-1">Historias reales</Text>
                      <Text className="text-gray-400 text-sm">Acceder a sección</Text>
                   </View>
                </View>
@@ -56,7 +56,7 @@ export default function HomeScreen() {
                      <Feather name="message-circle" size={26} color="#a855f7" />
                   </View>
                   <View className="flex-1">
-                     <Text className="text-white text-lg font-bold mb-1">Preguntas frecuentes</Text>
+                     <Text className="text-white text-lg font-bold mb-1">Resuelve tus dudas</Text>
                      <Text className="text-gray-400 text-sm">Acceder a sección</Text>
                   </View>
                </View>
@@ -72,7 +72,7 @@ export default function HomeScreen() {
                      <Feather name="heart" size={26} color={Colors.movapp.icon} />
                   </View>
                   <View className="flex-1">
-                     <Text className="text-white text-lg font-bold mb-1">Mente digital</Text>
+                     <Text className="text-white text-lg font-bold mb-1">Transforma tu mentalidad</Text>
                      <Text className="text-gray-400 text-sm">Acceder a sección</Text>
                   </View>
                </View>
