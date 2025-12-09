@@ -2,6 +2,12 @@
 
 # dependencies
 node_modules/
+.env
+.env.local
+.env.development  
+.env.test.local
+.env.production   
+
 
 # Expo
 .expo/
