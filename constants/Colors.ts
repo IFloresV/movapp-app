@@ -7,6 +7,7 @@ export const Colors = {
 
       primary: "#8149E2",
       text: "#ffffff",
+      textSecondary: "#d1d5db",
 
       linkBackgroundHome: "#0A0316",
       linkBackground: "#050505",

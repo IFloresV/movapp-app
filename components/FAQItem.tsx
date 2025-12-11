@@ -15,11 +15,11 @@ export default function FAQItem({ question, answer }: FAQItemProps) {
    return (
       <View className="mb-2 bg-movapp-linkBackgroundHome rounded-2xl overflow-hidden">
          <TouchableOpacity
-            className="flex-row items-center justify-between p-5"
+            className="flex-row items-center text-justify p-5"
             onPress={() => setIsExpanded(!isExpanded)}
             activeOpacity={0.7}
          >
-            <Text className="text-white text-base font-semibold flex-1 pr-4">{question}</Text>
+            <Text className="text-movapp-textSecondary text-center font-semibold flex-1 pr-4 ">{question}</Text>
             <View style={{ transform: [{ rotate: isExpanded ? "180deg" : "0deg" }] }}>
                <Feather name="chevron-down" size={24} color={Colors.movapp.primary} />
             </View>
@@ -27,8 +27,8 @@ export default function FAQItem({ question, answer }: FAQItemProps) {
 
          {isExpanded && (
             <View className="px-5 pb-5 pt-0">
-               <View className="h-px bg-gray-700 mb-4" />
-               <Text className="text-gray-300 text-base leading-6">{answer}</Text>
+               <View className="h-px bg-movapp-borderCard mb-4" />
+               <Text className="text-movapp-textSecondary text-justify leading-6">{answer}</Text>
             </View>
          )}
       </View>

@@ -88,10 +88,10 @@ const MOVAPP_SECTION = [
 function Section({ title, items }: { title: string; items: any[] }) {
    return (
       <View className="mb-4">
-         <Text className="text-white text-xl font-bold text-center mb-2">{title}</Text>
+         <Text className="text-movapp-textSecondary text-xl font-bold text-center mb-6">{title}</Text>
          <View>
             {items.map((it) => (
-               <View key={it.id} className="mb-3 px-2">
+               <View key={it.id} className="mb-3 px-2 ">
                   <FAQItem question={it.question ?? it.title} answer={it.answer ?? it.content} />
                </View>
             ))}

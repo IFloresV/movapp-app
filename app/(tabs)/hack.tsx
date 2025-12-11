@@ -95,9 +95,6 @@ export default function HackScreen() {
                   style={{ width: 150, height: 80, alignSelf: "center" }}
                   resizeMode="contain"
                />
-               <Text className="text-white text-xl font-bold text-center mt-3 mb-2 px-2">
-                  Nuestra solución al acoso de las apps de préstamo.
-               </Text>
 
                {hasPrices && (
                   <View className="flex-row items-center justify-center mb-6">

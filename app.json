@@ -58,7 +58,7 @@
          "typedRoutes": true
       },
       "extra": {
-         "API_URL": "https://api-stage.movapp.org/",
+         "API_URL": "http://192.168.3.31:5004/",
          "STRIPE_PUBLISHABLE_KEY": "pk_test_51SZkt4Hr7T4cDSzCMoM5OuhUVxvlUtxa900LiWzwqi9h2PZ0TFXVWh8FUeixwvvznuajyvy5gsjhW9kvmv1pSn1q00fTipXMeB",
          "router": {},
          "eas": {

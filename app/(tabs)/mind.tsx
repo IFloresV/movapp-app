@@ -1,5 +1,4 @@
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
-import SpotifyPlayer from "@/components/SpotifyPlayer";
 import { Image, ScrollView, Text } from "react-native";
 
 export default function MindScreen() {
@@ -15,7 +14,27 @@ export default function MindScreen() {
                   resizeMode="contain"
                />
 
-               <SpotifyPlayer playlistId="5KMbt5sI9mUetg1kIHRFGB" height={400} />
+               {/* <SpotifyPlayer playlistId="5KMbt5sI9mUetg1kIHRFGB" height={400} /> */}
+
+               <Text className=" text-white text-2xl text-center font-bold my-3">Bienvenido a mente digital</Text>
+
+               <Text className=" text-gray-300 text-base mb-2 text-justify">
+                  Este es un espacio dedicado a ayudarte a recuperar la paz emocional. Si has sido víctima de las
+                  aplicaciones no reguladas, llamadas montadeudas, y sientes que no hay salida, este es el lugar donde
+                  encontrarás las herramientas para sanar mental y emocionalmente. Dra. Dalia Te quiero guiar hacia un
+                  mayor bienestar emocional. Quiero brindarte las herramientas para que superes esta difícil situación y
+                  recuperes el control de tu vida.
+               </Text>
+
+               <Text className=" text-white text-2xl text-center font-bold my-3">
+                  Tu bienestar es importante para nosotros
+               </Text>
+               <Text className=" text-gray-300 text-base mb-2 text-justify">
+                  Sabemos que superar una situación como la que vives puede parecer abrumador, pero no estás solo. Con
+                  Movapp y el respaldo de Mente Digital, podrás encontrar un camino hacia la tranquilidad, tanto digital
+                  como emocional. Aquí, nos comprometemos a brindarte todo el apoyo necesario para que no solo protejas
+                  tus datos, sino que también recuperes la paz mental.
+               </Text>
 
                <Text className=" text-white text-2xl text-center font-bold my-3">
                   ¿Cómo obtener el apoyo psicológico?
