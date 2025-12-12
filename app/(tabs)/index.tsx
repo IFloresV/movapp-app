@@ -7,7 +7,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 import UserContext from "@/context/UserContext";
 
-import { Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Feather, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import YoutubePlayer from "react-native-youtube-iframe";
 
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
@@ -37,7 +37,7 @@ export default function HomeScreen() {
             >
                <View className="flex-row items-center flex-1">
                   <View className="bg-movapp-primary/20 p-3 rounded-xl mr-4">
-                     <FontAwesome name="handshake-o" size={24} color="#a855f7" />
+                     <FontAwesome6 name="people-group" size={24} color="#a855f7" />
                   </View>
                   <View className="flex-1">
                      <Text className="text-white text-lg font-bold mb-1">Historias reales</Text>

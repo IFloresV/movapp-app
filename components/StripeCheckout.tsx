@@ -1,5 +1,5 @@
 import { Colors } from "@/constants/Colors";
-import { API_URL } from "@/utils/Config";
+import Env from "@/utils/Config";
 import { useStripe } from "@stripe/stripe-react-native";
 import * as Linking from "expo-linking";
 import React, { useState } from "react";
@@ -52,7 +52,7 @@ export default function StripeCheckout({
          // enviar amount en unidades (ej. 2200.00). Si pasas amountCents como prop lo puedes convertir.
          const amountMajor = typeof amountCents === "number" ? Number((amountCents / 100).toFixed(2)) : computeAmount();
          const amountMinor = typeof amountCents === "number" ? amountCents : computeAmountCents();
-         const url = `${API_URL.replace(/\/+$/, "")}/payments/stripe/create-intent`;
+         const url = `${Env.API_URL.replace(/\/+$/, "")}/payments/stripe/create-intent`;
          // Enviar 'amount' en unidades; enviar amountCents también opcionalmente para compatibilidad
          const payload: any = { items: cart, currency: currencyToUse, amount: amountMajor, amountCents: amountMinor };
 

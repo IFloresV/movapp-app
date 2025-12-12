@@ -10,7 +10,7 @@ export default function MindScreen() {
 
                <Image
                   source={require("@/assets/images/mind.jpg")}
-                  style={{ width: 250, height: 300, alignSelf: "center", marginVertical: 24, borderRadius: 36 }}
+                  style={{ width: 150, height: 200, alignSelf: "center", marginVertical: 24, borderRadius: 22 }}
                   resizeMode="contain"
                />
 

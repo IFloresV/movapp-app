@@ -1,10 +1,9 @@
-import Constants from "expo-constants";
+export const API_URL = process.env.EXPO_PUBLIC_API_URL;
+export const STRIPE_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 
-const extra =
-   (Constants.expoConfig && (Constants.expoConfig as any).extra) ||
-   (Constants.manifest && (Constants.manifest as any).extra) ||
-   {};
+const Env = {
+   API_URL,
+   STRIPE_PUBLISHABLE_KEY,
+};
 
-export const API_URL = String(extra.API_URL);
-export const STRIPE_PUBLISHABLE_KEY = String(extra.STRIPE_PUBLISHABLE_KEY ?? "");
-export default { API_URL, STRIPE_PUBLISHABLE_KEY };
+export default Env;

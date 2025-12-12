@@ -1,9 +1,8 @@
 // api/ConfigService.ts
 
+import Env from "@/utils/Config";
 import axios from "axios";
-import Constants from "expo-constants";
-
-const { API_URL } = Constants.expoConfig?.extra as Record<string, string>;
+const { API_URL } = Env;
 
 const Service = {
    // --- Config ---

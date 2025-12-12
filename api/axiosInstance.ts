@@ -1,9 +1,9 @@
 // api/axiosInstance.ts
 import axios from "axios";
-import Constants from "expo-constants";
 import * as SecureStore from "expo-secure-store";
 
-const { API_URL } = Constants.expoConfig?.extra as Record<string, string>;
+import Env from "@/utils/Config";
+const { API_URL } = Env;
 
 const api = axios.create({
    baseURL: API_URL,

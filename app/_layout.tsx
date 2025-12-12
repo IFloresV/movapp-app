@@ -6,7 +6,10 @@ import { ConfigProvider } from "@/context/ConfigContext";
 import { RegisterProvider } from "@/context/RegisterContext";
 import { UserProvider } from "@/context/UserContext";
 
-import { STRIPE_PUBLISHABLE_KEY } from "@/utils/Config";
+import * as WebBrowser from "expo-web-browser";
+WebBrowser.maybeCompleteAuthSession(); // For Stripe OAuth flow Andoid
+
+import Env from "@/utils/Config";
 import { StripeProvider } from "@stripe/stripe-react-native";
 
 import "../global.css";
@@ -32,7 +35,7 @@ export default function RootLayout() {
    return (
       <>
          <SafeAreaProvider>
-            <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
+            <StripeProvider publishableKey={Env.STRIPE_PUBLISHABLE_KEY ?? ""}>
                <ConfigProvider>
                   <UserProvider>
                      <RegisterProvider>
