@@ -258,19 +258,25 @@ export default function RegisterScreen() {
                {/* Teléfono */}
                <View className="mb-4">
                   <Text className="text-white text-sm font-semibold mb-2">Número de Teléfono</Text>
-                  <TextInput
-                     className="bg-movapp-inputBackground text-white px-4 py-3 rounded-xl"
-                     value={formData.phone}
-                     onChangeText={(text) => handleChange("phone", text.replace(/[^0-9]/g, ""))}
-                     placeholder={
-                        selectedCountry?.codigo_telefono
-                           ? `(${selectedCountry.codigo_telefono}) 5511223344`
-                           : "5511223344"
-                     }
-                     placeholderTextColor={Colors.movapp.placeholderTextColor}
-                     keyboardType="number-pad"
-                     maxLength={12}
-                  />
+                  <View className="flex-row items-center bg-movapp-inputBackground rounded-xl">
+                     {/* Prefijo del país */}
+                     <View className="px-4 py-3 border-r border-gray-700">
+                        <Text className="text-white text-base font-semibold">
+                           {selectedCountry?.codigo_telefono || "+52"}
+                        </Text>
+                     </View>
+
+                     {/* Input del teléfono */}
+                     <TextInput
+                        className="flex-1 text-white px-4 py-3"
+                        value={formData.phone}
+                        onChangeText={(text) => handleChange("phone", text.replace(/[^0-9]/g, ""))}
+                        placeholder="5511223344"
+                        placeholderTextColor={Colors.movapp.placeholderTextColor}
+                        keyboardType="number-pad"
+                        maxLength={12}
+                     />
+                  </View>
                </View>
 
                {/* Contraseña */}

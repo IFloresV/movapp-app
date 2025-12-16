@@ -3,8 +3,8 @@ import api from "./axiosInstance";
 
 type RequestData = Record<string, any>;
 
-const saveToken = async (t: string) => SecureStore.setItemAsync("Token", t);
-const saveRefreshToken = async (t: string) => SecureStore.setItemAsync("RefreshToken", t);
+const saveToken = async (t: string) => SecureStore.setItemAsync("ACCESS_TOKEN", t);
+const saveRefreshToken = async (t: string) => SecureStore.setItemAsync("REFRESH_TOKEN", t);
 
 const Service = {
    register: async (data: RequestData) => {

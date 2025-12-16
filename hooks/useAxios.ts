@@ -31,10 +31,8 @@ export const useAxios = (endpoint: EndpointFn, timeout = 0) => {
       setLoading(true);
       setError("");
       try {
-         console.log("\x1b[35m", "Enviando solicitud con useAxios:", ...args);
-
          const response = await endpoint(...args);
-         console.log("\x1b[34m", "Respuesta recibida en useAxios:", response.data);
+         // console.log("\x1b[34m", "Respuesta recibida en useAxios:", response.data);
 
          setData(response.data);
 

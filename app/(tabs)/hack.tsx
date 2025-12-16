@@ -61,7 +61,7 @@ export default function HackScreen() {
       }
 
       // Si no hay usuario logueado pedir login
-      if (!user || !user.infoUser) {
+      if (!user || !user.infoUser || !user.logged) {
          setShowLoginModal(true);
          return;
       }
@@ -96,7 +96,7 @@ export default function HackScreen() {
                   resizeMode="contain"
                />
 
-               {hasPrices && (
+               {hasPrices && user?.logged && (
                   <View className="flex-row items-center justify-center mb-6">
                      <TouchableOpacity
                         onPress={decrement}
@@ -125,7 +125,7 @@ export default function HackScreen() {
 
                <View className="h-px bg-movapp-borderCard my-4" />
 
-               {hasPrices && (
+               {hasPrices && user?.logged && (
                   <View className="items-center mb-6">
                      <Text className="text-gray-400 text-sm mb-2">Tu pago es de:</Text>
                      <View className="flex-row items-center justify-center">
@@ -144,7 +144,7 @@ export default function HackScreen() {
                   onPress={handleBuy}
                >
                   <Text numberOfLines={1} ellipsizeMode="tail" className="text-white text-lg font-bold">
-                     {!hasPrices ? "Adquiere el Hack" : "Comprar"}
+                     {!hasPrices || !user?.logged ? "Adquiere el Hack" : "Comprar"}
                   </Text>
                </TouchableOpacity>
             </View>
