@@ -3,9 +3,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Colors } from "@/constants/Colors";
 import { useApp } from "@/context/AppContext";
-import { Feather } from "@expo/vector-icons";
+import { Feather, FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { Image, Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, Linking, Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 export type DrawerMenuItem = {
    name: string;
@@ -27,6 +27,8 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
    const isLoggedIn = user.logged;
    const userData = user.infoUser;
 
+   const whatsappNumber = process.env.EXPO_PUBLIC_WHATSAPP;
+
    const handleItemPress = (route: string) => {
       onClose();
       setTimeout(() => {
@@ -38,6 +40,39 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
       await logout();
       router.replace("/(auth)/login");
       onClose();
+   };
+
+   const handleWhatsAppPress = async () => {
+      if (!isLoggedIn) {
+         Alert.alert("Inicia Sesión", "Debes iniciar sesión para contactarnos por WhatsApp");
+         return;
+      }
+
+      if (!whatsappNumber) {
+         Alert.alert("Error", "Número de WhatsApp no configurado");
+         return;
+      }
+
+      // Limpiar número (quitar espacios, guiones, etc.)
+      const cleanNumber = whatsappNumber.replace(/\D/g, "");
+
+      // Construir URL de WhatsApp
+      const message = "Hola, necesito ayuda con MovApp";
+      const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
+
+      try {
+         const canOpen = await Linking.canOpenURL(whatsappUrl);
+
+         if (canOpen) {
+            await Linking.openURL(whatsappUrl);
+            onClose(); // Cerrar drawer después de abrir WhatsApp
+         } else {
+            Alert.alert("Error", "No se pudo abrir WhatsApp. Asegúrate de tenerlo instalado.");
+         }
+      } catch (error) {
+         console.error("Error opening WhatsApp:", error);
+         Alert.alert("Error", "No se pudo abrir WhatsApp");
+      }
    };
 
    return (
@@ -71,7 +106,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                   </View>
 
                   {/* Items */}
-                  <ScrollView className=" py-2">
+                  <ScrollView className="py-2">
                      {items.map((item, index) => (
                         <TouchableOpacity
                            key={item.name}
@@ -105,14 +140,35 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                         </TouchableOpacity>
                      ))}
 
-                     {user?.logged && (
+                     {/* ✅ WhatsApp Button (solo si está logueado) */}
+                     {isLoggedIn && (
                         <TouchableOpacity
-                           key={"logout"}
-                           className={`flex-row items-center px-6 py-5 mt-10 active:bg-red-800 `}
+                           key="whatsapp"
+                           className="flex-row items-center px-6 py-5 mt-6 active:bg-green-900 border-b border-gray-800"
+                           onPress={handleWhatsAppPress}
+                        >
+                           {/* Icono con fondo */}
+                           <View className="bg-green-500/20 p-3 rounded-xl mr-4">
+                              <FontAwesome name="whatsapp" size={24} color="#25D366" />
+                           </View>
+
+                           {/* Label */}
+                           <Text className="text-green-400 text-lg font-semibold flex-1">Contactar por WhatsApp</Text>
+
+                           {/* Flecha */}
+                           <Feather name="chevron-right" size={20} color="#25D366" />
+                        </TouchableOpacity>
+                     )}
+
+                     {/* Logout */}
+                     {isLoggedIn && (
+                        <TouchableOpacity
+                           key="logout"
+                           className="flex-row items-center px-6 py-5 mt-4 active:bg-red-800"
                            onPress={handleLogout}
                         >
                            <View className="bg-red-500/30 p-3 rounded-xl mr-4">
-                              <Feather name={"log-out"} size={24} color={"#A60D14"} />
+                              <Feather name="log-out" size={24} color="#A60D14" />
                            </View>
 
                            <Text className="text-red-500 text-lg font-semibold flex-1">Cerrar Sesión</Text>

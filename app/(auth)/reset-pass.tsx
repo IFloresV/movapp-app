@@ -11,13 +11,15 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import Service from "@/api/AuthService";
 import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
-import UserContext from "@/context/UserContext";
+import { useApp } from "@/context/AppContext";
+import { CartContext } from "@/context/CartContext";
 import { useAxios } from "@/hooks/useAxios";
 
 export default function ResetPasswordScreen() {
    const { email } = useLocalSearchParams();
    const router = useRouter();
-   const { login } = useContext(UserContext)!;
+   const { login } = useApp();
+   const cartContext = useContext(CartContext);
 
    const [formData, setFormData] = useState({
       code: "",
@@ -33,15 +35,35 @@ export default function ResetPasswordScreen() {
 
    useEffect(() => {
       if (!data) return;
+
       if (data.success) {
          (async () => {
-            login(data.user);
+            try {
+               const accessToken = data.accessToken;
+               const refreshToken = data.device?.refresh_hash;
 
-            Alert.alert("¡Contraseña Actualizada!", "Tu contraseña ha sido cambiada exitosamente", [
-               { text: "Continuar", onPress: () => router.replace("/") },
-            ]);
+               console.log("\x1b[33m[ResetPass] 🔑 Tokens:", { accessToken, refreshToken });
+               console.log("\x1b[33m[ResetPass] 👤 User:", data.user);
 
-            resetData();
+               // ✅ Limpiar carrito ANTES de hacer login
+               if (cartContext?.clearCart) {
+                  console.log("\x1b[33m[ResetPass] 🛒 Limpiando carrito...");
+                  await cartContext.clearCart();
+               }
+
+               // ✅ Hacer login (guarda credenciales + obtiene precios)
+               console.log("\x1b[32m[ResetPass] ✅ Ejecutando login...");
+               await login(data.user, accessToken, refreshToken);
+
+               Alert.alert("¡Contraseña Actualizada!", "Tu contraseña ha sido cambiada exitosamente", [
+                  { text: "Continuar", onPress: () => router.replace("/") },
+               ]);
+
+               resetData();
+            } catch (err) {
+               console.error("\x1b[31m[ResetPass] ❌ Error:", err);
+               Alert.alert("Error", "No se pudo completar el proceso");
+            }
          })();
       } else {
          const messages = data.errors
@@ -51,7 +73,7 @@ export default function ResetPasswordScreen() {
          Alert.alert("Error", messages);
          resetData();
       }
-   }, [data]);
+   }, [data, login, cartContext, resetData, router]);
 
    const getDeviceId = async (): Promise<string> => {
       let deviceId = await SecureStore.getItemAsync("deviceId");
@@ -123,7 +145,6 @@ export default function ResetPasswordScreen() {
                </Text>
             </View>
 
-            {/* Formulario */}
             <View className="px-7">
                {/* Email (read-only) */}
                <View className="mb-4">
