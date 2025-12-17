@@ -1,23 +1,20 @@
-import ConfigContext from "@/context/ConfigContext";
-import UserContext from "@/context/UserContext";
+import { useApp } from "@/context/AppContext";
 import { useRouter } from "expo-router";
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 
 export const useLogOut = () => {
-   const { logout } = useContext(UserContext)!;
-   const { dispatchConfig } = useContext(ConfigContext)!;
+   const { logout, clearConfig } = useApp();
    const router = useRouter();
 
    const handleLogout = useCallback(async () => {
-      // limpiar config
-      dispatchConfig({ type: "CLEAR_CONFIG" });
-
-      // cerrar sesión + SecureStore
-      await logout();
-
-      // redirigir
-      router.replace("/");
-   }, [dispatchConfig, logout, router]);
+      try {
+         clearConfig();
+         await logout();
+         router.replace("/");
+      } catch (error) {
+         console.error("\x1b[31m[useLogOut] ❌ Error en logout:", error);
+      }
+   }, [logout, clearConfig, router]);
 
    return { logout: handleLogout };
 };

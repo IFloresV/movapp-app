@@ -3,27 +3,26 @@ import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 
-import { useConfig } from "@/context/ConfigContext";
-import UserContext from "@/context/UserContext";
+import { useApp } from "@/context/AppContext";
 
 import AuthService from "@/api/AuthService";
-import ConfigService from "@/api/ConfigService";
 
 import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
 
 import { useAxios } from "@/hooks/useAxios";
 
+import { CartContext } from "@/context/CartContext";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function LoginScreen() {
-   const { login } = useContext(UserContext)!;
-   const { setPrecios } = useConfig();
+   const { login } = useApp();
    const router = useRouter();
-
+   const cartContext = useContext(CartContext);
    const [formData, setFormData] = useState({
       email: "",
       password: "",
@@ -31,7 +30,6 @@ export default function LoginScreen() {
    const [showPassword, setShowPassword] = useState(false);
 
    const [loginFetch, data, error, , loading, , resetData] = useAxios(AuthService.login);
-   const [pricesFetch, dataPrices, , , , , resetPricesData] = useAxios(ConfigService.getPrices);
 
    useEffect(() => {
       if (!data) return;
@@ -39,8 +37,9 @@ export default function LoginScreen() {
          (async () => {
             login(data.user);
             console.log("\x1b[34m", "USER =>", data.user);
-            const idcountry = data.user?.pais_id;
-            await pricesFetch(idcountry);
+            if (cartContext?.clearCart) {
+               await cartContext.clearCart();
+            }
 
             Alert.alert("¡Bienvenido de nuevo!", "Has iniciado sesión exitosamente", [
                { text: "Comenzar", onPress: () => router.replace("/") },
@@ -57,16 +56,6 @@ export default function LoginScreen() {
          resetData();
       }
    }, [data]);
-
-   useEffect(() => {
-      if (!dataPrices) return;
-      console.log("\x1b[33m", "precios =>", dataPrices);
-      if (dataPrices.success) {
-         console.log("Precios recibidos:", dataPrices.prices);
-         setPrecios(dataPrices.prices);
-         resetPricesData();
-      }
-   }, [dataPrices]);
 
    const getDeviceId = async (): Promise<string> => {
       let deviceId = await SecureStore.getItemAsync("deviceId");
@@ -118,11 +107,17 @@ export default function LoginScreen() {
    return (
       <View className="flex-1 bg-movapp-background">
          <Header showNotifications={false} showCart={false} />
-         <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+         <KeyboardAwareScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            enableOnAndroid={true}
+            enableAutomaticScroll={true}
+            extraScrollHeight={20}
+            contentContainerStyle={{ flexGrow: 1 }}
+         >
             <View className="items-center pt-32 pb-8">
                <Text className="text-white text-2xl font-bold mt-3">Inicia Sesión</Text>
             </View>
-
             {/* Formulario */}
             <View className="px-7">
                {/* Correo Electrónico */}
@@ -178,9 +173,8 @@ export default function LoginScreen() {
                   )}
                </TouchableOpacity>
             </View>
-
             {/* ¿Olvidaste tu contraseña? */}
-            <View className="flex-1">
+            <View className="mb-8 px-7 mt-4">
                <TouchableOpacity
                   onPress={() => router.push("/(auth)/forgot-pass")}
                   activeOpacity={0.7}
@@ -194,9 +188,8 @@ export default function LoginScreen() {
                   </Text>
                </TouchableOpacity>
             </View>
-
             {/* ¿No tienes cuenta? */}
-            <View className="flex-row justify-center mt-10">
+            <View className="flex-row justify-center mt-6">
                <Text className="text-white text-sm">¿No tienes una cuenta? </Text>
                <TouchableOpacity onPress={() => router.push("/(auth)/register")} activeOpacity={0.7} disabled={loading}>
                   <Text className="text-md font-semibold underline" style={{ color: Colors.movapp.primary }}>
@@ -204,16 +197,15 @@ export default function LoginScreen() {
                   </Text>
                </TouchableOpacity>
             </View>
-
             {/* Acceso sin login */}
-            <View className="flex-row justify-center mt-10 mb-8">
+            <View className="flex-row justify-center  mb-8 mt-4">
                <TouchableOpacity onPress={() => router.push("/")} activeOpacity={0.7} disabled={loading}>
                   <Text className="text-md font-semibold underline" style={{ color: Colors.movapp.primary }}>
                      Accede sin iniciar sesión
                   </Text>
                </TouchableOpacity>
             </View>
-         </ScrollView>
+         </KeyboardAwareScrollView>
       </View>
    );
 }

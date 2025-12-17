@@ -2,12 +2,10 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Colors } from "@/constants/Colors";
-import UserContext from "@/context/UserContext";
-import { useLogOut } from "@/hooks/useLogOut";
+import { useApp } from "@/context/AppContext";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useContext } from "react";
-import { Alert, Image, Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Image, Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 export type DrawerMenuItem = {
    name: string;
@@ -25,8 +23,9 @@ interface DrawerMenuProps {
 
 export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps) {
    const router = useRouter();
-   const { user } = useContext(UserContext)!;
-   const { logout } = useLogOut();
+   const { user, logout } = useApp();
+   const isLoggedIn = user.logged;
+   const userData = user.infoUser;
 
    const handleItemPress = (route: string) => {
       onClose();
@@ -35,10 +34,9 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
       }, 300);
    };
 
-   const handleLogout = () => {
-      console.log("\x1b[34m", "Logging out...");
-      logout();
-      Alert.alert("Sesión cerrada", "Has cerrado tu sesión.");
+   const handleLogout = async () => {
+      await logout();
+      router.replace("/(auth)/login");
       onClose();
    };
 

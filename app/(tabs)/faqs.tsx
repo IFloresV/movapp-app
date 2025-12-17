@@ -1,6 +1,7 @@
 // app/(tabs)/faqs.tsx
 import FAQItem from "@/components/FAQItem";
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
+import { useApp } from "@/context/AppContext";
 import React from "react";
 import { Image, Text, View } from "react-native";
 
@@ -101,6 +102,9 @@ function Section({ title, items }: { title: string; items: any[] }) {
 }
 
 export default function FAQsScreen() {
+   const { user } = useApp();
+   const isLoggedIn = user.logged;
+
    return (
       <LayoutWithNavigation scrollable={true}>
          <View className="px-4 py-1">

@@ -2,8 +2,8 @@
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 import StripeCheckout from "@/components/StripeCheckout";
 import { Colors } from "@/constants/Colors";
+import { useApp } from "@/context/AppContext";
 import { CartContext } from "@/context/CartContext";
-import UserContext from "@/context/UserContext";
 import { getImage } from "@/utils/Images";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -12,9 +12,12 @@ import { FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from "rea
 
 export default function CarScreen() {
    const { cart, addToCart, clearCart, decreaseQuantity, removeFromCart } = useContext(CartContext)!;
-   const { user } = useContext(UserContext) ?? {};
-   const user_id = user?.infoUser?.id ?? 0;
-   const email = user?.infoUser?.email ?? "";
+   const { user } = useApp();
+   const isLoggedIn = user.logged;
+   const userData = user.infoUser;
+
+   const user_id = userData?.id ?? 0;
+   const email = userData?.email ?? "";
    const router = useRouter();
 
    const getQty = (item: any) => item.quantity ?? 1;

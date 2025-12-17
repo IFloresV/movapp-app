@@ -1,13 +1,17 @@
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
+import { useApp } from "@/context/AppContext";
 import { CartContext } from "@/context/CartContext";
-import { useConfig } from "@/context/ConfigContext";
 import { useContext } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 
 import { getImage } from "@/utils/Images";
 
 export default function StoreScreen() {
-   const { config } = useConfig();
+   const { user, config } = useApp();
+   const isLoggedIn = user.logged;
+   const userData = user.infoUser;
+   const { precios } = config;
+
    const { addToCart } = useContext(CartContext)!;
 
    const preciosList: any[] = config?.precios || Object.values(config?.precios || {}).flat() || [];

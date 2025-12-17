@@ -80,11 +80,11 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
    // ==================== FETCH DATA (UNA SOLA VEZ) ====================
    useEffect(() => {
       if (isHydrated && !hasFetched.current) {
-         hasFetched.current = true; // ← Marcar como ejecutado
+         hasFetched.current = true;
          console.log("🌐 Fetching países...");
          fetchPaises().catch((err) => console.error("❌ Error fetching countries:", err));
       }
-   }, [isHydrated]); // ← NO incluir fetchPaises aquí
+   }, [isHydrated]);
 
    // ==================== UPDATE STATE FROM API ====================
    useEffect(() => {
@@ -94,6 +94,8 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
       const payloadPrecios = (dataPaises as any)?.precios;
 
       if (payloadCountries || payloadPrecios) {
+         console.log("");
+         console.log("------");
          console.log("📥 Actualizando países desde API");
          dispatchConfig({
             type: "SET_DATA",

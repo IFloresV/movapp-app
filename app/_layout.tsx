@@ -1,13 +1,13 @@
+// app/_layout.tsx
 import { useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { AppProvider } from "@/context/AppContext"; // 🎯 Nuevo contexto unificado
 import { CartProvider } from "@/context/CartContext";
-import { ConfigProvider } from "@/context/ConfigContext";
 import { RegisterProvider } from "@/context/RegisterContext";
-import { UserProvider } from "@/context/UserContext";
 
 import * as WebBrowser from "expo-web-browser";
-WebBrowser.maybeCompleteAuthSession(); // For Stripe OAuth flow Andoid
+WebBrowser.maybeCompleteAuthSession(); // For Stripe OAuth flow Android
 
 import Env from "@/utils/Config";
 import { StripeProvider } from "@stripe/stripe-react-native";
@@ -36,27 +36,25 @@ export default function RootLayout() {
       <>
          <SafeAreaProvider>
             <StripeProvider publishableKey={Env.STRIPE_PUBLISHABLE_KEY ?? ""}>
-               <ConfigProvider>
-                  <UserProvider>
-                     <RegisterProvider>
-                        <CartProvider>
-                           <Stack
-                              screenOptions={{
-                                 headerShown: false,
-                                 contentStyle: { backgroundColor: Colors.movapp.background },
-                                 animation: "slide_from_right",
-                                 gestureEnabled: true,
-                                 gestureDirection: "horizontal",
-                              }}
-                           >
-                              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                              <Stack.Screen name="reels" options={{ headerShown: false }} />
-                           </Stack>
-                        </CartProvider>
-                     </RegisterProvider>
-                  </UserProvider>
-               </ConfigProvider>
+               <AppProvider>
+                  <RegisterProvider>
+                     <CartProvider>
+                        <Stack
+                           screenOptions={{
+                              headerShown: false,
+                              contentStyle: { backgroundColor: Colors.movapp.background },
+                              animation: "slide_from_right",
+                              gestureEnabled: true,
+                              gestureDirection: "horizontal",
+                           }}
+                        >
+                           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                           <Stack.Screen name="reels" options={{ headerShown: false }} />
+                        </Stack>
+                     </CartProvider>
+                  </RegisterProvider>
+               </AppProvider>
             </StripeProvider>
          </SafeAreaProvider>
       </>

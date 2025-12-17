@@ -6,7 +6,7 @@ import Constants from "expo-constants";
 import * as Device from "expo-device";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
    ActivityIndicator,
    Alert,
@@ -21,18 +21,17 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import Service from "@/api/AuthService";
-import { useConfig } from "@/context/ConfigContext";
+import { useApp } from "@/context/AppContext";
 import { useRegister } from "@/context/RegisterContext";
-import UserContext from "@/context/UserContext";
+
 import { useAxios } from "@/hooks/useAxios";
 
 import { getFlag } from "@/utils/Flags";
 
 export default function RegisterScreen() {
-   const { dispatchUser } = useContext(UserContext)!;
+   const { config, reloadPaises, login } = useApp();
    const { acceptedTerms, setAcceptedTerms, acceptedPrivacy, setAcceptedPrivacy } = useRegister();
 
-   const { config, reloadPaises } = useConfig();
    const { paises } = config;
    const router = useRouter();
 
@@ -72,7 +71,7 @@ export default function RegisterScreen() {
 
       if (data.success) {
          (async () => {
-            dispatchUser({ type: "LOGIN", payload: data.user });
+            await login(data.user);
             clearStates();
 
             Alert.alert("Registro exitoso", "¡Bienvenido a Movapp!", [
@@ -185,7 +184,7 @@ export default function RegisterScreen() {
             extraScrollHeight={20}
             contentContainerStyle={{ flexGrow: 1 }}
          >
-            <View className="items-center pt-2 pb-4">
+            <View className="items-center pt-2 pb-">
                <Text className="text-white text-2xl font-bold mt-3">Crea tu cuenta</Text>
             </View>
 

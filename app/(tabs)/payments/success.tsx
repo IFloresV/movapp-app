@@ -1,10 +1,13 @@
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 import { Colors } from "@/constants/Colors";
+import { useApp } from "@/context/AppContext";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-export default function PaymentSuccess() {
+export default function PaymentSuccessScreen() {
+   const { user } = useApp();
+   const userData = user.infoUser;
    const router = useRouter();
 
    return (

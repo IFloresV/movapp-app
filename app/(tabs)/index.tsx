@@ -1,11 +1,11 @@
 // app/(tabs)/index.tsx
 
 import { useRouter } from "expo-router";
-import React, { useContext } from "react";
+import React from "react";
 
 import { Text, TouchableOpacity, View } from "react-native";
 
-import UserContext from "@/context/UserContext";
+import { useApp } from "@/context/AppContext";
 
 import { Feather, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import YoutubePlayer from "react-native-youtube-iframe";
@@ -14,9 +14,13 @@ import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 import { Colors } from "@/constants/Colors";
 
 export default function HomeScreen() {
-   const { user } = useContext(UserContext)!;
+   // ✅ Cambiar de useContext(UserContext) a useApp()
+   const { user } = useApp();
 
-   // console.log("user desde home", user);
+   // ✅ Acceder a la información del usuario
+   const isLoggedIn = user.logged;
+   const userData = user.infoUser;
+
    const router = useRouter();
 
    return (

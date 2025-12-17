@@ -1,7 +1,11 @@
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
+import { useApp } from "@/context/AppContext";
 import { Image, ScrollView, Text } from "react-native";
 
 export default function MindScreen() {
+   const { user } = useApp();
+   const isLoggedIn = user.logged;
+
    return (
       <>
          <LayoutWithNavigation>

@@ -5,8 +5,8 @@ import { Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Colors } from "@/constants/Colors";
+import { useApp } from "@/context/AppContext";
 import { CartContext } from "@/context/CartContext";
-import UserContext from "@/context/UserContext";
 
 import { useContext } from "react";
 
@@ -19,7 +19,10 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = true, logoType = 1 }) => {
    const router = useRouter();
 
-   const { user } = useContext(UserContext)!;
+   // ✅ Cambiar a useApp()
+   const { user } = useApp();
+   const isLoggedIn = user.logged;
+
    const { cart } = useContext(CartContext)!;
 
    // calcular cantidad de productos en carrito de forma segura
@@ -47,14 +50,14 @@ const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = tr
 
                {/* Iconos a la derecha */}
                <View style={{ width: 72 }} className="flex-row justify-end items-center space-x-2">
-                  {showNotifications && user.logged && (
+                  {showNotifications && isLoggedIn && (
                      <TouchableOpacity className="mr-4">
                         <Ionicons name="notifications-outline" size={24} color="white" />
                      </TouchableOpacity>
                   )}
 
                   {/* mostrar icono de carrito solo si usuario logueado y carrito tiene items */}
-                  {showCart && user.logged && itemsCount > 0 && (
+                  {showCart && isLoggedIn && itemsCount > 0 && (
                      <TouchableOpacity onPress={() => router.push("/car")} style={{ marginLeft: 8 }}>
                         <View>
                            <Ionicons name="cart-outline" size={28} color="white" />

@@ -1,14 +1,11 @@
 // app/(tabs)/profile.tsx
 import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
-import { useConfig } from "@/context/ConfigContext";
-import UserContext from "@/context/UserContext";
-import { getImage } from "@/utils/Images";
-
-import { useLogOut } from "@/hooks/useLogOut";
+import { useApp } from "@/context/AppContext";
 import { getFlag } from "@/utils/Flags";
+import { getImage } from "@/utils/Images";
 import { Feather } from "@expo/vector-icons";
-import { useContext } from "react";
+import { useRouter } from "expo-router";
 import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 interface Purchase {
@@ -21,22 +18,41 @@ interface Purchase {
 }
 
 export default function ProfileScreen() {
-   const { user } = useContext(UserContext)!;
+   const router = useRouter();
 
-   const { config } = useConfig();
-   const logoutHook = useLogOut();
-   const logout = logoutHook?.logout;
+   // ✅ Solo necesitas useApp - ya tiene todo
+   const { user, config, logout } = useApp();
 
-   const paises = config?.paises || [];
+   const isLoggedIn = user.logged;
+   const userData = user.infoUser;
+   const paises = config.paises;
 
-   const handleLogout = () => {
-      if (typeof logout !== "function") {
-         Alert.alert("Aviso", "No se pudo cerrar sesión en este momento.");
-         return;
-      }
-      console.log("\x1b[31m", "Logging out...");
-      Alert.alert("Sesión cerrada", "Has cerrado tu sesión.");
-      logout();
+   // ✅ Debug logs
+   console.log("👤 [Profile] userData:", userData);
+   console.log("👤 [Profile] pais_id del usuario:", userData?.pais_id);
+   console.log("🌍 [Profile] Total países cargados:", paises?.length || 0);
+   console.log("🌍 [Profile] Países:", paises);
+
+   // ✅ Función de logout simplificada - usa la del contexto
+   const handleLogout = async () => {
+      Alert.alert("Cerrar Sesión", "¿Estás seguro que deseas cerrar sesión?", [
+         { text: "Cancelar", style: "cancel" },
+         {
+            text: "Cerrar Sesión",
+            style: "destructive",
+            onPress: async () => {
+               try {
+                  console.log("\x1b[31m[Profile] Cerrando sesión...");
+                  await logout();
+                  Alert.alert("Sesión cerrada", "Has cerrado tu sesión correctamente.");
+                  router.replace("/(auth)/login");
+               } catch (error) {
+                  console.error("Error al cerrar sesión:", error);
+                  Alert.alert("Error", "No se pudo cerrar la sesión");
+               }
+            },
+         },
+      ]);
    };
 
    const purchases: Purchase[] = [
@@ -90,9 +106,16 @@ export default function ProfileScreen() {
       },
    ];
 
-   const selectedCountry = paises.find((p) => p.id === user?.infoUser?.pais_id);
+   // ✅ Buscar país por ID del usuario
+   const selectedCountry = paises.find((p) => p.id === userData?.pais_id);
+
+   console.log("🏳️ [Profile] País encontrado:", selectedCountry);
+
    const countryCode = selectedCountry?.codigo_pais || "MX";
-   const country = selectedCountry?.pais || "-";
+   const country = selectedCountry?.nombre || selectedCountry?.pais || "Cargando...";
+
+   console.log("🏳️ [Profile] Código país:", countryCode);
+   console.log("🏳️ [Profile] Nombre país:", country);
 
    return (
       <View className="flex-1 bg-black">
@@ -104,12 +127,13 @@ export default function ProfileScreen() {
                {/* Información Personal */}
                <View className="bg-movapp-card rounded-2xl p-2">
                   <Text className="text-white text-base font-bold mb-1">Información Personal</Text>
+
                   {/* Nombre */}
                   <View className="flex-row items-center mb-2">
                      <Feather name="user" size={16} color={Colors.movapp.primary} />
                      <View className="ml-3 flex-1">
                         <Text className="text-gray-400 text-xs mb-0.5">Nombre</Text>
-                        <Text className="text-white text-sm font-medium">{user?.infoUser?.nombre ?? "-"}</Text>
+                        <Text className="text-white text-sm font-medium">{userData?.nombre ?? "-"}</Text>
                      </View>
                   </View>
 
@@ -118,7 +142,7 @@ export default function ProfileScreen() {
                      <Feather name="phone" size={16} color={Colors.movapp.primary} />
                      <View className="ml-3 flex-1">
                         <Text className="text-gray-400 text-xs mb-0.5">Teléfono</Text>
-                        <Text className="text-white text-sm font-medium">{user?.infoUser?.telefono ?? "-"}</Text>
+                        <Text className="text-white text-sm font-medium">{userData?.telefono ?? "-"}</Text>
                      </View>
                   </View>
 
@@ -127,25 +151,44 @@ export default function ProfileScreen() {
                      <Feather name="mail" size={16} color={Colors.movapp.primary} />
                      <View className="ml-3 flex-1">
                         <Text className="text-gray-400 text-xs mb-0.5">Correo electrónico</Text>
-                        <Text className="text-white text-sm font-medium">{user?.infoUser?.email ?? "-"}</Text>
+                        <Text className="text-white text-sm font-medium">{userData?.email ?? "-"}</Text>
                      </View>
                   </View>
-                  {/* Pais */}
+
+                  {/* País */}
                   <View className="flex-row items-center">
                      <Feather name="flag" size={16} color={Colors.movapp.primary} />
                      <View className="ml-3 flex-1 flex-row items-center">
                         <Text style={{ fontSize: 20, marginRight: 8 }}>{getFlag(countryCode)}</Text>
-                        <Text style={{ fontSize: 16, color: "#fff" }}>- {country}</Text>
+                        <Text style={{ fontSize: 16, color: "#fff" }}>
+                           {country === "Cargando..." ? "Cargando..." : `- ${country}`}
+                        </Text>
                      </View>
                   </View>
+
+                  {/* ✅ Debug info en modo desarrollo */}
+                  {/* {__DEV__ && (
+                     <View className="mt-3 p-2 bg-gray-800 rounded">
+                        <Text className="text-yellow-400 text-xs mb-1">
+                           DEBUG - Usuario pais_id: {userData?.pais_id || "null"}
+                        </Text>
+                        <Text className="text-yellow-400 text-xs mb-1">Total países: {paises?.length || 0}</Text>
+                        <Text className="text-yellow-400 text-xs mb-1">
+                           País encontrado: {selectedCountry ? "SÍ" : "NO"}
+                        </Text>
+                        {selectedCountry && (
+                           <Text className="text-green-400 text-xs">País: {JSON.stringify(selectedCountry)}</Text>
+                        )}
+                     </View>
+                  )} */}
                </View>
             </View>
 
             {/* Historial de Compras */}
             {purchases.length > 0 && (
                <View
-                  className="bg-movapp-card rounded-3xl p-6 mb1 border border-movapp-borderCard border-opacity-50"
-                  style={{ height: 260 }} // Altura fija, ajusta según tu diseño
+                  className="bg-movapp-card rounded-3xl p-6 mb-2 border border-movapp-borderCard border-opacity-50"
+                  style={{ height: 260 }}
                >
                   <Text className="text-white text-base font-bold mb-2">Historial de Compras</Text>
                   <ScrollView
@@ -182,10 +225,7 @@ export default function ProfileScreen() {
             <View className="bg-movapp-card rounded-3xl p-6 mb-2 border border-movapp-borderCard border-opacity-50">
                <Text className="text-white text-base font-bold mb-2">Configuración</Text>
 
-               <TouchableOpacity
-                  className="flex-row items-center justify-between py-3.5"
-                  // style={{ borderBottomWidth: 1, borderBottomColor: Colors.movapp.borderCard }}
-               >
+               <TouchableOpacity className="flex-row items-center justify-between py-3.5">
                   <View className="flex-row items-center flex-1">
                      <Feather name="bell" size={20} color={Colors.movapp.primary} />
                      <Text className="text-white text-sm font-medium ml-3">Preferencias de Notificación</Text>
@@ -198,9 +238,8 @@ export default function ProfileScreen() {
             </View>
 
             {/* Botón Cerrar Sesión */}
-
             <TouchableOpacity
-               className="bg-red-700/70  py-4 rounded-xl items-center"
+               className="bg-red-700/70 py-4 rounded-xl items-center mb-6"
                activeOpacity={0.8}
                onPress={handleLogout}
             >
@@ -208,6 +247,5 @@ export default function ProfileScreen() {
             </TouchableOpacity>
          </ScrollView>
       </View>
-      // </LayoutWithNavigation>
    );
 }

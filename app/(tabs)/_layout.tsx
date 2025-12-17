@@ -1,12 +1,11 @@
 // app/(tabs)/_layout.tsx
 import DrawerMenu, { DrawerMenuItem } from "@/components/DrawerMenu";
 import { Colors } from "@/constants/Colors";
+import { useApp } from "@/context/AppContext";
 import { Feather } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Image, Pressable, View } from "react-native";
-
-import UserContext from "@/context/UserContext";
 
 type TabIconConfig =
    | { type: "feather"; icon: keyof typeof Feather.glyphMap; label: string }
@@ -79,13 +78,22 @@ const renderTabIcon = (config: TabIconConfig & { width?: number; height?: number
 
 export default function TabsLayout() {
    const [drawerVisible, setDrawerVisible] = useState(false);
-   const { user } = useContext(UserContext)!;
+
+   // ✅ Usar el nuevo contexto unificado
+   const { user, isHydrated } = useApp();
+
+   // ✅ Esperar a que se complete la hidratación
+   if (!isHydrated) {
+      return null;
+   }
+
+   const isLoggedIn = user.logged;
 
    const filteredDrawerItems = DRAWER_MENU_ITEMS.filter((item) => {
-      if (!user?.logged && item.name === "profile") return false;
-      if (!user?.logged && item.name === "store") return false;
-      if (user?.logged && item.name === "register") return false;
-      if (user?.logged && item.name === "login") return false;
+      if (!isLoggedIn && item.name === "profile") return false;
+      if (!isLoggedIn && item.name === "store") return false;
+      if (isLoggedIn && item.name === "register") return false;
+      if (isLoggedIn && item.name === "login") return false;
       return true;
    });
 
@@ -135,10 +143,8 @@ export default function TabsLayout() {
 
             {/* Pantallas ocultas del tab bar pero accesibles por navegación */}
             <Tabs.Screen name="car" options={{ href: null }} />
-
             <Tabs.Screen name="colaborations" options={{ href: null }} />
             <Tabs.Screen name="faqs" options={{ href: null }} />
-
             <Tabs.Screen name="mind" options={{ href: null }} />
             <Tabs.Screen name="profile" options={{ href: null }} />
             <Tabs.Screen name="store" options={{ href: null }} />

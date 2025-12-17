@@ -2,10 +2,14 @@
 import React from "react";
 
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
+import { useApp } from "@/context/AppContext";
 import { Text, View } from "react-native";
 import YoutubePlayer from "react-native-youtube-iframe";
 
-export default function ColaborationScreen() {
+export default function ColaborationsScreen() {
+   const { user } = useApp();
+   const isLoggedIn = user.logged;
+
    return (
       <LayoutWithNavigation scrollable={true}>
          <Text className="text-white text-2xl font-bold my-4 text-center">Historias reales</Text>

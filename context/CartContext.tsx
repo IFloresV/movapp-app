@@ -1,6 +1,6 @@
 import { CartContextType, CartItem, ProductBase } from "@/interfaces/cart.interfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { createContext, ReactNode, useEffect, useState } from "react";
+import React, { createContext, ReactNode, useCallback, useEffect, useState } from "react";
 
 export const CartContext = createContext<CartContextType | null>(null);
 
@@ -9,8 +9,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
    useEffect(() => {
       const loadCart = async () => {
-         const storedCart = await AsyncStorage.getItem("cart");
-         if (storedCart) setCart(JSON.parse(storedCart));
+         try {
+            const storedCart = await AsyncStorage.getItem("cart");
+            if (storedCart) {
+               setCart(JSON.parse(storedCart));
+            }
+         } catch (error) {
+            console.error("Error loading cart:", error);
+         }
       };
       loadCart();
    }, []);
@@ -66,7 +72,16 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       setCart((prev) => prev.filter((p) => p.producto_id !== producto_id));
    };
 
-   const clearCart = () => setCart([]);
+   const clearCart = useCallback(async () => {
+      try {
+         // Limpiar estado
+         setCart([]);
+         // Limpiar AsyncStorage
+         await AsyncStorage.removeItem("cart");
+      } catch (error) {
+         console.error("\x1b[31m[CartContext] ❌ Error limpiando carrito:", error);
+      }
+   }, []);
 
    return (
       <CartContext.Provider value={{ cart, addToCart, decreaseQuantity, removeFromCart, clearCart }}>

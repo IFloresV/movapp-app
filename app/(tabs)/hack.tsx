@@ -3,26 +3,25 @@ import { useRouter } from "expo-router";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
+import { useApp } from "@/context/AppContext";
 import { CartContext } from "@/context/CartContext"; // <-- nuevo import
-import { useConfig } from "@/context/ConfigContext";
-import UserContext from "@/context/UserContext";
 import { getFlag } from "@/utils/Flags";
 
 export default function HackScreen() {
-   const { config } = useConfig();
-   const { user } = useContext(UserContext)!;
+   const { user, config } = useApp();
+   const isLoggedIn = user.logged;
+   const { paises, precios } = config;
    const { cart, addToCart, decreaseQuantity } = useContext(CartContext)!; // <-- usar contexto carrito
    const router = useRouter();
-   const { paises } = config;
 
    const [showLoginModal, setShowLoginModal] = useState(false);
 
-   const hasPrices = config?.precios && config.precios.length > 0;
+   const hasPrices = precios && precios.length > 0;
 
    const hackPrice = useMemo(() => {
       if (!hasPrices) return null;
-      return (config.precios ?? []).find((p) => (p.sku || "").toUpperCase() === "PROD-001") || null;
-   }, [config.precios, hasPrices]);
+      return (precios ?? []).find((p) => (p.sku || "").toUpperCase() === "PROD-001") || null;
+   }, [precios, hasPrices]);
 
    const cartItem = useMemo(() => {
       if (!cart || !hackPrice) return null;
@@ -61,7 +60,7 @@ export default function HackScreen() {
       }
 
       // Si no hay usuario logueado pedir login
-      if (!user || !user.infoUser || !user.logged) {
+      if (!user || !user.infoUser || !isLoggedIn) {
          setShowLoginModal(true);
          return;
       }
@@ -96,7 +95,7 @@ export default function HackScreen() {
                   resizeMode="contain"
                />
 
-               {hasPrices && user?.logged && (
+               {hasPrices && isLoggedIn && (
                   <View className="flex-row items-center justify-center mb-6">
                      <TouchableOpacity
                         onPress={decrement}
@@ -125,7 +124,7 @@ export default function HackScreen() {
 
                <View className="h-px bg-movapp-borderCard my-4" />
 
-               {hasPrices && user?.logged && (
+               {hasPrices && isLoggedIn && (
                   <View className="items-center mb-6">
                      <Text className="text-gray-400 text-sm mb-2">Tu pago es de:</Text>
                      <View className="flex-row items-center justify-center">
