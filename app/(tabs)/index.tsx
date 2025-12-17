@@ -7,8 +7,8 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 import { useApp } from "@/context/AppContext";
 
+import VimeoPlayer from "@/components/VimeoPlayer";
 import { Feather, FontAwesome6, Ionicons } from "@expo/vector-icons";
-import YoutubePlayer from "react-native-youtube-iframe";
 
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 import { Colors } from "@/constants/Colors";
@@ -25,10 +25,10 @@ export default function HomeScreen() {
 
    return (
       <LayoutWithNavigation scrollable={true}>
-         {/* Video Section - YouTube */}
+         {/* Video Banner - Vimeo */}
          <View className="px-4 mt-4">
             <View className="w-full h-64 rounded-lg overflow-hidden">
-               <YoutubePlayer height={256} videoId="jQ5_wLifuAU" play={false} />
+               <VimeoPlayer videoId="1147159129" autoplay={false} loop={false} muted={false} controls={true} />
             </View>
          </View>
 

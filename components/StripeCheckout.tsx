@@ -52,7 +52,8 @@ export default function StripeCheckout({
          // enviar amount en unidades (ej. 2200.00). Si pasas amountCents como prop lo puedes convertir.
          const amountMajor = typeof amountCents === "number" ? Number((amountCents / 100).toFixed(2)) : computeAmount();
          const amountMinor = typeof amountCents === "number" ? amountCents : computeAmountCents();
-         const url = `${Env.API_URL.replace(/\/+$/, "")}/payments/stripe/create-intent`;
+         const apiUrl = Env.API_URL ?? "";
+         const url = `${apiUrl.replace(/\/+$/, "")}/payments/stripe/create-intent`;
          // Enviar 'amount' en unidades; enviar amountCents también opcionalmente para compatibilidad
          const payload: any = { items: cart, currency: currencyToUse, amount: amountMajor, amountCents: amountMinor };
 
