@@ -33,17 +33,23 @@ export default function ResetPasswordScreen() {
 
    const [resetPasswordFetch, data, error, , loading, , resetData] = useAxios(Service.resetPassword);
 
+   // ✅ Procesar respuesta solo cuando cambie data
    useEffect(() => {
       if (!data) return;
 
-      if (data.success) {
-         (async () => {
+      const processResponse = async () => {
+         if (data.success) {
             try {
                const accessToken = data.accessToken;
                const refreshToken = data.device?.refresh_hash;
 
-               console.log("\x1b[33m[ResetPass] 🔑 Tokens:", { accessToken, refreshToken });
-               console.log("\x1b[33m[ResetPass] 👤 User:", data.user);
+               console.log("\x1b[33m[ResetPass] 🔑 Processing response...");
+
+               if (!accessToken || !refreshToken) {
+                  console.error("\x1b[31m[ResetPass] ❌ Tokens missing");
+                  Alert.alert("Error", "No se recibieron los tokens de autenticación");
+                  return;
+               }
 
                // ✅ Limpiar carrito ANTES de hacer login
                if (cartContext?.clearCart) {
@@ -55,25 +61,36 @@ export default function ResetPasswordScreen() {
                console.log("\x1b[32m[ResetPass] ✅ Ejecutando login...");
                await login(data.user, accessToken, refreshToken);
 
-               Alert.alert("¡Contraseña Actualizada!", "Tu contraseña ha sido cambiada exitosamente", [
-                  { text: "Continuar", onPress: () => router.replace("/") },
-               ]);
+               console.log("\x1b[32m[ResetPass] ✅ Login completado");
 
-               resetData();
+               // ✅ Mostrar alerta y navegar
+               Alert.alert("¡Contraseña Actualizada!", "Tu contraseña ha sido cambiada exitosamente", [
+                  {
+                     text: "Continuar",
+                     onPress: () => {
+                        router.replace("/");
+                     },
+                  },
+               ]);
             } catch (err) {
                console.error("\x1b[31m[ResetPass] ❌ Error:", err);
                Alert.alert("Error", "No se pudo completar el proceso");
+            } finally {
+               // ✅ Limpiar SIEMPRE al final
+               resetData();
             }
-         })();
-      } else {
-         const messages = data.errors
-            ? data.errors.map((e: { msg: string }) => e.msg).join("\n")
-            : data.message || "No se pudo cambiar la contraseña";
+         } else {
+            const messages = data.errors
+               ? data.errors.map((e: { msg: string }) => e.msg).join("\n")
+               : data.message || "No se pudo cambiar la contraseña";
 
-         Alert.alert("Error", messages);
-         resetData();
-      }
-   }, [data, login, cartContext, resetData, router]);
+            Alert.alert("Error", messages);
+            resetData();
+         }
+      };
+
+      processResponse();
+   }, [data]); // Solo escucha cambios en data
 
    const getDeviceId = async (): Promise<string> => {
       let deviceId = await SecureStore.getItemAsync("deviceId");
