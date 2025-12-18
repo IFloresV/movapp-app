@@ -53,25 +53,16 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
          return;
       }
 
-      // Limpiar número (quitar espacios, guiones, etc.)
       const cleanNumber = whatsappNumber.replace(/\D/g, "");
-
-      // Construir URL de WhatsApp
       const message = "Hola, necesito ayuda con MovApp";
       const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
 
       try {
-         const canOpen = await Linking.canOpenURL(whatsappUrl);
-
-         if (canOpen) {
-            await Linking.openURL(whatsappUrl);
-            onClose(); // Cerrar drawer después de abrir WhatsApp
-         } else {
-            Alert.alert("Error", "No se pudo abrir WhatsApp. Asegúrate de tenerlo instalado.");
-         }
+         await Linking.openURL(whatsappUrl);
+         onClose();
       } catch (error) {
          console.error("Error opening WhatsApp:", error);
-         Alert.alert("Error", "No se pudo abrir WhatsApp");
+         Alert.alert("Error", "No se pudo abrir WhatsApp. Intenta nuevamente.");
       }
    };
 
@@ -110,9 +101,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                      {items.map((item, index) => (
                         <TouchableOpacity
                            key={item.name}
-                           className={`flex-row items-center px-6 py-5 active:bg-gray-800 ${
-                              index < items.length - 1 ? "border-b border-gray-800" : ""
-                           }`}
+                           className="flex-row items-center px-6 py-5 active:bg-gray-800 border-b border-gray-800"
                            onPress={() => handleItemPress(item.route)}
                         >
                            {/* Icono con fondo */}
@@ -140,11 +129,11 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                         </TouchableOpacity>
                      ))}
 
-                     {/* ✅ WhatsApp Button (solo si está logueado) */}
+                     {/* WhatsApp Button */}
                      {isLoggedIn && (
                         <TouchableOpacity
                            key="whatsapp"
-                           className="flex-row items-center px-6 py-5 mt-6 active:bg-green-900 border-b border-gray-800"
+                           className="flex-row items-center px-6 py-5 active:bg-green-900 border-b border-gray-800"
                            onPress={handleWhatsAppPress}
                         >
                            {/* Icono con fondo */}
@@ -164,7 +153,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                      {isLoggedIn && (
                         <TouchableOpacity
                            key="logout"
-                           className="flex-row items-center px-6 py-5 mt-4 active:bg-red-800"
+                           className="flex-row items-center px-6 py-5 active:bg-red-800"
                            onPress={handleLogout}
                         >
                            <View className="bg-red-500/30 p-3 rounded-xl mr-4">
