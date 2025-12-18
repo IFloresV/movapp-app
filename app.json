@@ -27,7 +27,8 @@
          },
          "edgeToEdgeEnabled": true,
          "package": "com.movapp.mobile",
-         "minSdkVersion": 21
+         "minSdkVersion": 21,
+         "permissions": ["NOTIFICATIONS"]
       },
 
       "web": {
