@@ -12,7 +12,11 @@
          "supportsTablet": true,
          "bundleIdentifier": "com.movapp.mobile",
          "infoPlist": {
-            "ITSAppUsesNonExemptEncryption": false
+            "ITSAppUsesNonExemptEncryption": false,
+            "NSCameraUsageDescription": "Movapp necesita acceso a la cámara para permitir cargar imágenes y completar funcionalidades dentro de la plataforma.",
+            "NSPhotoLibraryUsageDescription": "Movapp necesita acceso a tus fotos para permitir cargar imágenes dentro de la plataforma.",
+            "NSPhotoLibraryAddUsageDescription": "Movapp necesita guardar imágenes en tu galería cuando el usuario lo solicita.",
+            "NSUserNotificationsUsageDescription": "Movapp utiliza notificaciones para enviarte avisos importantes sobre tu cuenta, servicios, pagos y actualizaciones relevantes."
          }
       },
 
