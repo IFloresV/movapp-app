@@ -184,8 +184,8 @@ export default function RegisterScreen() {
             extraScrollHeight={20}
             contentContainerStyle={{ flexGrow: 1 }}
          >
-            <View className="items-center pt-2 pb-">
-               <Text className="text-white text-2xl font-bold mt-3">Crea tu cuenta</Text>
+            <View className="items-center ">
+               <Text className="text-white text-2xl font-bold mb-4">Crea tu cuenta</Text>
             </View>
 
             <View className="px-7">
@@ -381,7 +381,7 @@ export default function RegisterScreen() {
                {/* Botón */}
                <TouchableOpacity
                   onPress={handleRegister}
-                  className="py-4 rounded-xl items-center mb-4"
+                  className="py-4 rounded-xl items-center mb-1"
                   style={{ backgroundColor: Colors.movapp.primary }}
                   activeOpacity={0.8}
                >

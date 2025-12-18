@@ -15,6 +15,12 @@ export default function ColaborationsScreen() {
                <VimeoPlayer videoId="1147159629" autoplay={false} loop={false} muted={false} controls={true} />
             </View>
          </View>
+
+         <View className="px-4 mt-4">
+            <View className="w-full h-64 rounded-lg overflow-hidden">
+               <VimeoPlayer videoId="1147159682" autoplay={false} loop={false} muted={false} controls={true} />
+            </View>
+         </View>
       </LayoutWithNavigation>
    );
 }

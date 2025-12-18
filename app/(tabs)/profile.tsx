@@ -56,54 +56,22 @@ export default function ProfileScreen() {
    };
 
    const purchases: Purchase[] = [
-      {
-         id: "1",
-         title: "El Hack",
-         price: "$500.00",
-         date: "08 de Julio, 2025",
-         img: "PROD-001",
-         bgColor: "#000000",
-      },
-      {
-         id: "2",
-         title: "Guía de Meditación Consciente",
-         price: "$250.00",
-         date: "12 de Junio, 2025",
-         img: "PROD-002",
-         bgColor: "#000000",
-      },
-      {
-         id: "3",
-         title: "Taller de Inteligencia Emocional",
-         price: "$250.00",
-         date: "05 de Agosto, 2025",
-         img: "PROD-003",
-         bgColor: "#00000",
-      },
-      {
-         id: "4",
-         title: "Taller de Inteligencia Emocional",
-         price: "$250.00",
-         date: "05 de Agosto, 2025",
-         img: "PROD-003",
-         bgColor: "#00000",
-      },
-      {
-         id: "5",
-         title: "Taller de Inteligencia Emocional",
-         price: "$250.00",
-         date: "05 de Agosto, 2025",
-         img: "PROD-002",
-         bgColor: "#00000",
-      },
-      {
-         id: "6",
-         title: "Taller de Inteligencia Emocional",
-         price: "$250.00",
-         date: "05 de Agosto, 2025",
-         img: "PROD-001",
-         bgColor: "#00000",
-      },
+      // {
+      //    id: "1",
+      //    title: "El Hack",
+      //    price: "$500.00",
+      //    date: "08 de Julio, 2025",
+      //    img: "PROD-001",
+      //    bgColor: "#000000",
+      // },
+      // {
+      //    id: "2",
+      //    title: "Guía de Meditación Consciente",
+      //    price: "$250.00",
+      //    date: "12 de Junio, 2025",
+      //    img: "PROD-002",
+      //    bgColor: "#000000",
+      // },
    ];
 
    // ✅ Buscar país por ID del usuario
