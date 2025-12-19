@@ -7,6 +7,7 @@ const { API_URL } = Env;
 
 const api = axios.create({
    baseURL: API_URL,
+   timeout: 20000, // ✅ 20 segundos por defecto
    validateStatus: () => true, // Permite manejar todos los status codes
 });
 
@@ -38,10 +39,13 @@ api.interceptors.request.use(
       }
       return config;
    },
-   (error) => Promise.reject(error),
+   (error) => {
+      console.error("\x1b[31m[API] ❌ Request error:", error);
+      return Promise.reject(error);
+   },
 );
 
-// RESPONSE INTERCEPTOR: Maneja token expirado
+// RESPONSE INTERCEPTOR: Maneja token expirado y timeouts
 api.interceptors.response.use(
    (response) => {
       // Si no es 401, retornar respuesta normal
@@ -52,7 +56,23 @@ api.interceptors.response.use(
       // Si es 401, intentar refresh
       return handleUnauthorized(response);
    },
-   (error) => Promise.reject(error),
+   (error) => {
+      // ✅ Manejo de timeout
+      if (error.code === "ECONNABORTED" || error.message?.includes("timeout")) {
+         console.error("\x1b[31m[API] ⏱️ Timeout después de 30s");
+         error.message = "TIMEOUT";
+         error.isTimeout = true;
+      }
+
+      // ✅ Manejo de errores de red
+      if (error.code === "ERR_NETWORK" || error.message?.includes("Network")) {
+         console.error("\x1b[31m[API] 📡 Network error");
+         error.message = "NETWORK_ERROR";
+         error.isNetworkError = true;
+      }
+
+      return Promise.reject(error);
+   },
 );
 
 const handleUnauthorized = async (originalResponse: any) => {
@@ -60,7 +80,7 @@ const handleUnauthorized = async (originalResponse: any) => {
 
    // Evitar loop infinito
    if (originalRequest._retry) {
-      console.log("❌ Refresh ya intentado, redirigir a login");
+      console.log("\x1b[31m[API] ❌ Refresh ya intentado, redirigir a login");
       return originalResponse;
    }
 
@@ -81,16 +101,15 @@ const handleUnauthorized = async (originalResponse: any) => {
       const refreshToken = await getRefreshToken();
 
       if (!refreshToken) {
-         console.log("❌ No hay refresh token");
+         console.log("\x1b[31m[API] ❌ No hay refresh token");
          isRefreshing = false;
          return originalResponse;
       }
 
-      console.log("🔄 Intentando refrescar token...");
+      console.log("\x1b[33m[API] 🔄 Intentando refrescar token...");
 
-      const refreshResponse = await axios.post(`${API_URL}auth/refresh`, {
-         refreshToken,
-      });
+      // ✅ Refresh con timeout de 10 segundos
+      const refreshResponse = await axios.post(`${API_URL}auth/refresh`, { refreshToken }, { timeout: 10000 });
 
       if (refreshResponse.data?.accessToken) {
          const newAccessToken = refreshResponse.data.accessToken;
@@ -100,7 +119,7 @@ const handleUnauthorized = async (originalResponse: any) => {
          await saveToken(newAccessToken);
          await saveRefreshToken(newRefreshToken);
 
-         console.log("✅ Token refrescado exitosamente");
+         console.log("\x1b[32m[API] ✅ Token refrescado exitosamente");
 
          // Notificar a requests en espera
          onRefreshed(newAccessToken);
@@ -111,17 +130,20 @@ const handleUnauthorized = async (originalResponse: any) => {
          return api(originalRequest);
       }
 
-      console.log("❌ No se recibió accessToken en refresh");
+      console.log("\x1b[31m[API] ❌ No se recibió accessToken en refresh");
       isRefreshing = false;
       return originalResponse;
-   } catch (error) {
-      console.error("❌ Error al refrescar token:", error);
+   } catch (error: any) {
+      console.error("\x1b[31m[API] ❌ Error al refrescar token:", error.message);
       isRefreshing = false;
 
-      // Limpiar tokens si el refresh falló
-      await SecureStore.deleteItemAsync("ACCESS_TOKEN");
-      await SecureStore.deleteItemAsync("REFRESH_TOKEN");
-      await SecureStore.deleteItemAsync("USER_DATA");
+      // ✅ Si el refresh falló por timeout, no borrar tokens (podría ser problema de red)
+      if (error.code !== "ECONNABORTED") {
+         // Limpiar tokens solo si NO es timeout
+         await SecureStore.deleteItemAsync("ACCESS_TOKEN");
+         await SecureStore.deleteItemAsync("REFRESH_TOKEN");
+         await SecureStore.deleteItemAsync("USER_DATA");
+      }
 
       return originalResponse;
    }
