@@ -104,15 +104,6 @@ export default function LoginScreen() {
       }
    };
 
-   useEffect(() => {
-      if (error) {
-         Alert.alert("Error", error);
-      }
-      return () => {
-         resetData;
-      };
-   }, [error]);
-
    return (
       <View className="flex-1 bg-movapp-background">
          <Header showNotifications={false} showCart={false} />

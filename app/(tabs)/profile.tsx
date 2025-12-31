@@ -1,39 +1,66 @@
 // app/(tabs)/profile.tsx
+import OrderService, { OrderItem } from "@/api/OrderService";
 import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
 import { useApp } from "@/context/AppContext";
 import { getFlag } from "@/utils/Flags";
 import { getImage } from "@/utils/Images";
 import { Feather } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
-
-interface Purchase {
-   id: string;
-   title: string;
-   price: string;
-   date: string;
-   img: string;
-   bgColor: string;
-}
+import { useCallback, useState } from "react";
+import { ActivityIndicator, Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 export default function ProfileScreen() {
    const router = useRouter();
-
-   // ✅ Solo necesitas useApp - ya tiene todo
    const { user, config, logout } = useApp();
 
    const isLoggedIn = user.logged;
    const userData = user.infoUser;
    const paises = config.paises;
 
-   // ✅ Debug logs
-   console.log("👤 [Profile] userData:", userData);
-   console.log("👤 [Profile] pais_id del usuario:", userData?.pais_id);
-   console.log("🌍 [Profile] Total países cargados:", paises?.length || 0);
-   console.log("🌍 [Profile] Países:", paises);
+   // Estados para las órdenes
+   const [purchases, setPurchases] = useState<OrderItem[]>([]);
+   const [loadingOrders, setLoadingOrders] = useState(true);
+   const [error, setError] = useState<string | null>(null);
 
-   // ✅ Función de logout simplificada - usa la del contexto
+   // Función para cargar órdenes
+   const fetchOrders = useCallback(async () => {
+      if (!isLoggedIn || !userData?.user_uuid) {
+         setLoadingOrders(false);
+         return;
+      }
+
+      try {
+         setLoadingOrders(true);
+         setError(null);
+
+         // console.log("📦 [Profile] Cargando órdenes para:", userData.user_uuid);
+         const response = await OrderService.getPaidOrders(userData.user_uuid);
+         // console.log("\x1b[35m", "getPaidOrders =>", response);
+         if (response.success && response.orders && response.orders.length > 0) {
+            setPurchases(response.orders);
+         } else {
+            console.log("⚠️ [Profile] No se pudieron cargar las órdenes");
+            setPurchases([]);
+         }
+      } catch (err) {
+         console.error("❌ [Profile] Error al cargar órdenes:", err);
+         setError(err instanceof Error ? err.message : "Error desconocido");
+         setPurchases([]);
+      } finally {
+         setLoadingOrders(false);
+      }
+   }, [isLoggedIn, userData?.user_uuid]);
+
+   // Recargar órdenes cada vez que la pantalla obtiene el foco
+   useFocusEffect(
+      useCallback(() => {
+         // console.log("🔄 [Profile] Pantalla en foco - Recargando órdenes");
+         fetchOrders();
+      }, [fetchOrders]),
+   );
+
    const handleLogout = async () => {
       Alert.alert("Cerrar Sesión", "¿Estás seguro que deseas cerrar sesión?", [
          { text: "Cancelar", style: "cancel" },
@@ -42,7 +69,7 @@ export default function ProfileScreen() {
             style: "destructive",
             onPress: async () => {
                try {
-                  console.log("\x1b[31m[Profile] Cerrando sesión...");
+                  // console.log("\x1b[31m[Profile] Cerrando sesión...");
                   await logout();
                   Alert.alert("Sesión cerrada", "Has cerrado tu sesión correctamente.");
                   router.replace("/(auth)/login");
@@ -55,35 +82,9 @@ export default function ProfileScreen() {
       ]);
    };
 
-   const purchases: Purchase[] = [
-      // {
-      //    id: "1",
-      //    title: "El Hack",
-      //    price: "$500.00",
-      //    date: "08 de Julio, 2025",
-      //    img: "PROD-001",
-      //    bgColor: "#000000",
-      // },
-      // {
-      //    id: "2",
-      //    title: "Guía de Meditación Consciente",
-      //    price: "$250.00",
-      //    date: "12 de Junio, 2025",
-      //    img: "PROD-002",
-      //    bgColor: "#000000",
-      // },
-   ];
-
-   // ✅ Buscar país por ID del usuario
    const selectedCountry = paises.find((p) => p.id === userData?.pais_id);
-
-   console.log("🏳️ [Profile] País encontrado:", selectedCountry);
-
    const countryCode = selectedCountry?.codigo_pais || "MX";
    const country = selectedCountry?.nombre || selectedCountry?.pais || "Cargando...";
-
-   console.log("🏳️ [Profile] Código país:", countryCode);
-   console.log("🏳️ [Profile] Nombre país:", country);
 
    return (
       <View className="flex-1 bg-black">
@@ -133,61 +134,70 @@ export default function ProfileScreen() {
                         </Text>
                      </View>
                   </View>
-
-                  {/* ✅ Debug info en modo desarrollo */}
-                  {/* {__DEV__ && (
-                     <View className="mt-3 p-2 bg-gray-800 rounded">
-                        <Text className="text-yellow-400 text-xs mb-1">
-                           DEBUG - Usuario pais_id: {userData?.pais_id || "null"}
-                        </Text>
-                        <Text className="text-yellow-400 text-xs mb-1">Total países: {paises?.length || 0}</Text>
-                        <Text className="text-yellow-400 text-xs mb-1">
-                           País encontrado: {selectedCountry ? "SÍ" : "NO"}
-                        </Text>
-                        {selectedCountry && (
-                           <Text className="text-green-400 text-xs">País: {JSON.stringify(selectedCountry)}</Text>
-                        )}
-                     </View>
-                  )} */}
                </View>
             </View>
 
             {/* Historial de Compras */}
-            {purchases.length > 0 && (
-               <View
-                  className="bg-movapp-card rounded-3xl p-6 mb-2 border border-movapp-borderCard border-opacity-50"
-                  style={{ height: 260 }}
-               >
-                  <Text className="text-white text-base font-bold mb-2">Historial de Compras</Text>
-                  <ScrollView
-                     showsVerticalScrollIndicator={false}
-                     style={{ flex: 1 }}
-                     contentContainerStyle={{ paddingBottom: 2 }}
-                  >
+            {loadingOrders ? (
+               <View className="bg-movapp-card rounded-3xl p-6 mb-2 border border-movapp-borderCard border-opacity-50">
+                  <Text className="text-white text-base font-bold mb-3">Historial de Compras</Text>
+                  <View style={{ height: 300 }} className="items-center justify-center">
+                     <ActivityIndicator size="large" color={Colors.movapp.primary} />
+                     <Text className="text-gray-400 text-sm mt-3">Cargando compras...</Text>
+                  </View>
+               </View>
+            ) : error ? (
+               <View className="bg-movapp-card rounded-3xl p-6 mb-2 border border-movapp-borderCard border-opacity-50">
+                  <Text className="text-white text-base font-bold mb-3">Historial de Compras</Text>
+                  <View style={{ height: 200 }} className="items-center justify-center">
+                     <Feather name="alert-circle" size={32} color="#EF4444" />
+                     <Text className="text-gray-400 text-sm mt-3 text-center">Error al cargar las compras</Text>
+                     <Text className="text-gray-500 text-xs mt-1 text-center">{error}</Text>
+                  </View>
+               </View>
+            ) : purchases.length > 0 ? (
+               <View className="bg-movapp-card rounded-3xl p-6 mb-2 border border-movapp-borderCard border-opacity-50">
+                  <Text className="text-white text-base font-bold mb-3">Historial de Compras</Text>
+                  <ScrollView showsVerticalScrollIndicator={true} style={{ maxHeight: 190 }} nestedScrollEnabled={true}>
                      {purchases.map((purchase, index) => (
-                        <TouchableOpacity
+                        <View
                            key={purchase.id}
-                           className={`flex-row items-center ${index < purchases.length - 1 ? "mb-3" : ""}`}
-                           activeOpacity={0.7}
+                           className={`flex-row items-center py-3 ${
+                              index < purchases.length - 1 ? "border-b border-gray-700/50" : ""
+                           }`}
                         >
-                           <View
-                              className="w-14 h-14 rounded-2xl items-center justify-center mr-3"
-                              style={{ backgroundColor: purchase.bgColor }}
-                           >
-                              <Image source={getImage(purchase.img)} className="w-12 h-12" />
+                           <View className="w-16 h-16 rounded-2xl items-center justify-center mr-3 ">
+                              {purchase.sku ? (
+                                 <Image
+                                    source={getImage(purchase.sku)}
+                                    className="w-14 h-14 rounded-xl"
+                                    resizeMode="cover"
+                                 />
+                              ) : (
+                                 <Feather name="shopping-bag" size={28} color={Colors.movapp.primary} />
+                              )}
                            </View>
                            <View className="flex-1">
-                              <Text className="text-white text-sm font-semibold mb-1" numberOfLines={1}>
-                                 {purchase.title}
+                              <Text className="text-white text-base font-semibold mb-1" numberOfLines={2}>
+                                 {purchase.descripcion}
                               </Text>
-                              <Text className="text-gray-400 text-xs">{purchase.date}</Text>
+                              <Text className="text-gray-400 text-xs">
+                                 {new Date(purchase.created_at).toLocaleDateString("es-MX", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                 })}
+                              </Text>
                            </View>
-                           <Text className="text-purple-400 text-base font-bold ml-2">{purchase.price}</Text>
-                        </TouchableOpacity>
+                           <View className="items-end">
+                              <Text className="text-purple-400 text-lg font-bold">${purchase.subtotal}</Text>
+                              <Text className="text-gray-500 text-xs">x{purchase.cantidad}</Text>
+                           </View>
+                        </View>
                      ))}
                   </ScrollView>
                </View>
-            )}
+            ) : null}
 
             {/* Configuración */}
             <View className="bg-movapp-card rounded-3xl p-6 mb-2 border border-movapp-borderCard border-opacity-50">

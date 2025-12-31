@@ -12,6 +12,7 @@ type Props = {
    amountCents?: number;
    currency?: string;
    userId?: number;
+   paisId?: number;
    email?: string;
 };
 
@@ -22,6 +23,7 @@ export default function StripeCheckout({
    amountCents,
    currency: propCurrency,
    userId: propUserId,
+   paisId: propPaisId,
    email: propEmail,
 }: Props) {
    const { initPaymentSheet, presentPaymentSheet } = useStripe();
@@ -61,6 +63,7 @@ export default function StripeCheckout({
 
          if (propEmail) payload.email = propEmail;
          if (propUserId) payload.userId = propUserId;
+         if (propPaisId) payload.paisId = propPaisId;
          console.log("\x1b[33m", "[StripeCheckout] POST", url, payload);
 
          const res = await fetch(url, {

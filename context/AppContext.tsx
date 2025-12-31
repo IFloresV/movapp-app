@@ -268,9 +268,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
    const login = useCallback(
       async (userObj: any, accessToken?: string, refreshToken?: string) => {
-         console.log("\x1b[33m[AppContext] 🔐 Login iniciado");
-         console.log("  - User:", userObj);
-         console.log("  - País ID:", userObj?.pais_id);
+         // console.log("\x1b[33m[AppContext] 🔐 Login iniciado");
+         // console.log("  - User:", userObj);
+         // console.log("  - País ID:", userObj?.pais_id);
 
          try {
             // Guardar credenciales
@@ -291,7 +291,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
                await saveConfigCache(state.config.paises, precios);
             }
 
-            console.log("\x1b[32m[AppContext] ✅ Login completado");
+            // console.log("\x1b[32m[AppContext] ✅ Login completado");
          } catch (error) {
             console.error("\x1b[31m[AppContext] ❌ Error en login:", error);
             throw error;
@@ -301,13 +301,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
    );
 
    const logout = useCallback(async () => {
-      console.log("\x1b[33m[AppContext] 🚪 Logout iniciado");
+      // console.log("\x1b[33m[AppContext] 🚪 Logout iniciado");
 
       try {
          await clearStorage();
          dispatch({ type: "USER_LOGOUT" });
 
-         console.log("\x1b[32m[AppContext] ✅ Logout completado");
+         // console.log("\x1b[32m[AppContext] ✅ Logout completado");
       } catch (error) {
          console.error("\x1b[31m[AppContext] ❌ Error en logout:", error);
       }

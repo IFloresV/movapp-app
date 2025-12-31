@@ -7,6 +7,8 @@ import { Feather, FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Alert, Image, Linking, Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
+import { Info } from "@/constants/Info";
+
 export type DrawerMenuItem = {
    name: string;
    type: "feather" | "image";
@@ -25,9 +27,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
    const router = useRouter();
    const { user, logout } = useApp();
    const isLoggedIn = user.logged;
-   const userData = user.infoUser;
-
-   const whatsappNumber = process.env.EXPO_PUBLIC_WHATSAPP;
+   const { whatsappNumber } = Info;
 
    const handleItemPress = (route: string) => {
       onClose();

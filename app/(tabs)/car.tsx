@@ -18,6 +18,7 @@ export default function CarScreen() {
 
    const user_id = userData?.id ?? 0;
    const email = userData?.email ?? "";
+   const pais_id = userData?.pais_id ?? 0;
    const router = useRouter();
 
    const getQty = (item: any) => item.quantity ?? 1;
@@ -140,6 +141,7 @@ export default function CarScreen() {
                      amountCents={computeAmountCents()}
                      currency={currency}
                      userId={parseInt(user_id.toString(), 10)}
+                     paisId={parseInt(pais_id.toString(), 10)}
                      email={email}
                      onSuccess={() => {
                         clearCart();
