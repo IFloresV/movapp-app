@@ -12,6 +12,7 @@
          "supportsTablet": true,
          "bundleIdentifier": "com.movapp.mobile",
          "infoPlist": {
+            "UIBackgroundModes": ["remote-notification"],
             "ITSAppUsesNonExemptEncryption": false,
             "NSCameraUsageDescription": "Movapp necesita acceso a la cámara para permitir cargar imágenes y completar funcionalidades dentro de la plataforma.",
             "NSPhotoLibraryUsageDescription": "Movapp necesita acceso a tus fotos para permitir cargar imágenes dentro de la plataforma.",
@@ -68,6 +69,7 @@
                "enableGooglePay": true
             }
          ],
+         ["expo-notifications"],
          "expo-font",
          "expo-secure-store",
          "expo-web-browser"
