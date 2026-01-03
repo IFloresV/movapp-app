@@ -5,8 +5,6 @@ import React from "react";
 
 import { Text, TouchableOpacity, View } from "react-native";
 
-import { useApp } from "@/context/AppContext";
-
 import VimeoPlayer from "@/components/VimeoPlayer";
 import { Feather, FontAwesome6, Ionicons } from "@expo/vector-icons";
 
@@ -14,13 +12,6 @@ import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 import { Colors } from "@/constants/Colors";
 
 export default function HomeScreen() {
-   // ✅ Cambiar de useContext(UserContext) a useApp()
-   const { user } = useApp();
-
-   // ✅ Acceder a la información del usuario
-   const isLoggedIn = user.logged;
-   const userData = user.infoUser;
-
    const router = useRouter();
 
    return (
@@ -82,22 +73,6 @@ export default function HomeScreen() {
                </View>
                <Ionicons name="arrow-forward" size={24} color="#a855f7" />
             </TouchableOpacity>
-            {/* Reels */}
-            {/* <TouchableOpacity
-               className="bg-movapp-linkBackgroundHome rounded-2xl p-5 flex-row items-center justify-between mb-4"
-               onPress={() => router.push("/reels")}
-            >
-               <View className="flex-row items-center flex-1">
-                  <View className="bg-movapp-primary/20 p-3 rounded-xl mr-4">
-                     <Feather name="heart" size={26} color="#a855f7" />
-                  </View>
-                  <View className="flex-1">
-                     <Text className="text-white text-lg font-bold mb-1">Reels</Text>
-                     <Text className="text-gray-400 text-sm">Acceder a sección</Text>
-                  </View>
-               </View>
-               <Ionicons name="arrow-forward" size={24} color="#a855f7" />
-            </TouchableOpacity> */}
          </View>
       </LayoutWithNavigation>
    );

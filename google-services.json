@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "539900229950",
+    "project_id": "movapp-notificatios",
+    "storage_bucket": "movapp-notificatios.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:539900229950:android:e0eb2c805e6b3cfa6b546f",
+        "android_client_info": {
+          "package_name": "com.movapp.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiZjoOF8wMQjb6-o_05C_5UQ1oJy1qeXA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

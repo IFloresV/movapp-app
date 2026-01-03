@@ -48,7 +48,7 @@ type AppAction =
 // ==================== REDUCER ====================
 
 function appReducer(state: AppState, action: AppAction): AppState {
-   console.log("\x1b[36m[AppContext Reducer]", action.type);
+   // console.log("\x1b[36m[AppContext Reducer]", action.type);
 
    switch (action.type) {
       case "USER_LOGIN":
@@ -152,7 +152,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
    const saveCredentials = useCallback(async (userObj: any, accessToken?: string, refreshToken?: string) => {
       try {
-         console.log("\x1b[33m[AppContext] 💾 Guardando credenciales...");
+         // console.log("\x1b[33m[AppContext] 💾 Guardando credenciales...");
 
          const saves = [];
          if (userObj) saves.push(SecureStore.setItemAsync(STORAGE_KEYS.USER, JSON.stringify(userObj)));
@@ -160,15 +160,15 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
          if (refreshToken) saves.push(SecureStore.setItemAsync(STORAGE_KEYS.REFRESH, refreshToken));
 
          await Promise.all(saves);
-         console.log("\x1b[32m[AppContext] ✅ Credenciales guardadas");
+         // console.log("\x1b[32m[AppContext] ✅ Credenciales guardadas");
       } catch (e) {
-         console.error("\x1b[31m[AppContext] ❌ Error guardando credenciales:", e);
+         // console.error("\x1b[31m[AppContext] ❌ Error guardando credenciales:", e);
       }
    }, []);
 
    const clearStorage = useCallback(async () => {
       try {
-         console.log("\x1b[33m[AppContext] 🗑️ Limpiando credenciales...");
+         // console.log("\x1b[33m[AppContext] 🗑️ Limpiando credenciales...");
 
          await Promise.all([
             SecureStore.deleteItemAsync(STORAGE_KEYS.USER),
@@ -176,18 +176,18 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             SecureStore.deleteItemAsync(STORAGE_KEYS.REFRESH),
          ]);
 
-         console.log("\x1b[32m[AppContext] ✅ Credenciales eliminadas");
+         // console.log("\x1b[32m[AppContext] ✅ Credenciales eliminadas");
       } catch (e) {
-         console.error("\x1b[31m[AppContext] ❌ Error limpiando credenciales:", e);
+         // console.error("\x1b[31m[AppContext] ❌ Error limpiando credenciales:", e);
       }
    }, []);
 
    const saveConfigCache = useCallback(async (paises: any[], precios: any[]) => {
       try {
          await AsyncStorage.setItem(STORAGE_KEYS.CONFIG, JSON.stringify({ paises, precios }));
-         console.log("\x1b[32m[AppContext] ✅ Config guardada en cache");
+         // console.log("\x1b[32m[AppContext] ✅ Config guardada en cache");
       } catch (e) {
-         console.error("\x1b[31m[AppContext] ❌ Error guardando cache:", e);
+         // console.error("\x1b[31m[AppContext] ❌ Error guardando cache:", e);
       }
    }, []);
 
@@ -195,45 +195,45 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
    const fetchCountries = useCallback(async (): Promise<any[]> => {
       try {
-         console.log("\x1b[33m[AppContext] 🌍 Obteniendo países...");
+         // console.log("\x1b[33m[AppContext] 🌍 Obteniendo países...");
          const response = await ConfigService.getCountries();
 
          if (response?.data?.success) {
             const countries = response.data.countries || [];
-            console.log("\x1b[32m[AppContext] ✅ Países obtenidos:", countries.length);
+            // console.log("\x1b[32m[AppContext] ✅ Países obtenidos:", countries.length);
             return countries;
          }
 
-         console.log("\x1b[33m[AppContext] ⚠️ No se pudieron obtener países");
+         // console.log("\x1b[33m[AppContext] ⚠️ No se pudieron obtener países");
          return [];
       } catch (error) {
-         console.error("\x1b[31m[AppContext] ❌ Error obteniendo países:", error);
+         // console.error("\x1b[31m[AppContext] ❌ Error obteniendo países:", error);
          return [];
       }
    }, []);
 
    const fetchPrices = useCallback(async (paisId: number): Promise<any[]> => {
       try {
-         console.log("\x1b[33m[AppContext] 💰 Obteniendo precios para país:", paisId);
+         // console.log("\x1b[33m[AppContext] 💰 Obteniendo precios para país:", paisId);
          const response = await ConfigService.getPrices(paisId);
 
          if (response?.data?.success) {
             const prices = response.data.prices || [];
-            console.log("\x1b[32m[AppContext] ✅ Precios obtenidos:", prices.length);
+            // console.log("\x1b[32m[AppContext] ✅ Precios obtenidos:", prices.length);
             return prices;
          }
 
-         console.log("\x1b[33m[AppContext] ⚠️ No se pudieron obtener precios");
+         // console.log("\x1b[33m[AppContext] ⚠️ No se pudieron obtener precios");
          return [];
       } catch (error) {
-         console.error("\x1b[31m[AppContext] ❌ Error obteniendo precios:", error);
+         // console.error("\x1b[31m[AppContext] ❌ Error obteniendo precios:", error);
          return [];
       }
    }, []);
 
    // ✅ Método para recargar países manualmente
    const reloadPaises = useCallback(async () => {
-      console.log("\x1b[33m[AppContext] 🔄 Recargando países...");
+      // console.log("\x1b[33m[AppContext] 🔄 Recargando países...");
       try {
          const paises = await fetchCountries();
 
@@ -244,9 +244,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
          await saveConfigCache(paises, state.config.precios);
 
-         console.log("\x1b[32m[AppContext] ✅ Países recargados:", paises.length);
+         // console.log("\x1b[32m[AppContext] ✅ Países recargados:", paises.length);
       } catch (error) {
-         console.error("\x1b[31m[AppContext] ❌ Error recargando países:", error);
+         // console.error("\x1b[31m[AppContext] ❌ Error recargando países:", error);
       }
    }, [fetchCountries, saveConfigCache, state.config.precios]);
 
@@ -293,7 +293,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
             // console.log("\x1b[32m[AppContext] ✅ Login completado");
          } catch (error) {
-            console.error("\x1b[31m[AppContext] ❌ Error en login:", error);
+            // console.error("\x1b[31m[AppContext] ❌ Error en login:", error);
             throw error;
          }
       },
@@ -309,13 +309,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
          // console.log("\x1b[32m[AppContext] ✅ Logout completado");
       } catch (error) {
-         console.error("\x1b[31m[AppContext] ❌ Error en logout:", error);
+         // console.error("\x1b[31m[AppContext] ❌ Error en logout:", error);
       }
    }, [clearStorage]);
 
    const updateUser = useCallback(
       async (userObj: any) => {
-         console.log("\x1b[33m[AppContext] 👤 Actualizando usuario");
+         // console.log("\x1b[33m[AppContext] 👤 Actualizando usuario");
 
          try {
             await SecureStore.setItemAsync(STORAGE_KEYS.USER, JSON.stringify(userObj));
@@ -327,13 +327,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
             // Si cambió el país, actualizar precios
             if (userObj?.pais_id && userObj.pais_id !== state.user.infoUser?.pais_id) {
-               console.log("\x1b[33m[AppContext] 🔄 País cambió, actualizando precios...");
+               // console.log("\x1b[33m[AppContext] 🔄 País cambió, actualizando precios...");
                await refreshPrices(userObj.pais_id);
             }
 
-            console.log("\x1b[32m[AppContext] ✅ Usuario actualizado");
+            // console.log("\x1b[32m[AppContext] ✅ Usuario actualizado");
          } catch (error) {
-            console.error("\x1b[31m[AppContext] ❌ Error actualizando usuario:", error);
+            // console.error("\x1b[31m[AppContext] ❌ Error actualizando usuario:", error);
          }
       },
       [refreshPrices, state.user.infoUser],
@@ -343,7 +343,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
    const setConfig = useCallback(
       (paises?: any[], precios?: any[]) => {
-         console.log("\x1b[33m[AppContext] ⚙️ Actualizando config");
+         // console.log("\x1b[33m[AppContext] ⚙️ Actualizando config");
 
          dispatch({
             type: "CONFIG_SET",
@@ -358,7 +358,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
    );
 
    const clearConfig = useCallback(() => {
-      console.log("\x1b[33m[AppContext] 🗑️ Limpiando config");
+      // console.log("\x1b[33m[AppContext] 🗑️ Limpiando config");
 
       dispatch({ type: "CONFIG_CLEAR" });
       AsyncStorage.removeItem(STORAGE_KEYS.CONFIG).catch(console.error);
@@ -368,7 +368,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
    useEffect(() => {
       const hydrate = async () => {
-         console.log("\x1b[33m[AppContext] 🔄 Iniciando hydrate...");
+         // console.log("\x1b[33m[AppContext] 🔄 Iniciando hydrate...");
 
          try {
             // Cargar datos guardados
@@ -378,10 +378,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
                AsyncStorage.getItem(STORAGE_KEYS.CONFIG),
             ]);
 
-            console.log("\x1b[35m[AppContext] 📦 Datos en storage:");
-            console.log("  - User:", storedUser ? "EXISTS" : "NULL");
-            console.log("  - Access:", storedAccess ? "EXISTS" : "NULL");
-            console.log("  - Cache:", cachedConfig ? "EXISTS" : "NULL");
+            // console.log("\x1b[35m[AppContext] 📦 Datos en storage:");
+            // console.log("  - User:", storedUser ? "EXISTS" : "NULL");
+            // console.log("  - Access:", storedAccess ? "EXISTS" : "NULL");
+            // console.log("  - Cache:", cachedConfig ? "EXISTS" : "NULL");
 
             let userObj = null;
             let paises: any[] = [];
@@ -391,9 +391,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             if (storedUser) {
                try {
                   userObj = JSON.parse(storedUser);
-                  console.log("\x1b[32m[AppContext] ✅ Usuario restaurado:", userObj.nombre);
+                  // console.log("\x1b[32m[AppContext] ✅ Usuario restaurado:", userObj.nombre);
                } catch (e) {
-                  console.error("\x1b[31m[AppContext] ❌ Error parseando usuario:", e);
+                  // console.error("\x1b[31m[AppContext] ❌ Error parseando usuario:", e);
                }
             }
 
@@ -403,15 +403,15 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
                   const parsed = JSON.parse(cachedConfig);
                   paises = parsed.paises ?? [];
                   precios = parsed.precios ?? [];
-                  console.log("\x1b[32m[AppContext] ✅ Config desde cache");
+                  // console.log("\x1b[32m[AppContext] ✅ Config desde cache");
                } catch (e) {
-                  console.error("\x1b[31m[AppContext] ❌ Error parseando cache:", e);
+                  // console.error("\x1b[31m[AppContext] ❌ Error parseando cache:", e);
                }
             }
 
             // ✅ SIEMPRE obtener países si no hay en cache
             if (paises.length === 0) {
-               console.log("\x1b[33m[AppContext] 🌍 No hay países en cache, obteniendo...");
+               // console.log("\x1b[33m[AppContext] 🌍 No hay países en cache, obteniendo...");
                paises = await fetchCountries();
             }
 
@@ -443,11 +443,11 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
                },
             });
 
-            console.log("\x1b[32m[AppContext] ✅ Hydrate completado");
-            console.log("\x1b[32m[AppContext] 📊 Países cargados:", paises.length);
-            console.log("\x1b[32m[AppContext] 📊 Precios cargados:", precios.length);
+            // console.log("\x1b[32m[AppContext] ✅ Hydrate completado");
+            // console.log("\x1b[32m[AppContext] 📊 Países cargados:", paises.length);
+            // console.log("\x1b[32m[AppContext] 📊 Precios cargados:", precios.length);
          } catch (error) {
-            console.error("\x1b[31m[AppContext] ❌ Error en hydrate:", error);
+            // console.error("\x1b[31m[AppContext] ❌ Error en hydrate:", error);
          } finally {
             setIsHydrated(true);
          }

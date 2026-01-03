@@ -15,6 +15,7 @@ import { Colors } from "@/constants/Colors";
 import { useAxios } from "@/hooks/useAxios";
 
 import { CartContext } from "@/context/CartContext";
+import { registerForPushNotificationsAsync } from "@/utils/notifications";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -36,7 +37,6 @@ export default function LoginScreen() {
       if (data.success) {
          (async () => {
             login(data.user);
-            console.log("\x1b[34m", "USER =>", data.user);
             if (cartContext?.clearCart) {
                await cartContext.clearCart();
             }
@@ -96,8 +96,17 @@ export default function LoginScreen() {
          appVersion,
       };
 
+      let pushToken: string | undefined = undefined;
       try {
-         await loginFetch(payload);
+         pushToken = await registerForPushNotificationsAsync();
+      } catch (pushError) {
+         console.warn("No se pudo obtener push token, se continuará sin notificaciones push.");
+         console.error("❌ Error en Token de Push:", pushError);
+      }
+
+      try {
+         // Llamar a login pasando deviceId y pushToken (puede ser undefined)
+         await loginFetch(payload, deviceId, pushToken);
       } catch (err) {
          console.error("❌ Error en login:", err);
          Alert.alert("Error", error || "No se pudo iniciar sesión. Intenta de nuevo.");

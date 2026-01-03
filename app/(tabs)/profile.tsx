@@ -1,4 +1,5 @@
 // app/(tabs)/profile.tsx
+import NotificationService from "@/api/NotificationService";
 import OrderService, { OrderItem } from "@/api/OrderService";
 import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
@@ -8,8 +9,20 @@ import { getImage } from "@/utils/Images";
 import { Feather } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { useCallback, useState } from "react";
-import { ActivityIndicator, Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import * as SecureStore from "expo-secure-store";
+import { useCallback, useEffect, useState } from "react";
+import { ActivityIndicator, Alert, Image, ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
+
+// Función para obtener el deviceId desde SecureStore
+const getDeviceId = async (): Promise<string> => {
+   let deviceId = await SecureStore.getItemAsync("deviceId");
+   return deviceId || "";
+};
+
+const getPushToken = async (): Promise<string> => {
+   let pushToken = await SecureStore.getItemAsync("pushToken");
+   return pushToken || "";
+};
 
 export default function ProfileScreen() {
    const router = useRouter();
@@ -23,6 +36,47 @@ export default function ProfileScreen() {
    const [purchases, setPurchases] = useState<OrderItem[]>([]);
    const [loadingOrders, setLoadingOrders] = useState(true);
    const [error, setError] = useState<string | null>(null);
+
+   // Estados para las notificaciones
+   const [notifEnabled, setNotifEnabled] = useState<boolean>(true);
+   const [notifLoading, setNotifLoading] = useState<boolean>(false);
+   const [deviceId, setDeviceId] = useState<string>("");
+   const [pushToken, setPushToken] = useState<string>("");
+
+   // Obtener deviceId y pushToken al montar el componente
+   useEffect(() => {
+      (async () => {
+         const id = await getDeviceId();
+         setDeviceId(id);
+         const token = await getPushToken();
+         setPushToken(token);
+      })();
+   }, []);
+
+   // Consultar estado de notificaciones cuando deviceId esté disponible
+   useEffect(() => {
+      if (!deviceId) {
+         console.warn("[Notificaciones] deviceId vacío, no se consulta el estado.");
+         return;
+      }
+      setNotifLoading(true);
+      NotificationService.getDevice(deviceId)
+         .then((res) => {
+            console.log("[Notificaciones] Respuesta getDevice:", res);
+            if (res && res.success && res.device) {
+               setNotifEnabled(!!res.device.pushEnabled);
+               console.log("[Notificaciones] Estado pushEnabled:", res.device.pushEnabled);
+            } else {
+               setNotifEnabled(false);
+               console.warn("[Notificaciones] No se encontró el dispositivo o pushEnabled.");
+            }
+         })
+         .catch((err) => {
+            setNotifEnabled(false);
+            console.error("[Notificaciones] Error al obtener estado del dispositivo:", err);
+         })
+         .finally(() => setNotifLoading(false));
+   }, [deviceId]);
 
    // Función para cargar órdenes
    const fetchOrders = useCallback(async () => {
@@ -80,6 +134,31 @@ export default function ProfileScreen() {
             },
          },
       ]);
+   };
+
+   // Handler para activar/desactivar notificaciones
+   const handleToggleNotif = async (value: boolean) => {
+      if (!deviceId) {
+         Alert.alert("Error", "No se encontró el ID del dispositivo.");
+         return;
+      }
+      setNotifLoading(true);
+      console.log("[Notificaciones] Cambiando pushEnabled a:", value);
+      try {
+         const res = await NotificationService.toggle(deviceId, value);
+         console.log("[Notificaciones] Respuesta toggle:", res);
+         if (res && res.success && res.device) {
+            setNotifEnabled(!!res.device.pushEnabled);
+            console.log("[Notificaciones] Nuevo estado pushEnabled:", res.device.pushEnabled);
+         } else {
+            Alert.alert("Error", res?.message || "No se pudo actualizar el estado de notificaciones");
+         }
+      } catch (err) {
+         console.error("[Notificaciones] Error al cambiar estado:", err);
+         Alert.alert("Error", "No se pudo actualizar el estado de notificaciones");
+      } finally {
+         setNotifLoading(false);
+      }
    };
 
    const selectedCountry = paises.find((p) => p.id === userData?.pais_id);
@@ -203,16 +282,27 @@ export default function ProfileScreen() {
             <View className="bg-movapp-card rounded-3xl p-6 mb-2 border border-movapp-borderCard border-opacity-50">
                <Text className="text-white text-base font-bold mb-2">Configuración</Text>
 
-               <TouchableOpacity className="flex-row items-center justify-between py-3.5">
+               <View className="flex-row items-center justify-between py-3.5">
                   <View className="flex-row items-center flex-1">
                      <Feather name="bell" size={20} color={Colors.movapp.primary} />
                      <Text className="text-white text-sm font-medium ml-3">Preferencias de Notificación</Text>
                   </View>
-                  <View className="flex-row items-center">
-                     <Text className="text-gray-400 text-xs mr-2">Activadas</Text>
-                     <Feather name="chevron-right" size={18} color={Colors.movapp.backgroundTop} />
+                  <View
+                     style={{
+                        padding: 2,
+                        borderRadius: 20,
+                        borderWidth: 2,
+                     }}
+                  >
+                     <Switch
+                        value={pushToken ? notifEnabled : false}
+                        onValueChange={handleToggleNotif}
+                        disabled={notifLoading || !deviceId || !pushToken}
+                        thumbColor={notifEnabled ? Colors.movapp.green : Colors.movapp.red}
+                        trackColor={{ false: "#444", true: Colors.movapp.primary }}
+                     />
                   </View>
-               </TouchableOpacity>
+               </View>
             </View>
 
             {/* Botón Cerrar Sesión */}

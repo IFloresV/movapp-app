@@ -1,5 +1,6 @@
 // app/_layout.tsx
-import { useEffect, useState } from "react";
+import * as Notifications from "expo-notifications";
+import React, { useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { AppProvider, useApp } from "@/context/AppContext";
@@ -24,7 +25,7 @@ function AppContent() {
    const { logout } = useApp();
 
    useEffect(() => {
-      console.log("\x1b[33m[Layout] 🔧 Registrando logout callback en axios");
+      // console.log("\x1b[33m[Layout] 🔧 Registrando logout callback en axios");
       setLogoutCallback(logout);
    }, [logout]);
 
@@ -47,6 +48,14 @@ function AppContent() {
 
 export default function RootLayout() {
    const [isAppReady, setIsAppReady] = useState(false);
+
+   useEffect(() => {
+      const subscription = Notifications.addNotificationReceivedListener((notification) => {
+         console.log("Notificación recibida:", notification);
+      });
+
+      return () => subscription.remove();
+   }, []);
 
    if (!isAppReady) {
       return (

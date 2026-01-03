@@ -27,6 +27,7 @@ import { useRegister } from "@/context/RegisterContext";
 import { useAxios } from "@/hooks/useAxios";
 
 import { getFlag } from "@/utils/Flags";
+import { registerForPushNotificationsAsync } from "@/utils/notifications";
 
 export default function RegisterScreen() {
    const { config, reloadPaises, login } = useApp();
@@ -140,7 +141,7 @@ export default function RegisterScreen() {
 
       const payload = {
          nombre: formData.fullName,
-         email: formData.email,
+         email: formData.email.toLowerCase().trim(),
          telefono: formData.phone,
          pais_id: formData.countryId,
          cp: formData.postalCode,
@@ -152,11 +153,20 @@ export default function RegisterScreen() {
          appVersion,
       };
 
+      let pushToken: string | undefined = undefined;
       try {
-         await registerFetch(payload);
+         pushToken = await registerForPushNotificationsAsync();
+      } catch (pushError) {
+         console.warn("No se pudo obtener push token, se continuará sin notificaciones push.");
+         console.error("❌ Error en Token de Push:", pushError);
+      }
+
+      try {
+         // Llamar a login pasando deviceId y pushToken (puede ser undefined)
+         await registerFetch(payload, deviceId, pushToken);
       } catch (err) {
-         console.error("Error en registro:", err);
-         Alert.alert("Error", error || "No se pudo crear la cuenta. Intenta de nuevo.");
+         console.error("❌ Error en registro:", err);
+         Alert.alert("Error", "No se pudo registrar. Intenta de nuevo.");
       }
    };
 

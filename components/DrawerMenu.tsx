@@ -8,6 +8,7 @@ import { useRouter } from "expo-router";
 import { Alert, Image, Linking, Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 import { Info } from "@/constants/Info";
+import Constants from "expo-constants";
 
 export type DrawerMenuItem = {
    name: string;
@@ -163,6 +164,11 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                            <Text className="text-red-500 text-lg font-semibold flex-1">Cerrar Sesión</Text>
                         </TouchableOpacity>
                      )}
+
+                     {/* Version Info */}
+                     <Text className="text-xs mt-32 text-center" style={{ color: Colors.movapp.icon }}>
+                        Versión {Constants.expoConfig?.version || "1.0.0"} - 2026
+                     </Text>
                   </ScrollView>
                </Pressable>
             </Pressable>
