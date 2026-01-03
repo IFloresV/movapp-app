@@ -166,7 +166,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                      )}
 
                      {/* Version Info */}
-                     <Text className="text-xs mt-32 text-center" style={{ color: Colors.movapp.icon }}>
+                     <Text className="text-xs mt-2 text-center" style={{ color: Colors.movapp.icon }}>
                         Versión {Constants.expoConfig?.version || "1.0.0"}
                      </Text>
                   </ScrollView>

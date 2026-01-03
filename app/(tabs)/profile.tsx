@@ -19,11 +19,6 @@ const getDeviceId = async (): Promise<string> => {
    return deviceId || "";
 };
 
-const getPushToken = async (): Promise<string> => {
-   let pushToken = await SecureStore.getItemAsync("pushToken");
-   return pushToken || "";
-};
-
 export default function ProfileScreen() {
    const router = useRouter();
    const { user, config, logout } = useApp();
@@ -48,35 +43,40 @@ export default function ProfileScreen() {
       (async () => {
          const id = await getDeviceId();
          setDeviceId(id);
-         const token = await getPushToken();
-         setPushToken(token);
+         // const token = await getPushToken();
+         // setPushToken(token);
       })();
    }, []);
 
-   // Consultar estado de notificaciones cuando deviceId esté disponible
-   useEffect(() => {
-      if (!deviceId) {
-         console.warn("[Notificaciones] deviceId vacío, no se consulta el estado.");
-         return;
-      }
-      setNotifLoading(true);
-      NotificationService.getDevice(deviceId)
-         .then((res) => {
-            console.log("[Notificaciones] Respuesta getDevice:", res);
-            if (res && res.success && res.device) {
-               setNotifEnabled(!!res.device.pushEnabled);
-               console.log("[Notificaciones] Estado pushEnabled:", res.device.pushEnabled);
-            } else {
+   // Consultar estado de notificaciones cada vez que la pantalla obtiene el foco
+   useFocusEffect(
+      useCallback(() => {
+         if (!deviceId) {
+            console.warn("[Notificaciones] deviceId vacío, no se consulta el estado.");
+            return;
+         }
+         setNotifLoading(true);
+         NotificationService.getDevice(deviceId)
+            .then((res) => {
+               console.log("-----------------");
+
+               console.log("\x1b[32m", "[Notificaciones] Respuesta getDevice:", res);
+               if (res && res.success && res.device) {
+                  setNotifEnabled(!!res.device.pushEnabled);
+                  console.log("\x1b[33m", "[Notificaciones] Estado pushEnabled:", res.device.pushEnabled);
+               } else {
+                  setNotifEnabled(false);
+                  console.warn("\x1b[31m", "[Notificaciones] No se encontró el dispositivo o pushEnabled.");
+               }
+            })
+            .catch((err) => {
                setNotifEnabled(false);
-               console.warn("[Notificaciones] No se encontró el dispositivo o pushEnabled.");
-            }
-         })
-         .catch((err) => {
-            setNotifEnabled(false);
-            console.error("[Notificaciones] Error al obtener estado del dispositivo:", err);
-         })
-         .finally(() => setNotifLoading(false));
-   }, [deviceId]);
+               console.log("-----------------");
+               console.error("\x1b[31m", "[Notificaciones] Error al obtener estado del dispositivo:", err);
+            })
+            .finally(() => setNotifLoading(false));
+      }, [deviceId]),
+   );
 
    // Función para cargar órdenes
    const fetchOrders = useCallback(async () => {
@@ -287,17 +287,11 @@ export default function ProfileScreen() {
                      <Feather name="bell" size={20} color={Colors.movapp.primary} />
                      <Text className="text-white text-sm font-medium ml-3">Preferencias de Notificación</Text>
                   </View>
-                  <View
-                     style={{
-                        padding: 2,
-                        borderRadius: 20,
-                        borderWidth: 2,
-                     }}
-                  >
+                  <View>
                      <Switch
-                        value={pushToken ? notifEnabled : false}
+                        value={notifEnabled}
                         onValueChange={handleToggleNotif}
-                        disabled={notifLoading || !deviceId || !pushToken}
+                        // disabled={notifLoading || !pushToken}
                         thumbColor={notifEnabled ? Colors.movapp.green : Colors.movapp.red}
                         trackColor={{ false: "#444", true: Colors.movapp.primary }}
                      />
