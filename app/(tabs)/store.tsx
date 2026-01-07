@@ -7,10 +7,7 @@ import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { getImage } from "@/utils/Images";
 
 export default function StoreScreen() {
-   const { user, config } = useApp();
-   const isLoggedIn = user.logged;
-   const userData = user.infoUser;
-   const { precios } = config;
+   const { config } = useApp();
 
    const { addToCart } = useContext(CartContext)!;
 

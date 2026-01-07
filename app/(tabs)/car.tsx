@@ -13,7 +13,6 @@ import { FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from "rea
 export default function CarScreen() {
    const { cart, addToCart, clearCart, decreaseQuantity, removeFromCart } = useContext(CartContext)!;
    const { user } = useApp();
-   const isLoggedIn = user.logged;
    const userData = user.infoUser;
 
    const user_id = userData?.id ?? 0;

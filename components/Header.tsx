@@ -7,6 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
 import { useApp } from "@/context/AppContext";
 import { CartContext } from "@/context/CartContext";
+import { useNotificationStore } from "@/context/NotificationContext"; // <-- Importa tu contexto de notificaciones
 
 import { useContext } from "react";
 
@@ -19,14 +20,15 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = true, logoType = 1 }) => {
    const router = useRouter();
 
-   // ✅ Cambiar a useApp()
    const { user } = useApp();
    const isLoggedIn = user.logged;
 
    const { cart } = useContext(CartContext)!;
-
-   // calcular cantidad de productos en carrito de forma segura
    const itemsCount = Array.isArray(cart) ? cart.length : 0;
+
+   // Notificaciones
+   const { notifications } = useNotificationStore();
+   const notificationsCount = notifications.length;
 
    return (
       <>
@@ -50,9 +52,33 @@ const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = tr
 
                {/* Iconos a la derecha */}
                <View style={{ width: 72 }} className="flex-row justify-end items-center space-x-2">
-                  {showNotifications && isLoggedIn && (
-                     <TouchableOpacity className="mr-4">
-                        <Ionicons name="notifications-outline" size={24} color="white" />
+                  {showNotifications && isLoggedIn && notificationsCount > 0 && (
+                     <TouchableOpacity className="mr-4" onPress={() => router.push("/notifications")}>
+                        <View>
+                           <Ionicons name="notifications-outline" size={24} color="white" />
+                           {notificationsCount > 0 && (
+                              <View
+                                 style={{
+                                    position: "absolute",
+                                    right: -6,
+                                    top: -6,
+                                    backgroundColor: Colors.movapp.red || "#A78BFA",
+                                    borderRadius: 10,
+                                    minWidth: 18,
+                                    height: 18,
+                                    paddingHorizontal: 4,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    borderWidth: 1,
+                                    borderColor: "rgba(255,255,255,0.12)",
+                                 }}
+                              >
+                                 <Text style={{ color: "#fff", fontSize: 11, fontWeight: "700" }}>
+                                    {notificationsCount > 99 ? "99+" : notificationsCount}
+                                 </Text>
+                              </View>
+                           )}
+                        </View>
                      </TouchableOpacity>
                   )}
 

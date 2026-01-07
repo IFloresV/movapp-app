@@ -149,6 +149,7 @@ export default function TabsLayout() {
             <Tabs.Screen name="profile" options={{ href: null }} />
             <Tabs.Screen name="store" options={{ href: null }} />
             <Tabs.Screen name="payments/success" options={{ href: null }} />
+            <Tabs.Screen name="notifications" options={{ href: null }} />
          </Tabs>
 
          {/* Drawer Menu Component */}

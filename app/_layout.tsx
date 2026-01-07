@@ -5,6 +5,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { AppProvider, useApp } from "@/context/AppContext";
 import { CartProvider } from "@/context/CartContext";
+import { NotificationProvider, useNotificationStore } from "@/context/NotificationContext";
 import { RegisterProvider } from "@/context/RegisterContext";
 
 import * as WebBrowser from "expo-web-browser";
@@ -23,11 +24,26 @@ import { Stack } from "expo-router";
 
 function AppContent() {
    const { logout } = useApp();
+   const { addNotification } = useNotificationStore();
 
    useEffect(() => {
       // console.log("\x1b[33m[Layout] 🔧 Registrando logout callback en axios");
       setLogoutCallback(logout);
    }, [logout]);
+
+   useEffect(() => {
+      const subscription = Notifications.addNotificationReceivedListener((notification) => {
+         addNotification({
+            id: notification.request.identifier,
+            title: notification.request.content.title || "",
+            body: notification.request.content.body || "",
+            data: notification.request.content.data,
+            date: new Date().toISOString(),
+         });
+      });
+
+      return () => subscription.remove();
+   }, []);
 
    return (
       <Stack
@@ -74,7 +90,9 @@ export default function RootLayout() {
                <AppProvider>
                   <RegisterProvider>
                      <CartProvider>
-                        <AppContent />
+                        <NotificationProvider>
+                           <AppContent />
+                        </NotificationProvider>
                      </CartProvider>
                   </RegisterProvider>
                </AppProvider>
