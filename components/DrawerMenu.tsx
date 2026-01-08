@@ -164,12 +164,14 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                            <Text className="text-red-500 text-lg font-semibold flex-1">Cerrar Sesión</Text>
                         </TouchableOpacity>
                      )}
+                  </ScrollView>
 
-                     {/* Version Info */}
-                     <Text className="text-xs mt-2 text-center" style={{ color: Colors.movapp.icon }}>
+                  {/* Version Info */}
+                  <View style={{ paddingVertical: 40, backgroundColor: Colors.movapp.linkBackground }}>
+                     <Text className="text-xs text-center" style={{ color: Colors.movapp.icon }}>
                         Versión {Constants.expoConfig?.version || "1.0.0"}
                      </Text>
-                  </ScrollView>
+                  </View>
                </Pressable>
             </Pressable>
          </SafeAreaView>

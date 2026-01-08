@@ -19,7 +19,7 @@ const registerPushToken = async (deviceId: string, pushToken: string) => {
    }
 };
 
-const Service = {
+const AuthService = {
    register: async (data: RequestData, deviceId?: string, pushToken?: string) => {
       const response = await api.post("auth/register", data);
 
@@ -64,6 +64,11 @@ const Service = {
    },
 
    registerPushToken, // Exporta la función para uso directo si se requiere
+
+   deleteAccount: async () => {
+      const response = await api.delete("/auth/delete-account");
+      return response.data;
+   },
 };
 
-export default Service;
+export default AuthService;

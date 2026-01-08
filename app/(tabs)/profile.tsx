@@ -1,4 +1,5 @@
 // app/(tabs)/profile.tsx
+import AuthService from "@/api/AuthService";
 import NotificationService from "@/api/NotificationService";
 import OrderService, { OrderItem } from "@/api/OrderService";
 import Header from "@/components/Header";
@@ -36,15 +37,13 @@ export default function ProfileScreen() {
    const [notifEnabled, setNotifEnabled] = useState<boolean>(true);
    const [notifLoading, setNotifLoading] = useState<boolean>(false);
    const [deviceId, setDeviceId] = useState<string>("");
-   const [pushToken, setPushToken] = useState<string>("");
+   const [deletingAccount, setDeletingAccount] = useState(false);
 
    // Obtener deviceId y pushToken al montar el componente
    useEffect(() => {
       (async () => {
          const id = await getDeviceId();
          setDeviceId(id);
-         // const token = await getPushToken();
-         // setPushToken(token);
       })();
    }, []);
 
@@ -159,6 +158,40 @@ export default function ProfileScreen() {
       } finally {
          setNotifLoading(false);
       }
+   };
+
+   // Handler para borrar cuenta
+   const handleDeleteAccount = async () => {
+      Alert.alert("Borrar cuenta", "¿Estás seguro que deseas borrar tu cuenta? Esta acción no se puede deshacer.", [
+         { text: "Cancelar", style: "cancel" },
+         {
+            text: "Borrar cuenta",
+            style: "destructive",
+            onPress: async () => {
+               setDeletingAccount(true);
+               try {
+                  const res = await AuthService.deleteAccount();
+                  if (res.success) {
+                     Alert.alert("Cuenta eliminada", res.message || "Tu cuenta ha sido eliminada.");
+                     await logout();
+                     router.replace("/(auth)/login");
+                  } else {
+                     Alert.alert("Error", res.message || "No se pudo eliminar la cuenta.");
+                  }
+               } catch (err: any) {
+                  if (err?.response?.status === 401) {
+                     Alert.alert("No autorizado", "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.");
+                     await logout();
+                     router.replace("/(auth)/login");
+                  } else {
+                     Alert.alert("Error", "No se pudo eliminar la cuenta.");
+                  }
+               } finally {
+                  setDeletingAccount(false);
+               }
+            },
+         },
+      ]);
    };
 
    const selectedCountry = paises.find((p) => p.id === userData?.pais_id);
@@ -306,6 +339,18 @@ export default function ProfileScreen() {
                onPress={handleLogout}
             >
                <Text className="text-white text-lg font-bold">Cerrar Sesión</Text>
+            </TouchableOpacity>
+
+            {/* Botón Cerrar Sesión */}
+            <TouchableOpacity
+               className="bg-red-700/70 py-4 rounded-xl items-center mb-6"
+               activeOpacity={0.8}
+               onPress={handleDeleteAccount}
+               disabled={deletingAccount}
+            >
+               <Text className="text-white text-lg font-bold">
+                  {deletingAccount ? "Eliminando cuenta..." : "Eliminar cuenta"}
+               </Text>
             </TouchableOpacity>
          </ScrollView>
       </View>

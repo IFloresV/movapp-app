@@ -19,7 +19,7 @@ export default function NotificationsScreen() {
          <View className="flex-1 bg-movapp-black mx-2 rounded-2xl p-2">
             {/* Header */}
             <View className="flex-row items-center justify-center mb-4">
-               <Text className="text-white text-2xl font-bold text-center mb-2">Mente digital </Text>
+               <Text className="text-white text-2xl font-bold text-center mb-2">Notificaciones</Text>
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false}>
