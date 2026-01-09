@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 export type NotificationItem = {
    id: string;
@@ -20,12 +21,38 @@ const NotificationContext = createContext<{
    removeNotification: () => {},
 });
 
+const STORAGE_KEY = "notifications";
+
 export const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
    const [notifications, setNotifications] = useState<NotificationItem[]>([]);
 
-   const addNotification = (n: NotificationItem) => setNotifications((prev) => [n, ...prev]);
-   const clearNotifications = () => setNotifications([]);
-   const removeNotification = (id: string) => setNotifications((prev) => prev.filter((n) => n.id !== id));
+   // Cargar historial al iniciar
+   useEffect(() => {
+      AsyncStorage.getItem(STORAGE_KEY).then((data) => {
+         if (data) setNotifications(JSON.parse(data));
+      });
+   }, []);
+
+   const addNotification = (n: NotificationItem) => {
+      setNotifications((prev) => {
+         const updated = [n, ...prev];
+         AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+         return updated;
+      });
+   };
+
+   const clearNotifications = () => {
+      setNotifications([]);
+      AsyncStorage.removeItem(STORAGE_KEY);
+   };
+
+   const removeNotification = (id: string) => {
+      setNotifications((prev) => {
+         const updated = prev.filter((n) => n.id !== id);
+         AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+         return updated;
+      });
+   };
 
    return (
       <NotificationContext.Provider value={{ notifications, addNotification, clearNotifications, removeNotification }}>
