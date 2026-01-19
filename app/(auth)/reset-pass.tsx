@@ -1,11 +1,12 @@
 // app/(auth)/reset-pass.tsx
+import AlertComponent from "@/components/Alert";
 import { Feather } from "@expo/vector-icons";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import Service from "@/api/AuthService";
@@ -16,6 +17,16 @@ import { CartContext } from "@/context/CartContext";
 import { useAxios } from "@/hooks/useAxios";
 
 export default function ResetPasswordScreen() {
+   const [alert, setAlert] = useState<{
+      type: "success" | "error" | "warning" | "info";
+      title: string;
+      message: string;
+      onlyAccept?: boolean;
+      onAccept?: () => void;
+      onCancel?: () => void;
+      acceptText?: string;
+      cancelText?: string;
+   } | null>(null);
    const { email } = useLocalSearchParams();
    const router = useRouter();
    const { login } = useApp();
@@ -43,40 +54,43 @@ export default function ResetPasswordScreen() {
                const accessToken = data.accessToken;
                const refreshToken = data.device?.refresh_hash;
 
-               console.log("\x1b[33m[ResetPass] 🔑 Processing response...");
-
                if (!accessToken || !refreshToken) {
-                  console.error("\x1b[31m[ResetPass] ❌ Tokens missing");
-                  Alert.alert("Error", "No se recibieron los tokens de autenticación");
+                  setAlert({
+                     type: "error",
+                     title: "Error",
+                     message: "No se recibieron los tokens de autenticación",
+                     onlyAccept: true,
+                     onAccept: () => setAlert(null),
+                  });
                   return;
                }
 
-               // ✅ Limpiar carrito ANTES de hacer login
                if (cartContext?.clearCart) {
-                  console.log("\x1b[33m[ResetPass] 🛒 Limpiando carrito...");
                   await cartContext.clearCart();
                }
 
-               // ✅ Hacer login (guarda credenciales + obtiene precios)
-               console.log("\x1b[32m[ResetPass] ✅ Ejecutando login...");
                await login(data.user, accessToken, refreshToken);
 
-               console.log("\x1b[32m[ResetPass] ✅ Login completado");
-
-               // ✅ Mostrar alerta y navegar
-               Alert.alert("¡Contraseña Actualizada!", "Tu contraseña ha sido cambiada exitosamente", [
-                  {
-                     text: "Continuar",
-                     onPress: () => {
-                        router.replace("/");
-                     },
+               setAlert({
+                  type: "success",
+                  title: "¡Contraseña Actualizada!",
+                  message: "Tu contraseña ha sido cambiada exitosamente",
+                  onlyAccept: true,
+                  acceptText: "Continuar",
+                  onAccept: () => {
+                     setAlert(null);
+                     router.replace("/");
                   },
-               ]);
+               });
             } catch (err) {
-               console.error("\x1b[31m[ResetPass] ❌ Error:", err);
-               Alert.alert("Error", "No se pudo completar el proceso");
+               setAlert({
+                  type: "error",
+                  title: "Error",
+                  message: "No se pudo completar el proceso",
+                  onlyAccept: true,
+                  onAccept: () => setAlert(null),
+               });
             } finally {
-               // ✅ Limpiar SIEMPRE al final
                resetData();
             }
          } else {
@@ -84,13 +98,21 @@ export default function ResetPasswordScreen() {
                ? data.errors.map((e: { msg: string }) => e.msg).join("\n")
                : data.message || "No se pudo cambiar la contraseña";
 
-            Alert.alert("Error", messages);
-            resetData();
+            setAlert({
+               type: "error",
+               title: "Error",
+               message: messages,
+               onlyAccept: true,
+               onAccept: () => {
+                  setAlert(null);
+                  resetData();
+               },
+            });
          }
       };
 
       processResponse();
-   }, [data]); // Solo escucha cambios en data
+   }, [data]);
 
    const getDeviceId = async (): Promise<string> => {
       let deviceId = await SecureStore.getItemAsync("deviceId");
@@ -104,17 +126,35 @@ export default function ResetPasswordScreen() {
    const handleSubmit = async () => {
       // Validaciones
       if (!formData.code || !formData.newPassword || !formData.confirmPassword) {
-         Alert.alert("Campos Incompletos", "Por favor completa todos los campos");
+         setAlert({
+            type: "error",
+            title: "Campos Incompletos",
+            message: "Por favor completa todos los campos",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
          return;
       }
 
       if (formData.newPassword !== formData.confirmPassword) {
-         Alert.alert("Error", "Las contraseñas no coinciden");
+         setAlert({
+            type: "error",
+            title: "Error",
+            message: "Las contraseñas no coinciden",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
          return;
       }
 
       if (formData.newPassword.length < 6) {
-         Alert.alert("Contraseña débil", "La contraseña debe tener al menos 6 caracteres");
+         setAlert({
+            type: "error",
+            title: "Contraseña débil",
+            message: "La contraseña debe tener al menos 6 caracteres",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
          return;
       }
 
@@ -139,13 +179,32 @@ export default function ResetPasswordScreen() {
          await resetPasswordFetch(payload);
       } catch (err) {
          console.error("❌ Error en reset password:", err);
-         Alert.alert("Error", error || "No se pudo cambiar la contraseña. Intenta de nuevo.");
+         setAlert({
+            type: "error",
+            title: "Error",
+            message: error || "No se pudo cambiar la contraseña. Intenta de nuevo.",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
       }
    };
 
    return (
       <View className="flex-1 bg-movapp-background">
          <Header showNotifications={false} showCart={false} />
+         {alert && (
+            <AlertComponent
+               visible={!!alert}
+               type={alert.type}
+               title={alert.title}
+               message={alert.message}
+               onlyAccept={alert.onlyAccept}
+               onAccept={alert.onAccept}
+               onCancel={alert.onCancel}
+               acceptText={alert.acceptText}
+               cancelText={alert.cancelText}
+            />
+         )}
          <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"

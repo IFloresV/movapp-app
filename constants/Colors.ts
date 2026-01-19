@@ -30,6 +30,7 @@ export const Colors = {
       logoutButton: "#A60D14",
 
       red: "#CF192E",
-      green: "#00FF00",
+      green: "#09ad09",
+      orange: "#FFA500",
    },
 } as const;

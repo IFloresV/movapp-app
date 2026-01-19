@@ -1,4 +1,5 @@
 // app/(auth)/register.tsx
+import AlertComponent from "@/components/Alert";
 import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
 import { Feather } from "@expo/vector-icons";
@@ -7,17 +8,7 @@ import * as Device from "expo-device";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useEffect, useState } from "react";
-import {
-   ActivityIndicator,
-   Alert,
-   FlatList,
-   Modal,
-   Platform,
-   Text,
-   TextInput,
-   TouchableOpacity,
-   View,
-} from "react-native";
+import { ActivityIndicator, FlatList, Modal, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import Service from "@/api/AuthService";
@@ -30,6 +21,16 @@ import { getFlag } from "@/utils/Flags";
 import { registerForPushNotificationsAsync } from "@/utils/notifications";
 
 export default function RegisterScreen() {
+   const [alert, setAlert] = useState<{
+      type: "success" | "error" | "warning" | "info";
+      title: string;
+      message: string;
+      onlyAccept?: boolean;
+      onAccept?: () => void;
+      onCancel?: () => void;
+      acceptText?: string;
+      cancelText?: string;
+   } | null>(null);
    const { config, reloadPaises, login } = useApp();
    const { acceptedTerms, setAcceptedTerms, acceptedPrivacy, setAcceptedPrivacy } = useRegister();
 
@@ -74,17 +75,32 @@ export default function RegisterScreen() {
          (async () => {
             await login(data.user);
             clearStates();
-
-            Alert.alert("Registro exitoso", "¡Bienvenido a Movapp!", [
-               { text: "Comenzar", onPress: () => router.replace("/") },
-            ]);
-
-            resetData();
+            setAlert({
+               type: "success",
+               title: "Registro exitoso",
+               message: "¡Bienvenido a Movapp!",
+               onlyAccept: true,
+               onAccept: () => {
+                  setAlert(null);
+                  router.replace("/");
+                  resetData();
+               },
+            });
          })();
       } else {
          const messages = data.errors ? data.errors.map((e: { msg: string }) => e.msg).join("\n") : data.message;
-         if (messages) Alert.alert("Error", messages);
-         resetData();
+         if (messages) {
+            setAlert({
+               type: "error",
+               title: "Error",
+               message: messages,
+               onlyAccept: true,
+               onAccept: () => {
+                  setAlert(null);
+                  resetData();
+               },
+            });
+         }
       }
    }, [data]);
 
@@ -113,23 +129,53 @@ export default function RegisterScreen() {
 
    const handleRegister = async () => {
       if (!formData.fullName || !formData.email || !formData.phone || !formData.postalCode) {
-         Alert.alert("Campos incompletos", "Por favor completa todos los campos obligatorios");
+         setAlert({
+            type: "error",
+            title: "Campos incompletos",
+            message: "Por favor completa todos los campos obligatorios",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
          return;
       }
       if (!formData.password || formData.password.length < 8) {
-         Alert.alert("Contraseña débil", "La contraseña debe tener al menos 8 caracteres");
+         setAlert({
+            type: "error",
+            title: "Contraseña débil",
+            message: "La contraseña debe tener al menos 8 caracteres",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
          return;
       }
       if (formData.password !== formData.confirmPassword) {
-         Alert.alert("Error", "Las contraseñas no coinciden");
+         setAlert({
+            type: "error",
+            title: "Error",
+            message: "Las contraseñas no coinciden",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
          return;
       }
       if (!acceptedTerms) {
-         Alert.alert("Términos requeridos", "Debes aceptar los Términos y Condiciones para continuar");
+         setAlert({
+            type: "error",
+            title: "Términos requeridos",
+            message: "Debes aceptar los Términos y Condiciones para continuar",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
          return;
       }
       if (!acceptedPrivacy) {
-         Alert.alert("Privacidad requerida", "Debes aceptar la Política de Privacidad");
+         setAlert({
+            type: "error",
+            title: "Privacidad requerida",
+            message: "Debes aceptar la Política de Privacidad",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
          return;
       }
 
@@ -166,7 +212,13 @@ export default function RegisterScreen() {
          await registerFetch(payload, deviceId, pushToken);
       } catch (err) {
          console.error("❌ Error en registro:", err);
-         Alert.alert("Error", "No se pudo registrar. Intenta de nuevo.");
+         setAlert({
+            type: "error",
+            title: "Error",
+            message: "No se pudo registrar. Intenta de nuevo.",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
       }
    };
 
@@ -185,7 +237,19 @@ export default function RegisterScreen() {
    return (
       <View className="flex-1 bg-black">
          <Header showNotifications={false} showCart={false} logoType={2} />
-
+         {alert && (
+            <AlertComponent
+               visible={!!alert}
+               type={alert.type}
+               title={alert.title}
+               message={alert.message}
+               onlyAccept={alert.onlyAccept}
+               onAccept={alert.onAccept}
+               onCancel={alert.onCancel}
+               acceptText={alert.acceptText}
+               cancelText={alert.cancelText}
+            />
+         )}
          <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"

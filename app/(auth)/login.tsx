@@ -1,9 +1,10 @@
 // app/(auth)/login.tsx
+import AlertComponent from "@/components/Alert";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 import { useApp } from "@/context/AppContext";
 
@@ -32,6 +33,15 @@ export default function LoginScreen() {
 
    const [loginFetch, data, error, , loading, , resetData] = useAxios(AuthService.login);
 
+   const [alert, setAlert] = useState<{
+      type: "success" | "error";
+      title: string;
+      message: string;
+      onlyAccept?: boolean;
+      onAccept?: () => void;
+      onCancel?: () => void;
+   } | null>(null);
+
    useEffect(() => {
       if (!data) return;
       if (data.success) {
@@ -40,20 +50,32 @@ export default function LoginScreen() {
             if (cartContext?.clearCart) {
                await cartContext.clearCart();
             }
-
-            Alert.alert("¡Bienvenido de nuevo!", "Has iniciado sesión exitosamente", [
-               { text: "Comenzar", onPress: () => router.replace("/") },
-            ]);
-
-            resetData();
+            setAlert({
+               type: "success",
+               title: "¡Bienvenido de nuevo!",
+               message: "Has iniciado sesión exitosamente",
+               onlyAccept: true,
+               onAccept: () => {
+                  setAlert(null);
+                  router.replace("/");
+                  resetData();
+               },
+            });
          })();
       } else {
          const messages = data.errors
             ? data.errors.map((e: { msg: string }) => e.msg).join("\n")
             : data.message || "Credenciales incorrectas";
-
-         Alert.alert("Error", messages);
-         resetData();
+         setAlert({
+            type: "error",
+            title: "Error",
+            message: messages,
+            onlyAccept: true,
+            onAccept: () => {
+               setAlert(null);
+               resetData();
+            },
+         });
       }
    }, [data]);
 
@@ -69,14 +91,26 @@ export default function LoginScreen() {
    const handleLogin = async () => {
       // Validaciones
       if (!formData.email || !formData.password) {
-         Alert.alert("Campos Incompletos", "Por favor completa todos los campos");
+         setAlert({
+            type: "error",
+            title: "Campos Incompletos",
+            message: "Por favor completa todos los campos",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
          return;
       }
 
       // Validación básica de email
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
-         Alert.alert("Email inválido", "Por favor ingresa un email válido");
+         setAlert({
+            type: "error",
+            title: "Email inválido",
+            message: "Por favor ingresa un email válido",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
          return;
       }
 
@@ -109,13 +143,30 @@ export default function LoginScreen() {
          await loginFetch(payload, deviceId, pushToken);
       } catch (err) {
          console.error("❌ Error en login:", err);
-         Alert.alert("Error", error || "No se pudo iniciar sesión. Intenta de nuevo.");
+         setAlert({
+            type: "error",
+            title: "Error",
+            message: error || "No se pudo iniciar sesión. Intenta de nuevo.",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
       }
    };
 
    return (
       <View className="flex-1 bg-movapp-background">
          <Header showNotifications={false} showCart={false} />
+         {alert && (
+            <AlertComponent
+               visible={!!alert}
+               type={alert.type}
+               title={alert.title}
+               message={alert.message}
+               onlyAccept={alert.onlyAccept}
+               onAccept={alert.onAccept}
+               onCancel={alert.onCancel}
+            />
+         )}
          <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"

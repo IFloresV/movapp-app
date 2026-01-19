@@ -2,6 +2,7 @@
 import AuthService from "@/api/AuthService";
 import NotificationService from "@/api/NotificationService";
 import OrderService, { OrderItem } from "@/api/OrderService";
+import AlertComponent from "@/components/Alert";
 import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
 import { useApp } from "@/context/AppContext";
@@ -12,7 +13,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Image, ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
 
 // Función para obtener el deviceId desde SecureStore
 const getDeviceId = async (): Promise<string> => {
@@ -21,6 +22,16 @@ const getDeviceId = async (): Promise<string> => {
 };
 
 export default function ProfileScreen() {
+   const [alert, setAlert] = useState<{
+      type: "success" | "error" | "warning" | "info";
+      title: string;
+      message: string;
+      onlyAccept?: boolean;
+      onAccept?: () => void;
+      onCancel?: () => void;
+      acceptText?: string;
+      cancelText?: string;
+   } | null>(null);
    const router = useRouter();
    const { user, config, logout } = useApp();
 
@@ -115,30 +126,51 @@ export default function ProfileScreen() {
    );
 
    const handleLogout = async () => {
-      Alert.alert("Cerrar Sesión", "¿Estás seguro que deseas cerrar sesión?", [
-         { text: "Cancelar", style: "cancel" },
-         {
-            text: "Cerrar Sesión",
-            style: "destructive",
-            onPress: async () => {
-               try {
-                  // console.log("\x1b[31m[Profile] Cerrando sesión...");
-                  await logout();
-                  Alert.alert("Sesión cerrada", "Has cerrado tu sesión correctamente.");
-                  router.replace("/(auth)/login");
-               } catch (error) {
-                  console.error("Error al cerrar sesión:", error);
-                  Alert.alert("Error", "No se pudo cerrar la sesión");
-               }
-            },
+      setAlert({
+         type: "warning",
+         title: "Cerrar Sesión",
+         message: "¿Estás seguro que deseas cerrar sesión?",
+         onlyAccept: false,
+         acceptText: "Cerrar Sesión",
+         cancelText: "Cancelar",
+         onAccept: async () => {
+            setAlert(null);
+            try {
+               await logout();
+               setAlert({
+                  type: "success",
+                  title: "Sesión cerrada",
+                  message: "Has cerrado tu sesión correctamente.",
+                  onlyAccept: true,
+                  onAccept: () => {
+                     setAlert(null);
+                     router.replace("/(auth)/login");
+                  },
+               });
+            } catch (error) {
+               setAlert({
+                  type: "error",
+                  title: "Error",
+                  message: "No se pudo cerrar la sesión",
+                  onlyAccept: true,
+                  onAccept: () => setAlert(null),
+               });
+            }
          },
-      ]);
+         onCancel: () => setAlert(null),
+      });
    };
 
    // Handler para activar/desactivar notificaciones
    const handleToggleNotif = async (value: boolean) => {
       if (!deviceId) {
-         Alert.alert("Error", "No se encontró el ID del dispositivo.");
+         setAlert({
+            type: "error",
+            title: "Error",
+            message: "No se encontró el ID del dispositivo.",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
          return;
       }
       setNotifLoading(true);
@@ -150,11 +182,23 @@ export default function ProfileScreen() {
             setNotifEnabled(!!res.device.pushEnabled);
             console.log("[Notificaciones] Nuevo estado pushEnabled:", res.device.pushEnabled);
          } else {
-            Alert.alert("Error", res?.message || "No se pudo actualizar el estado de notificaciones");
+            setAlert({
+               type: "error",
+               title: "Error",
+               message: res?.message || "No se pudo actualizar el estado de notificaciones",
+               onlyAccept: true,
+               onAccept: () => setAlert(null),
+            });
          }
       } catch (err) {
          console.error("[Notificaciones] Error al cambiar estado:", err);
-         Alert.alert("Error", "No se pudo actualizar el estado de notificaciones");
+         setAlert({
+            type: "error",
+            title: "Error",
+            message: "No se pudo actualizar el estado de notificaciones",
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
       } finally {
          setNotifLoading(false);
       }
@@ -162,36 +206,67 @@ export default function ProfileScreen() {
 
    // Handler para borrar cuenta
    const handleDeleteAccount = async () => {
-      Alert.alert("Borrar cuenta", "¿Estás seguro que deseas borrar tu cuenta? Esta acción no se puede deshacer.", [
-         { text: "Cancelar", style: "cancel" },
-         {
-            text: "Borrar cuenta",
-            style: "destructive",
-            onPress: async () => {
-               setDeletingAccount(true);
-               try {
-                  const res = await AuthService.deleteAccount();
-                  if (res.success) {
-                     Alert.alert("Cuenta eliminada", res.message || "Tu cuenta ha sido eliminada.");
-                     await logout();
-                     router.replace("/(auth)/login");
-                  } else {
-                     Alert.alert("Error", res.message || "No se pudo eliminar la cuenta.");
-                  }
-               } catch (err: any) {
-                  if (err?.response?.status === 401) {
-                     Alert.alert("No autorizado", "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.");
-                     await logout();
-                     router.replace("/(auth)/login");
-                  } else {
-                     Alert.alert("Error", "No se pudo eliminar la cuenta.");
-                  }
-               } finally {
-                  setDeletingAccount(false);
+      setAlert({
+         type: "warning",
+         title: "Borrar cuenta",
+         message: "¿Estás seguro que deseas borrar tu cuenta? Esta acción no se puede deshacer.",
+         onlyAccept: false,
+         acceptText: "Borrar cuenta",
+         cancelText: "Cancelar",
+         onAccept: async () => {
+            setAlert(null);
+            setDeletingAccount(true);
+            try {
+               const res = await AuthService.deleteAccount();
+               if (res.success) {
+                  setAlert({
+                     type: "success",
+                     title: "Cuenta eliminada",
+                     message: res.message || "Tu cuenta ha sido eliminada.",
+                     onlyAccept: true,
+                     onAccept: async () => {
+                        setAlert(null);
+                        await logout();
+                        router.replace("/(auth)/login");
+                     },
+                  });
+               } else {
+                  setAlert({
+                     type: "error",
+                     title: "Error",
+                     message: res.message || "No se pudo eliminar la cuenta.",
+                     onlyAccept: true,
+                     onAccept: () => setAlert(null),
+                  });
                }
-            },
+            } catch (err: any) {
+               if (err?.response?.status === 401) {
+                  setAlert({
+                     type: "error",
+                     title: "No autorizado",
+                     message: "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.",
+                     onlyAccept: true,
+                     onAccept: async () => {
+                        setAlert(null);
+                        await logout();
+                        router.replace("/(auth)/login");
+                     },
+                  });
+               } else {
+                  setAlert({
+                     type: "error",
+                     title: "Error",
+                     message: "No se pudo eliminar la cuenta.",
+                     onlyAccept: true,
+                     onAccept: () => setAlert(null),
+                  });
+               }
+            } finally {
+               setDeletingAccount(false);
+            }
          },
-      ]);
+         onCancel: () => setAlert(null),
+      });
    };
 
    const selectedCountry = paises.find((p) => p.id === userData?.pais_id);
@@ -201,7 +276,19 @@ export default function ProfileScreen() {
    return (
       <View className="flex-1 bg-black">
          <Header showNotifications={true} showCart={true} logoType={2} />
-
+         {alert && (
+            <AlertComponent
+               visible={!!alert}
+               type={alert.type}
+               title={alert.title}
+               message={alert.message}
+               onlyAccept={alert.onlyAccept}
+               onAccept={alert.onAccept}
+               onCancel={alert.onCancel}
+               acceptText={alert.acceptText}
+               cancelText={alert.cancelText}
+            />
+         )}
          <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
             {/* Card Principal de Perfil */}
             <View className="bg-movapp-card rounded-3xl p-3 mb-2 border border-movapp-borderCard border-opacity-50">
@@ -261,11 +348,7 @@ export default function ProfileScreen() {
             ) : error ? (
                <View className="bg-movapp-card rounded-3xl p-6 mb-2 border border-movapp-borderCard border-opacity-50">
                   <Text className="text-white text-base font-bold mb-3">Historial de Compras</Text>
-                  <View style={{ height: 200 }} className="items-center justify-center">
-                     <Feather name="alert-circle" size={32} color="#EF4444" />
-                     <Text className="text-gray-400 text-sm mt-3 text-center">Error al cargar las compras</Text>
-                     <Text className="text-gray-500 text-xs mt-1 text-center">{error}</Text>
-                  </View>
+                  <AlertComponent visible={true} type="error" title="Error al cargar las compras" message={error} />
                </View>
             ) : purchases.length > 0 ? (
                <View className="bg-movapp-card rounded-3xl p-6 mb-2 border border-movapp-borderCard border-opacity-50">
@@ -334,7 +417,7 @@ export default function ProfileScreen() {
 
             {/* Botón Cerrar Sesión */}
             <TouchableOpacity
-               className="bg-red-700/70 py-4 rounded-xl items-center mb-6"
+               className="bg-movapp-logoutButton py-4 rounded-xl items-center mb-3"
                activeOpacity={0.8}
                onPress={handleLogout}
             >
@@ -343,12 +426,12 @@ export default function ProfileScreen() {
 
             {/* Botón Cerrar Sesión */}
             <TouchableOpacity
-               className="bg-red-700/70 py-4 rounded-xl items-center mb-6"
+               className="bg-movapp-text py-4 rounded-xl items-center mb-2"
                activeOpacity={0.8}
                onPress={handleDeleteAccount}
                disabled={deletingAccount}
             >
-               <Text className="text-white text-lg font-bold">
+               <Text className="text-movapp-primary text-lg font-bold">
                   {deletingAccount ? "Eliminando cuenta..." : "Eliminar cuenta"}
                </Text>
             </TouchableOpacity>
