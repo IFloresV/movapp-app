@@ -1,9 +1,10 @@
+import AlertComponent from "@/components/Alert";
 import { Colors } from "@/constants/Colors";
 import Env from "@/utils/Config";
 import { useStripe } from "@stripe/stripe-react-native";
 import * as Linking from "expo-linking";
 import React, { useState } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 type Props = {
    cart: any[];
@@ -28,6 +29,16 @@ export default function StripeCheckout({
 }: Props) {
    const { initPaymentSheet, presentPaymentSheet } = useStripe();
    const [loading, setLoading] = useState(false);
+   const [alert, setAlert] = useState<{
+      type: "success" | "error" | "warning" | "info";
+      title: string;
+      message: string;
+      onlyAccept?: boolean;
+      onAccept?: () => void;
+      onCancel?: () => void;
+      acceptText?: string;
+      cancelText?: string;
+   } | null>(null);
 
    // total en unidades (ej. 2200.00)
    const computeAmount = () => {
@@ -134,17 +145,45 @@ export default function StripeCheckout({
          if (presentError) {
             // el usuario cerró/canceló el flujo
             if ((presentError as any).code === "Canceled" || /cancel/i.test(presentError.message || "")) {
-               Alert.alert("Pago cancelado", "Has cancelado el proceso de pago.");
+               setAlert({
+                  type: "info",
+                  title: "Pago cancelado",
+                  message: "Has cancelado el proceso de pago.",
+                  onlyAccept: true,
+                  onAccept: () => setAlert(null),
+               });
                return;
             }
             throw presentError;
          }
 
          onSuccess?.();
-         // Alert.alert("Pago exitoso", "Gracias por tu compra.");
+         // setAlert({ type: "success", title: "Pago exitoso", message: "Gracias por tu compra.", onlyAccept: true, onAccept: () => setAlert(null) });
       } catch (err: any) {
-         console.error("StripeCheckout error:", err?.message);
-         Alert.alert("Error pago", "Ocurrió un error al procesar el pago");
+         let errorMsg = "Ocurrió un error desconocido al procesar el pago.";
+         if (typeof err === "string") {
+            errorMsg = err;
+         } else if (err && typeof err === "object") {
+            if (err.localizedMessage) {
+               errorMsg = err.localizedMessage;
+            } else if (err.stripeErrorCode || err.type || err.code) {
+               errorMsg = `Stripe error: ${err.stripeErrorCode || err.type || err.code}`;
+            } else if (err.message) {
+               errorMsg = err.message;
+            } else {
+               try {
+                  errorMsg = JSON.stringify(err);
+               } catch {}
+            }
+         }
+         console.error("StripeCheckout error:", errorMsg, err);
+         setAlert({
+            type: "error",
+            title: "Error pago",
+            message: errorMsg,
+            onlyAccept: true,
+            onAccept: () => setAlert(null),
+         });
       } finally {
          setLoading(false);
       }
@@ -152,13 +191,26 @@ export default function StripeCheckout({
 
    return (
       <View className="w-full">
+         {alert && (
+            <AlertComponent
+               visible={!!alert}
+               type={alert.type}
+               title={alert.title}
+               message={alert.message}
+               onlyAccept={alert.onlyAccept}
+               onAccept={alert.onAccept}
+               onCancel={alert.onCancel}
+               acceptText={alert.acceptText}
+               cancelText={alert.cancelText}
+            />
+         )}
          <TouchableOpacity
             className={`py-4 rounded-xl items-center ${disabled || loading ? "opacity-60" : ""}`}
             style={{ backgroundColor: Colors.movapp.primary }}
             onPress={handleCheckout}
             disabled={disabled || loading}
          >
-            <Text className="text-white text-lg font-bold">{loading ? "Procesando..." : "Proceder con el pago"}</Text>
+            <Text className="text-white text-lg font-bold">{loading ? "Procesando..." : "Continuar"}</Text>
          </TouchableOpacity>
       </View>
    );
