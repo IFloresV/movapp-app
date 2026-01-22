@@ -61,7 +61,7 @@ const forceLogout = async () => {
          router.replace("/");
       }, 1000);
    } catch (error) {
-      console.error("\x1b[31m[API] ❌ Error en forceLogout:", error);
+      console.log("\x1b[31m[API] ❌ Error en forceLogout:", error);
    }
 };
 

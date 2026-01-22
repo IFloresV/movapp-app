@@ -178,7 +178,7 @@ export default function ResetPasswordScreen() {
       try {
          await resetPasswordFetch(payload);
       } catch (err) {
-         console.error("❌ Error en reset password:", err);
+         console.log("❌ Error en reset password:", err);
          setAlert({
             type: "error",
             title: "Error",

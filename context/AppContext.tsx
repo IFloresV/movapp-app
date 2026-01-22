@@ -162,7 +162,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
          await Promise.all(saves);
          // console.log("\x1b[32m[AppContext] ✅ Credenciales guardadas");
       } catch (e) {
-         // console.error("\x1b[31m[AppContext] ❌ Error guardando credenciales:", e);
+         // console.log("\x1b[31m[AppContext] ❌ Error guardando credenciales:", e);
       }
    }, []);
 
@@ -178,7 +178,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
          // console.log("\x1b[32m[AppContext] ✅ Credenciales eliminadas");
       } catch (e) {
-         // console.error("\x1b[31m[AppContext] ❌ Error limpiando credenciales:", e);
+         // console.log("\x1b[31m[AppContext] ❌ Error limpiando credenciales:", e);
       }
    }, []);
 
@@ -187,7 +187,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
          await AsyncStorage.setItem(STORAGE_KEYS.CONFIG, JSON.stringify({ paises, precios }));
          // console.log("\x1b[32m[AppContext] ✅ Config guardada en cache");
       } catch (e) {
-         // console.error("\x1b[31m[AppContext] ❌ Error guardando cache:", e);
+         // console.log("\x1b[31m[AppContext] ❌ Error guardando cache:", e);
       }
    }, []);
 
@@ -207,7 +207,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
          // console.log("\x1b[33m[AppContext] ⚠️ No se pudieron obtener países");
          return [];
       } catch (error) {
-         // console.error("\x1b[31m[AppContext] ❌ Error obteniendo países:", error);
+         // console.log("\x1b[31m[AppContext] ❌ Error obteniendo países:", error);
          return [];
       }
    }, []);
@@ -226,7 +226,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
          // console.log("\x1b[33m[AppContext] ⚠️ No se pudieron obtener precios");
          return [];
       } catch (error) {
-         // console.error("\x1b[31m[AppContext] ❌ Error obteniendo precios:", error);
+         // console.log("\x1b[31m[AppContext] ❌ Error obteniendo precios:", error);
          return [];
       }
    }, []);
@@ -246,7 +246,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
          // console.log("\x1b[32m[AppContext] ✅ Países recargados:", paises.length);
       } catch (error) {
-         // console.error("\x1b[31m[AppContext] ❌ Error recargando países:", error);
+         // console.log("\x1b[31m[AppContext] ❌ Error recargando países:", error);
       }
    }, [fetchCountries, saveConfigCache, state.config.precios]);
 
@@ -293,7 +293,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
             // console.log("\x1b[32m[AppContext] ✅ Login completado");
          } catch (error) {
-            // console.error("\x1b[31m[AppContext] ❌ Error en login:", error);
+            // console.log("\x1b[31m[AppContext] ❌ Error en login:", error);
             throw error;
          }
       },
@@ -309,7 +309,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
          // console.log("\x1b[32m[AppContext] ✅ Logout completado");
       } catch (error) {
-         // console.error("\x1b[31m[AppContext] ❌ Error en logout:", error);
+         // console.log("\x1b[31m[AppContext] ❌ Error en logout:", error);
       }
    }, [clearStorage]);
 
@@ -333,7 +333,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
             // console.log("\x1b[32m[AppContext] ✅ Usuario actualizado");
          } catch (error) {
-            // console.error("\x1b[31m[AppContext] ❌ Error actualizando usuario:", error);
+            // console.log("\x1b[31m[AppContext] ❌ Error actualizando usuario:", error);
          }
       },
       [refreshPrices, state.user.infoUser],
@@ -361,7 +361,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       // console.log("\x1b[33m[AppContext] 🗑️ Limpiando config");
 
       dispatch({ type: "CONFIG_CLEAR" });
-      AsyncStorage.removeItem(STORAGE_KEYS.CONFIG).catch(console.error);
+      AsyncStorage.removeItem(STORAGE_KEYS.CONFIG).catch(console.log);
    }, []);
 
    // ==================== HYDRATION ====================
@@ -393,7 +393,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
                   userObj = JSON.parse(storedUser);
                   // console.log("\x1b[32m[AppContext] ✅ Usuario restaurado:", userObj.nombre);
                } catch (e) {
-                  // console.error("\x1b[31m[AppContext] ❌ Error parseando usuario:", e);
+                  // console.log("\x1b[31m[AppContext] ❌ Error parseando usuario:", e);
                }
             }
 
@@ -405,7 +405,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
                   precios = parsed.precios ?? [];
                   // console.log("\x1b[32m[AppContext] ✅ Config desde cache");
                } catch (e) {
-                  // console.error("\x1b[31m[AppContext] ❌ Error parseando cache:", e);
+                  // console.log("\x1b[31m[AppContext] ❌ Error parseando cache:", e);
                }
             }
 
@@ -447,7 +447,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             // console.log("\x1b[32m[AppContext] 📊 Países cargados:", paises.length);
             // console.log("\x1b[32m[AppContext] 📊 Precios cargados:", precios.length);
          } catch (error) {
-            // console.error("\x1b[31m[AppContext] ❌ Error en hydrate:", error);
+            // console.log("\x1b[31m[AppContext] ❌ Error en hydrate:", error);
          } finally {
             setIsHydrated(true);
          }

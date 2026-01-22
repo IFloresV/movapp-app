@@ -53,6 +53,6 @@ export async function registerForPushNotificationsAsync() {
       console.log("Token push obtenido:", token);
       return token;
    } catch (error) {
-      console.error("Error obteniendo token:", error);
+      console.log("Error obteniendo token:", error);
    }
 }

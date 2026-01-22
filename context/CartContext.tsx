@@ -15,7 +15,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
                setCart(JSON.parse(storedCart));
             }
          } catch (error) {
-            console.error("Error loading cart:", error);
+            console.log("Error loading cart:", error);
          }
       };
       loadCart();
@@ -79,7 +79,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
          // Limpiar AsyncStorage
          await AsyncStorage.removeItem("cart");
       } catch (error) {
-         console.error("\x1b[31m[CartContext] ❌ Error limpiando carrito:", error);
+         console.log("\x1b[31m[CartContext] ❌ Error limpiando carrito:", error);
       }
    }, []);
 

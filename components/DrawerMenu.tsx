@@ -62,7 +62,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
          await Linking.openURL(whatsappUrl);
          onClose();
       } catch (error) {
-         console.error("Error opening WhatsApp:", error);
+         console.log("Error opening WhatsApp:", error);
          Alert.alert("Error", "No se pudo abrir WhatsApp. Intenta nuevamente.");
       }
    };

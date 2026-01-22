@@ -41,7 +41,7 @@ const OrderService = {
             message: "Error al obtener las órdenes",
          };
       } catch (error) {
-         console.error("\x1b[31m[OrderService] Error al obtener órdenes pagadas:", error);
+         console.log("\x1b[31m[OrderService] Error al obtener órdenes pagadas:", error);
          return {
             success: false,
             count: 0,

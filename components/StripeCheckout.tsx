@@ -85,7 +85,7 @@ export default function StripeCheckout({
 
          const text = await res.text();
          if (!res.ok) {
-            console.error("[StripeCheckout] backend non-OK response:", res.status, text);
+            console.log("[StripeCheckout] backend non-OK response:", res.status, text);
             throw new Error(`Backend error ${res.status}: ${text}`);
          }
 
@@ -93,7 +93,7 @@ export default function StripeCheckout({
          try {
             json = JSON.parse(text);
          } catch (err) {
-            console.error("[StripeCheckout] invalid JSON from backend:", text);
+            console.log("[StripeCheckout] invalid JSON from backend:", text);
             throw new Error(`Respuesta no JSON del backend: ${text}`);
          }
 
@@ -176,11 +176,11 @@ export default function StripeCheckout({
                } catch {}
             }
          }
-         console.error("StripeCheckout error:", errorMsg, err);
+         console.log("StripeCheckout error:", errorMsg, err);
          setAlert({
             type: "error",
             title: "Error pago",
-            message: errorMsg,
+            message: "Ocurrió un error al procesar el pago, por favor intenta nuevamente.\n\n",
             onlyAccept: true,
             onAccept: () => setAlert(null),
          });

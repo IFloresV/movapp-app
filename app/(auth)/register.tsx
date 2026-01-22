@@ -204,14 +204,14 @@ export default function RegisterScreen() {
          pushToken = await registerForPushNotificationsAsync();
       } catch (pushError) {
          console.warn("No se pudo obtener push token, se continuará sin notificaciones push.");
-         console.error("❌ Error en Token de Push:", pushError);
+         console.log("❌ Error en Token de Push:", pushError);
       }
 
       try {
          // Llamar a login pasando deviceId y pushToken (puede ser undefined)
          await registerFetch(payload, deviceId, pushToken);
       } catch (err) {
-         console.error("❌ Error en registro:", err);
+         console.log("❌ Error en registro:", err);
          setAlert({
             type: "error",
             title: "Error",

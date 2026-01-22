@@ -49,7 +49,7 @@ export const useAxios = (endpoint: EndpointFn, timeout = 0) => {
 
          return response.data;
       } catch (err: any) {
-         // console.error("\x1b[36m", "Error en useAxios:", err);
+         // console.log("\x1b[36m", "Error en useAxios:", err);
          alert("Error al conectar con el servidor. Por favor, intenta nuevamente.");
 
          if (err?.response?.data?.errors) {

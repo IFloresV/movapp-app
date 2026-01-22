@@ -82,7 +82,7 @@ export default function ProfileScreen() {
             .catch((err) => {
                setNotifEnabled(false);
                console.log("-----------------");
-               console.error("\x1b[31m", "[Notificaciones] Error al obtener estado del dispositivo:", err);
+               console.log("\x1b[31m", "[Notificaciones] Error al obtener estado del dispositivo:", err);
             })
             .finally(() => setNotifLoading(false));
       }, [deviceId]),
@@ -109,7 +109,7 @@ export default function ProfileScreen() {
             setPurchases([]);
          }
       } catch (err) {
-         console.error("❌ [Profile] Error al cargar órdenes:", err);
+         console.log("❌ [Profile] Error al cargar órdenes:", err);
          setError(err instanceof Error ? err.message : "Error desconocido");
          setPurchases([]);
       } finally {
@@ -191,7 +191,7 @@ export default function ProfileScreen() {
             });
          }
       } catch (err) {
-         console.error("[Notificaciones] Error al cambiar estado:", err);
+         console.log("[Notificaciones] Error al cambiar estado:", err);
          setAlert({
             type: "error",
             title: "Error",

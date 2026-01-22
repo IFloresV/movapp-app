@@ -82,7 +82,7 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
       if (isHydrated && !hasFetched.current) {
          hasFetched.current = true;
          console.log("🌐 Fetching países...");
-         fetchPaises().catch((err) => console.error("❌ Error fetching countries:", err));
+         fetchPaises().catch((err) => console.log("❌ Error fetching countries:", err));
       }
    }, [isHydrated]);
 
@@ -122,7 +122,7 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
             await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(payload));
             console.log("💾 Config cache saved");
          } catch (err) {
-            console.error("❌ Error saving config cache:", err);
+            console.log("❌ Error saving config cache:", err);
          }
       };
 
@@ -138,7 +138,7 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
       try {
          await fetchPaises();
       } catch (err) {
-         console.error("❌ reloadPaises error:", err);
+         console.log("❌ reloadPaises error:", err);
       }
    }, [fetchPaises]);
 

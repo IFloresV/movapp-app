@@ -12,7 +12,7 @@ export const useLogOut = () => {
          await logout();
          router.replace("/");
       } catch (error) {
-         console.error("\x1b[31m[useLogOut] ❌ Error en logout:", error);
+         console.log("\x1b[31m[useLogOut] ❌ Error en logout:", error);
       }
    }, [logout, clearConfig, router]);
 

@@ -134,15 +134,15 @@ export default function LoginScreen() {
       try {
          pushToken = await registerForPushNotificationsAsync();
       } catch (pushError) {
-         console.warn("No se pudo obtener push token, se continuará sin notificaciones push.");
-         console.error("❌ Error en Token de Push:", pushError);
+         console.log("No se pudo obtener push token, se continuará sin notificaciones push.");
+         console.log("❌ Error en Token de Push:", pushError);
       }
 
       try {
          // Llamar a login pasando deviceId y pushToken (puede ser undefined)
          await loginFetch(payload, deviceId, pushToken);
       } catch (err) {
-         console.error("❌ Error en login:", err);
+         console.log("❌ Error en login:", err);
          setAlert({
             type: "error",
             title: "Error",
