@@ -28,10 +28,10 @@ export default function HackScreen() {
       return cart.find((c: any) => (c.sku || "").toUpperCase() === "PROD-001") ?? null;
    }, [cart, hackPrice]);
 
-   const [hackCount, setHackCount] = useState<number>(() => (cartItem ? cartItem.quantity ?? 1 : 1));
+   const [hackCount, setHackCount] = useState<number>(() => (cartItem ? (cartItem.quantity ?? 1) : 1));
 
    useEffect(() => {
-      setHackCount(cartItem ? cartItem.quantity ?? 1 : 1);
+      setHackCount(cartItem ? (cartItem.quantity ?? 1) : 1);
    }, [cartItem]);
 
    const priceValue = hackPrice?.precio ? Number(hackPrice.precio) : 500;
@@ -167,9 +167,8 @@ export default function HackScreen() {
          {showLoginModal && (
             <View className="absolute inset-0 bg-black/60 items-center justify-center px-6">
                <View className="bg-movapp-linkBorder p-6 rounded-2xl w-full max-w-sm border border-gray-700">
-                  <Text className="text-white text-xl font-bold mb-3 text-center">Inicia sesión</Text>
                   <Text className="text-gray-300 text-center mb-6">
-                     Debes iniciar sesión antes de adquirir el Hack.
+                     Para adquirir EL HACK, necesitas iniciar sesión.
                   </Text>
                   <TouchableOpacity
                      onPress={() => {
