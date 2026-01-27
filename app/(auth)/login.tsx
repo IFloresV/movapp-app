@@ -249,7 +249,7 @@ export default function LoginScreen() {
                </TouchableOpacity>
             </View>
             {/* ¿No tienes cuenta? */}
-            <View className="flex-row justify-center mt-6">
+            <View className="flex-row justify-center mt-4">
                <Text className="text-white text-sm">¿No tienes una cuenta? </Text>
                <TouchableOpacity onPress={() => router.push("/(auth)/register")} activeOpacity={0.7} disabled={loading}>
                   <Text className="text-md font-semibold underline" style={{ color: Colors.movapp.primary }}>
@@ -258,10 +258,10 @@ export default function LoginScreen() {
                </TouchableOpacity>
             </View>
             {/* Acceso sin login */}
-            <View className="flex-row justify-center  mb-8 mt-4">
+            <View className="flex-row justify-center  mb-8 mt-8">
                <TouchableOpacity onPress={() => router.push("/")} activeOpacity={0.7} disabled={loading}>
-                  <Text className="text-md font-semibold underline" style={{ color: Colors.movapp.primary }}>
-                     Accede sin iniciar sesión
+                  <Text className="text-sm font-semibold underline" style={{ color: Colors.movapp.primary }}>
+                     Puedes explorar el contenido sin crear una cuenta.
                   </Text>
                </TouchableOpacity>
             </View>

@@ -14,7 +14,7 @@ const registerPushToken = async (deviceId: string, pushToken: string) => {
       });
       return response.data;
    } catch (error) {
-      console.error("Error registrando push token:", error);
+      console.log("Error registrando push token:", error);
       throw error;
    }
 };

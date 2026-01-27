@@ -128,11 +128,11 @@ export default function RegisterScreen() {
    };
 
    const handleRegister = async () => {
-      if (!formData.fullName || !formData.email || !formData.phone || !formData.postalCode) {
+      if (!formData.fullName || !formData.email) {
          setAlert({
             type: "error",
             title: "Campos incompletos",
-            message: "Por favor completa todos los campos obligatorios",
+            message: "Por favor completa los campos obligatorios: nombre y correo electrónico",
             onlyAccept: true,
             onAccept: () => setAlert(null),
          });
@@ -185,12 +185,22 @@ export default function RegisterScreen() {
       const model = Device.modelName || "Unknown";
       const appVersion = Constants.expoConfig?.version || "1.0.0";
 
+      const telefonoToSend = formData.phone && formData.phone.trim().length > 0 ? formData.phone.trim() : "-";
+      const cpToSend = formData.postalCode && formData.postalCode.trim().length > 0 ? formData.postalCode.trim() : "-";
+
+      // Update UI to show '-' for empty optional fields while request is in-flight
+      setFormData((prev) => ({
+         ...prev,
+         phone: telefonoToSend,
+         postalCode: cpToSend,
+      }));
+
       const payload = {
          nombre: formData.fullName,
          email: formData.email.toLowerCase().trim(),
-         telefono: formData.phone,
+         telefono: telefonoToSend,
          pais_id: formData.countryId,
-         cp: formData.postalCode,
+         cp: cpToSend,
          password: formData.password,
          deviceId,
          device,
@@ -259,13 +269,15 @@ export default function RegisterScreen() {
             contentContainerStyle={{ flexGrow: 1 }}
          >
             <View className="items-center ">
-               <Text className="text-white text-2xl font-bold mb-4">Crea tu cuenta</Text>
+               <Text className="text-white text-2xl font-bold mb-2">Registrate</Text>
             </View>
 
             <View className="px-7">
                {/* Nombre */}
                <View className="mb-4">
-                  <Text className="text-white text-sm font-semibold mb-2">Nombre Completo</Text>
+                  <Text className="text-white text-sm font-semibold mb-2">
+                     Nombre Completo <Text style={{ color: Colors.movapp.primary }}>*</Text>
+                  </Text>
                   <TextInput
                      className="bg-movapp-inputBackground text-white px-4 py-3 rounded-xl"
                      value={formData.fullName}
@@ -277,7 +289,9 @@ export default function RegisterScreen() {
 
                {/* Email */}
                <View className="mb-4">
-                  <Text className="text-white text-sm font-semibold mb-2">Correo Electrónico</Text>
+                  <Text className="text-white text-sm font-semibold mb-2">
+                     Correo Electrónico <Text style={{ color: Colors.movapp.primary }}>*</Text>
+                  </Text>
                   <TextInput
                      className="bg-movapp-inputBackground text-white px-4 py-3 rounded-xl"
                      value={formData.email}
@@ -292,7 +306,7 @@ export default function RegisterScreen() {
                <View className="flex-row mb-4 gap-3">
                   {/* País */}
                   <View className="flex-1">
-                     <Text className="text-white text-sm font-semibold mb-2">País</Text>
+                     <Text className="text-white text-sm font-semibold mb-2">País </Text>
                      <TouchableOpacity
                         onPress={() => setShowCountryModal(true)}
                         className="bg-movapp-inputBackground px-4 py-3 rounded-xl flex-row items-center justify-between"
@@ -354,7 +368,9 @@ export default function RegisterScreen() {
 
                {/* Contraseña */}
                <View className="mb-4">
-                  <Text className="text-white text-sm font-semibold mb-2">Contraseña</Text>
+                  <Text className="text-white text-sm font-semibold mb-2">
+                     Contraseña <Text style={{ color: Colors.movapp.primary }}>*</Text>
+                  </Text>
                   <View className="relative">
                      <TextInput
                         className="bg-movapp-inputBackground text-white px-4 py-3 rounded-xl pr-12"
@@ -375,7 +391,9 @@ export default function RegisterScreen() {
 
                {/* Confirmar Contraseña */}
                <View className="mb-6">
-                  <Text className="text-white text-sm font-semibold mb-2">Confirmar Contraseña</Text>
+                  <Text className="text-white text-sm font-semibold mb-2">
+                     Confirmar Contraseña <Text style={{ color: Colors.movapp.primary }}>*</Text>
+                  </Text>
                   <View className="relative">
                      <TextInput
                         className="bg-movapp-inputBackground text-white px-4 py-3 rounded-xl pr-12"
@@ -393,35 +411,9 @@ export default function RegisterScreen() {
                      </TouchableOpacity>
                   </View>
                </View>
-
-               {/* Términos */}
-               <TouchableOpacity
-                  onPress={() => setAcceptedTerms(!acceptedTerms)}
-                  className="flex-row items-start mb-6"
-                  activeOpacity={0.7}
-               >
-                  <View
-                     className="w-5 h-5 rounded border-2 items-center justify-center mr-3 mt-0.5"
-                     style={{
-                        borderColor: acceptedTerms ? Colors.movapp.primary : "#6b7280",
-                        backgroundColor: acceptedTerms ? Colors.movapp.primary : "transparent",
-                     }}
-                  >
-                     {acceptedTerms && <Feather name="check" size={14} color="white" />}
-                  </View>
-                  <View className="flex-1">
-                     <Text className="text-white text-sm leading-5">
-                        Acepto los{" "}
-                        <Text
-                           className="font-semibold underline"
-                           style={{ color: Colors.movapp.primary }}
-                           onPress={() => router.push("/(auth)/conditions")}
-                        >
-                           Términos y Condiciones
-                        </Text>
-                     </Text>
-                  </View>
-               </TouchableOpacity>
+               <Text className="text-gray-400 text-xs mb-4">
+                  Los campos marcados con <Text style={{ color: Colors.movapp.primary }}>*</Text> son obligatorios
+               </Text>
 
                {/* Privacidad */}
                <TouchableOpacity
@@ -447,6 +439,35 @@ export default function RegisterScreen() {
                            onPress={() => router.push("/(auth)/privacy")}
                         >
                            Política de Privacidad
+                        </Text>
+                     </Text>
+                  </View>
+               </TouchableOpacity>
+
+               {/* Términos */}
+               <TouchableOpacity
+                  onPress={() => setAcceptedTerms(!acceptedTerms)}
+                  className="flex-row items-start mb-6"
+                  activeOpacity={0.7}
+               >
+                  <View
+                     className="w-5 h-5 rounded border-2 items-center justify-center mr-3 mt-0.5"
+                     style={{
+                        borderColor: acceptedTerms ? Colors.movapp.primary : "#6b7280",
+                        backgroundColor: acceptedTerms ? Colors.movapp.primary : "transparent",
+                     }}
+                  >
+                     {acceptedTerms && <Feather name="check" size={14} color="white" />}
+                  </View>
+                  <View className="flex-1">
+                     <Text className="text-white text-sm leading-5">
+                        Acepto los{" "}
+                        <Text
+                           className="font-semibold underline"
+                           style={{ color: Colors.movapp.primary }}
+                           onPress={() => router.push("/(auth)/conditions")}
+                        >
+                           Términos y Condiciones
                         </Text>
                      </Text>
                   </View>

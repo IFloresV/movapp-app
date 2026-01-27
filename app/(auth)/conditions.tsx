@@ -1,10 +1,9 @@
-// app/(tabs)/conditions.tsx
 import { Colors } from "@/constants/Colors";
 import { useRegister } from "@/context/RegisterContext";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Linking, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ConditionsScreen() {
@@ -41,9 +40,11 @@ export default function ConditionsScreen() {
             <View className="mb-6 p-4">
                <Text className="text-purple-400 text-base font-bold mb-3">1. Introducción</Text>
                <Text className="text-white text-sm leading-6">
-                  Bienvenido a Movapp. Al acceder y utilizar nuestra aplicación, usted acepta cumplir con los siguientes
-                  términos y condiciones. Por favor, lea los detenidamente. Si no está de acuerdo con alguna parte de
-                  estos términos, no utilice nuestra aplicación.
+                  Bienvenido a Movapp. El acceso al contenido informativo de la aplicación puede realizarse sin
+                  necesidad de aceptar estos términos.
+                  {"\n\n"}
+                  La aceptación de los Términos y Condiciones es requerida únicamente para crear una cuenta y contratar
+                  servicios de asesoría.
                </Text>
             </View>
 
@@ -52,14 +53,13 @@ export default function ConditionsScreen() {
                <Text className="text-purple-400 text-base font-bold mb-3">2. Licencia de Uso</Text>
                <Text className="text-white text-sm leading-6 mb-4">
                   Movapp le otorga una licencia limitada, no exclusiva, intransferible y revocable para utilizar la
-                  aplicación estrictamente de acuerdo con estos Términos. Esta licencia es personal y no comercial.
+                  aplicación de acuerdo con estos Términos. Esta licencia es personal y no comercial.
                </Text>
 
-               <Text className="text-white text-sm font-bold mb-2 p-2">2.1 Restricciones</Text>
-               <Text className="text-white text-sm leading-6 p-2">
-                  Usted no puede: modificar, copiar, distribuir, transmitir, mostrar, ejecutar, reproducir, publicar,
-                  licenciar, crear trabajos derivados, transferir o vender información, software o servicios obtenidos
-                  de la aplicación sin el consentimiento previo por escrito de Movapp.
+               <Text className="text-white text-sm font-bold mb-2">2.1 Restricciones</Text>
+               <Text className="text-white text-sm leading-6">
+                  Usted no puede modificar, copiar, distribuir, reproducir o vender información, software o servicios
+                  obtenidos de la aplicación sin autorización previa por escrito de Movapp.
                </Text>
             </View>
 
@@ -67,9 +67,14 @@ export default function ConditionsScreen() {
             <View className="mb-6 p-4">
                <Text className="text-purple-400 text-base font-bold mb-3">3. Privacidad</Text>
                <Text className="text-white text-sm leading-6">
-                  Su uso de Movapp está sujeto a la Política de Privacidad de la aplicación, que también rige la
-                  aplicación e informa a los usuarios de nuestras prácticas de recopilación de datos. Al descargar datos
-                  telemáticos, usted también acepta nuestra Política de Privacidad.
+                  El uso de Movapp está sujeto a nuestra{" "}
+                  <Text
+                     className="text-purple-400 underline"
+                     onPress={() => Linking.openURL("https://legal.movapp.com.mx/")}
+                  >
+                     Política de Privacidad
+                  </Text>
+                  , la cual describe cómo recopilamos, utilizamos y protegemos la información personal de los usuarios.
                </Text>
             </View>
 
@@ -77,9 +82,8 @@ export default function ConditionsScreen() {
             <View className="mb-6 p-4">
                <Text className="text-purple-400 text-base font-bold mb-3">4. Terminación</Text>
                <Text className="text-white text-sm leading-6">
-                  Podemos rescindir o suspender su acceso a la aplicación de inmediato, sin previo aviso ni
-                  responsabilidad, por cualquier motivo, incluyendo, entre otros, si incumple cualquiera de los
-                  Términos. Tras la rescisión, su derecho a usar la aplicación cesará inmediatamente.
+                  Podemos suspender o terminar el acceso a las funciones de compra o asesoría si el usuario incumple
+                  estos Términos. El acceso al contenido informativo no se verá afectado.
                </Text>
             </View>
 
@@ -87,49 +91,43 @@ export default function ConditionsScreen() {
             <View className="mb-6 p-4">
                <Text className="text-purple-400 text-base font-bold mb-3">5. Cambios en los Términos</Text>
                <Text className="text-white text-sm leading-6">
-                  Nos reservamos el derecho, a nuestra entera discreción, de modificar o reemplazar estos Términos en
-                  cualquier momento. Si una revisión es material, intentaremos proporcionar al menos 30 días de aviso
-                  antes de que los nuevos términos entren en vigor. Lo que constituye un cambio material se determinará
-                  a nuestra entera discreción.
+                  Nos reservamos el derecho de modificar estos Términos en cualquier momento. Las modificaciones
+                  entrarán en vigor una vez publicadas.
                </Text>
             </View>
 
             {/* 6. Contacto */}
             <View className="mb-6 p-4">
                <Text className="text-purple-400 text-base font-bold mb-3">6. Contacto</Text>
-               <Text className="text-white text-sm leading-6 mb-2">
-                  Si tiene alguna pregunta sobre estos Términos y Condiciones, no dude en ponerse en contacto con
-                  nosotros a través de nuestro soporte dentro de la aplicación o en la dirección de correo electrónico
-                  de contacto proporcionada en nuestra página web oficial.
+               <Text className="text-white text-sm leading-6">
+                  Si tiene preguntas sobre estos Términos, puede contactarnos a través del soporte de la aplicación o
+                  mediante la información disponible en nuestro sitio web oficial.
                </Text>
             </View>
 
-            {/* Propiedad Intelectual */}
+            {/* 7. Propiedad Intelectual */}
             <View className="mb-6 p-4">
                <Text className="text-purple-400 text-base font-bold mb-3">7. Propiedad Intelectual</Text>
                <Text className="text-white text-sm leading-6">
-                  La aplicación y su contenido original, características y funcionalidad son y seguirán siendo propiedad
-                  exclusiva de Movapp y sus licenciantes. La aplicación está protegida por derechos de autor, marcas
-                  comerciales y otras leyes.
+                  La aplicación y su contenido son propiedad exclusiva de Movapp y están protegidos por las leyes de
+                  propiedad intelectual.
                </Text>
             </View>
 
-            {/* Limitación de Responsabilidad */}
+            {/* 8. Limitación de Responsabilidad */}
             <View className="mb-6 p-4">
                <Text className="text-purple-400 text-base font-bold mb-3">8. Limitación de Responsabilidad</Text>
                <Text className="text-white text-sm leading-6">
-                  En ningún caso Movapp, ni sus directores, empleados, socios, agentes, proveedores o afiliados, serán
-                  responsables de ningún daño indirecto, incidental, especial, consecuente o punitivo, incluyendo sin
-                  limitación, pérdida de beneficios, datos, uso, buena voluntad u otras pérdidas intangibles.
+                  Movapp no será responsable por daños indirectos derivados del uso de la aplicación o de los servicios
+                  de asesoría.
                </Text>
             </View>
 
-            {/* Ley Aplicable */}
+            {/* 9. Ley Aplicable */}
             <View className="mb-8 p-4">
                <Text className="text-purple-400 text-base font-bold mb-3">9. Ley Aplicable</Text>
                <Text className="text-white text-sm leading-6">
-                  Estos Términos se regirán e interpretarán de acuerdo con las leyes de México, sin tener en cuenta sus
-                  disposiciones sobre conflictos de leyes.
+                  Estos Términos se rigen por las leyes de los Estados Unidos Mexicanos.
                </Text>
             </View>
          </ScrollView>

@@ -4,6 +4,7 @@ import { Feather } from "@expo/vector-icons";
 
 import { useRegister } from "@/context/RegisterContext";
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -25,8 +26,10 @@ export default function PrivacyScreen() {
 
    return (
       <SafeAreaView className="flex-1 bg-black">
+         <StatusBar style="light" />
+
          {/* Header */}
-         <View className="pt-12 pb-4 px-4 border-b border-gray-800">
+         <View className="px-4 pb-8 pt-4 border-t border-gray-800">
             <View className="flex-row items-center">
                <TouchableOpacity onPress={() => router.back()} className="mr-4">
                   <Feather name="arrow-left" size={24} color="white" />
@@ -37,203 +40,167 @@ export default function PrivacyScreen() {
 
          {/* Content */}
          <ScrollView className="flex-1 px-4 py-6" showsVerticalScrollIndicator={false}>
-            {/* Introducción */}
-            <View className="mb-8">
-               <Text className="text-purple-400 text-lg font-bold mb-3">Introducción</Text>
-               <Text className="text-white text-base leading-6">
-                  Bienvenido a Movapp. Tu privacidad es de suma importancia para nosotros. Esta Política de Privacidad
-                  describe cómo recopilamos, usamos, procesamos y compartimos tu información personal en relación con tu
-                  acceso y uso de la plataforma Movapp.
+            {/* 0. Intro */}
+            <View className="mb-6 p-4">
+               <Text className="text-purple-400 text-base font-bold mb-3">Política de Privacidad de Movapp</Text>
+               <Text className="text-white text-sm leading-6 mb-3">Última actualización: enero de 2026</Text>
+               <Text className="text-white text-sm leading-6">
+                  Movapp (en adelante, “la App”) es una aplicación propiedad de Movapp (la “Empresa”), diseñada para
+                  ofrecer contenido informativo y servicios de asesoría personalizada a través de WhatsApp.
+               </Text>
+               <Text className="text-white text-sm leading-6 mt-3">
+                  La presente Política de Privacidad describe cómo recopilamos, usamos y protegemos la información
+                  personal de los usuarios.
                </Text>
             </View>
 
-            {/* Información que Recopilamos */}
-            <View className="mb-8">
-               <Text className="text-purple-400 text-lg font-bold mb-3">Información que Recopilamos</Text>
-               <Text className="text-white text-base leading-6 mb-4">
-                  Recopilamos información sobre ti cuando usas nuestros servicios. Esto incluye:
-               </Text>
-
-               <View className="space-y-3">
-                  <View className="flex-row">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        <Text className="font-semibold">Información de Perfil:</Text> Tu nombre, dirección de correo
-                        electrónico, contraseña, fecha de nacimiento, género y foto de perfil.
-                     </Text>
-                  </View>
-
-                  <View className="flex-row mt-3">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        <Text className="font-semibold">Información de Uso:</Text> Datos sobre cómo interactúas con la
-                        aplicación, como las películas o series que ves, el tiempo de visualización, búsquedas y
-                        preferencias.
-                     </Text>
-                  </View>
-
-                  <View className="flex-row mt-3">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        <Text className="font-semibold">Información del Dispositivo:</Text> Datos sobre el dispositivo
-                        que usas para acceder a Movapp, incluyendo el modelo, sistema operativo, y tipo de navegador,
-                        así como tu dirección IP y ubicación general desde la cual accedes al contenido.
-                     </Text>
-                  </View>
-
-                  <View className="flex-row mt-3">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        <Text className="font-semibold">Datos de Ubicación:</Text> Información de ubicación aproximada
-                        basada en tu dirección IP para fines de licencia de contenido.
-                     </Text>
-                  </View>
-
-                  <View className="flex-row mt-3">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        <Text className="font-semibold">Comunicaciones:</Text> Registros de tus comunicaciones con
-                        nosotros, incluyendo correos electrónicos de soporte y chats dentro de la aplicación.
-                     </Text>
-                  </View>
-               </View>
-            </View>
-
-            {/* Uso de la Información */}
-            <View className="mb-8">
-               <Text className="text-purple-400 text-lg font-bold mb-3">Uso de la Información</Text>
-               <Text className="text-white text-base leading-6 mb-4">Utilizamos la información recopilada para:</Text>
-
-               <View className="space-y-3">
-                  <View className="flex-row">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        Proporcionar y mejorar nuestros servicios, incluyendo recomendaciones de contenido y
-                        recomendaciones.
-                     </Text>
-                  </View>
-
-                  <View className="flex-row mt-3">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">Procesar tus suscripciones y pagos.</Text>
-                  </View>
-
-                  <View className="flex-row mt-3">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        Comunicarnos contigo sobre tu cuenta, promociones y actualizaciones promocionales.
-                     </Text>
-                  </View>
-
-                  <View className="flex-row mt-3">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        Detectar, prevenir y abordar fraudes, abusos o violaciones de nuestros Términos y Condiciones.
-                     </Text>
-                  </View>
-
-                  <View className="flex-row mt-3">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        Realizar análisis y estudios para comprender mejor las preferencias de los usuarios.
-                     </Text>
-                  </View>
-               </View>
-            </View>
-
-            {/* Compartir Información */}
-            <View className="mb-8">
-               <Text className="text-purple-400 text-lg font-bold mb-3">Compartir Información</Text>
-               <Text className="text-white text-base leading-6 mb-4">
-                  No compartimos tu información personal con terceros, excepto en las siguientes circunstancias:
-               </Text>
-
-               <View className="space-y-3">
-                  <View className="flex-row">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        <Text className="font-semibold">Proveedores de Servicios:</Text> Compartimos información con
-                        terceros que nos ayudan a operar la plataforma, como servicios de hosting, procesamiento de
-                        pagos y análisis de datos.
-                     </Text>
-                  </View>
-
-                  <View className="flex-row mt-3">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        <Text className="font-semibold">Cumplimiento Legal:</Text> Podemos divulgar información si es
-                        requerido por ley o en respuesta a procesos legales válidos.
-                     </Text>
-                  </View>
-
-                  <View className="flex-row mt-3">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        <Text className="font-semibold">Protección de Derechos:</Text> Para proteger los derechos,
-                        propiedad o seguridad de Movapp, nuestros usuarios o el público.
-                     </Text>
-                  </View>
-               </View>
-            </View>
-
-            {/* Seguridad */}
-            <View className="mb-8">
-               <Text className="text-purple-400 text-lg font-bold mb-3">Seguridad</Text>
-               <Text className="text-white text-base leading-6">
-                  Implementamos medidas de seguridad técnicas y organizativas para proteger tu información contra acceso
-                  no autorizado, pérdida o alteración. Sin embargo, ninguna transmisión por internet es completamente
-                  segura, por lo que no podemos garantizar la seguridad absoluta de tus datos.
+            {/* 1. Uso de la aplicación sin registro */}
+            <View className="mb-6 p-4">
+               <Text className="text-purple-400 text-base font-bold mb-3">1. Uso de la aplicación sin registro</Text>
+               <Text className="text-white text-sm leading-6">
+                  La App puede utilizarse sin necesidad de crear una cuenta para acceder al contenido informativo.
+                  {"\n\n"}
+                  El registro es opcional y únicamente necesario para acceder al carrito de compras y contratar los
+                  servicios de asesoría.
                </Text>
             </View>
 
-            {/* Tus Derechos */}
-            <View className="mb-8">
-               <Text className="text-purple-400 text-lg font-bold mb-3">Tus Derechos</Text>
-               <Text className="text-white text-base leading-6 mb-4">Tienes derecho a:</Text>
-
-               <View className="space-y-3">
-                  <View className="flex-row">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        Acceder y obtener una copia de tu información personal.
-                     </Text>
-                  </View>
-
-                  <View className="flex-row mt-3">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        Solicitar la corrección de información inexacta.
-                     </Text>
-                  </View>
-
-                  <View className="flex-row mt-3">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        Solicitar la eliminación de tu cuenta e información personal.
-                     </Text>
-                  </View>
-
-                  <View className="flex-row mt-3">
-                     <Text className="text-white mr-2">•</Text>
-                     <Text className="text-white text-base leading-6 flex-1">
-                        Oponerte al procesamiento de tus datos en ciertas circunstancias.
-                     </Text>
-                  </View>
+            {/* 2. Información que recopilamos */}
+            <View className="mb-6 p-4">
+               <Text className="text-purple-400 text-base font-bold mb-3">2. Información que recopilamos</Text>
+               <Text className="text-white text-sm leading-6 mb-3">
+                  Solo recopilamos información personal cuando el usuario decide registrarse voluntariamente para
+                  contratar un servicio.
+               </Text>
+               <Text className="text-white text-sm leading-6 mb-3">Los datos que podemos recopilar son:</Text>
+               <View className="space-y-2">
+                  <Text className="text-white text-sm leading-6">• Nombre completo</Text>
+                  <Text className="text-white text-sm leading-6">• Correo electrónico</Text>
+                  <Text className="text-white text-sm leading-6">• Número de teléfono</Text>
+                  <Text className="text-white text-sm leading-6">• País</Text>
+                  <Text className="text-white text-sm leading-6">• Código postal</Text>
                </View>
+               <Text className="text-white text-sm leading-6 mt-3">
+                  No solicitamos datos sensibles adicionales ni información innecesaria para la prestación del servicio.
+               </Text>
             </View>
 
-            {/* Contacto */}
-            <View className="mb-8">
-               <Text className="text-purple-400 text-lg font-bold mb-3">Contacto</Text>
-               <Text className="text-white text-base leading-6 mb-2">
-                  Si tienes preguntas sobre esta Política de Privacidad, contáctanos en:
+            {/* 3. Finalidad del uso de los datos */}
+            <View className="mb-6 p-4">
+               <Text className="text-purple-400 text-base font-bold mb-3">3. Finalidad del uso de los datos</Text>
+               <Text className="text-white text-sm leading-6 mb-3">
+                  La información recopilada se utiliza exclusivamente para:
+               </Text>
+               <View className="space-y-2">
+                  <Text className="text-white text-sm leading-6">• Crear y administrar la cuenta del usuario</Text>
+                  <Text className="text-white text-sm leading-6">• Gestionar el proceso de compra de servicios</Text>
+                  <Text className="text-white text-sm leading-6">
+                     • Canalizar al usuario con un asesor vía WhatsApp
+                  </Text>
+                  <Text className="text-white text-sm leading-6">
+                     • Contactar al usuario en relación con la asesoría contratada
+                  </Text>
+                  <Text className="text-white text-sm leading-6">
+                     • Determinar la asignación del asesor según país y zona
+                  </Text>
+               </View>
+               <Text className="text-white text-sm leading-6 mt-3">
+                  La App no realiza envíos físicos, ya que los servicios ofrecidos son servicios digitales de asesoría.
+               </Text>
+            </View>
+
+            {/* 4. Uso del número telefónico */}
+            <View className="mb-6 p-4">
+               <Text className="text-purple-400 text-base font-bold mb-3">4. Uso del número telefónico</Text>
+               <Text className="text-white text-sm leading-6 mb-3">
+                  El número telefónico es requerido únicamente para:
+               </Text>
+               <View className="space-y-2">
+                  <Text className="text-white text-sm leading-6">
+                     • Establecer comunicación directa entre el usuario y el asesor asignado
+                  </Text>
+                  <Text className="text-white text-sm leading-6">
+                     • Brindar el servicio de asesoría a través de WhatsApp
+                  </Text>
+               </View>
+               <Text className="text-white text-sm leading-6 mt-3">
+                  El número telefónico no se utiliza con fines publicitarios ni se comparte con terceros ajenos al
+                  servicio.
+               </Text>
+            </View>
+
+            {/* 5. Compartición de información */}
+            <View className="mb-6 p-4">
+               <Text className="text-purple-400 text-base font-bold mb-3">5. Compartición de información</Text>
+               <Text className="text-white text-sm leading-6 mb-3">
+                  No vendemos, alquilamos ni compartimos información personal con terceros, salvo cuando sea
+                  estrictamente necesario para:
+               </Text>
+               <View className="space-y-2">
+                  <Text className="text-white text-sm leading-6">• Procesar pagos</Text>
+                  <Text className="text-white text-sm leading-6">• Prestar el servicio de asesoría solicitado</Text>
+               </View>
+               <Text className="text-white text-sm leading-6 mt-3">
+                  En dichos casos, la información compartida se limita al mínimo indispensable.
+               </Text>
+            </View>
+
+            {/* 6. Conservación de la información */}
+            <View className="mb-6 p-4">
+               <Text className="text-purple-400 text-base font-bold mb-3">6. Conservación de la información</Text>
+               <Text className="text-white text-sm leading-6">
+                  Los datos personales se conservan únicamente durante el tiempo necesario para cumplir con las
+                  finalidades descritas en esta política o mientras el usuario mantenga una cuenta activa.
+               </Text>
+            </View>
+
+            {/* 7. Eliminación de datos y derechos del usuario */}
+            <View className="mb-6 p-4">
+               <Text className="text-purple-400 text-base font-bold mb-3">
+                  7. Eliminación de datos y derechos del usuario
+               </Text>
+               <Text className="text-white text-sm leading-6 mb-3">
+                  El usuario puede solicitar en cualquier momento:
+               </Text>
+               <View className="space-y-2">
+                  <Text className="text-white text-sm leading-6">• Acceso a sus datos</Text>
+                  <Text className="text-white text-sm leading-6">• Corrección de su información</Text>
+                  <Text className="text-white text-sm leading-6">• Eliminación de su cuenta y datos personales</Text>
+               </View>
+               <Text className="text-white text-sm leading-6 mt-3">Para ello, puede escribir a:</Text>
+               <Text className="text-purple-400 text-base font-semibold mt-2">privacidad@movapp.org</Text>
+            </View>
+
+            {/* 8. Seguridad de la información */}
+            <View className="mb-6 p-4">
+               <Text className="text-purple-400 text-base font-bold mb-3">8. Seguridad de la información</Text>
+               <Text className="text-white text-sm leading-6">
+                  Implementamos medidas técnicas y organizativas razonables para proteger la información personal contra
+                  accesos no autorizados, pérdida o uso indebido.
+               </Text>
+            </View>
+
+            {/* 9. Cambios a esta política */}
+            <View className="mb-6 p-4">
+               <Text className="text-purple-400 text-base font-bold mb-3">9. Cambios a esta política</Text>
+               <Text className="text-white text-sm leading-6">
+                  La Empresa se reserva el derecho de modificar esta Política de Privacidad. Cualquier cambio será
+                  publicado en esta misma página y entrará en vigor a partir de su publicación.
+               </Text>
+            </View>
+
+            {/* 10. Contacto */}
+            <View className="mb-8 p-4">
+               <Text className="text-purple-400 text-base font-bold mb-3">10. Contacto</Text>
+               <Text className="text-white text-sm leading-6 mb-2">
+                  Si tienes dudas sobre esta Política de Privacidad o el tratamiento de tus datos, puedes contactarnos
+                  en:
                </Text>
                <Text className="text-purple-400 text-base font-semibold">privacidad@movapp.org</Text>
             </View>
 
-            {/* Fecha de actualización */}
             <View className="mb-8 pb-4">
-               <Text className="text-gray-400 text-sm italic">Última actualización: Octubre 2025</Text>
+               <Text className="text-gray-400 text-sm italic">Última actualización: Enero 2026</Text>
             </View>
          </ScrollView>
 
