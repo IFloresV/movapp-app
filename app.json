@@ -28,6 +28,7 @@
          },
          "edgeToEdgeEnabled": true,
          "package": "com.movapp.mobile",
+         "versionCode": 21,
          "minSdkVersion": 21,
          "permissions": ["RECEIVE_BOOT_COMPLETED", "VIBRATE", "NOTIFICATIONS"],
          "googleServicesFile": "./google-services.json",
