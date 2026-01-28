@@ -279,7 +279,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             // Actualizar estado de usuario
             dispatch({ type: "USER_LOGIN", payload: userObj });
 
-            // Obtener precios del país del usuario
+            // Obtener precios del país del usuario (o cargar precios por defecto MX id 1 si no tiene país)
             if (userObj?.pais_id) {
                const precios = await fetchPrices(userObj.pais_id);
 
@@ -289,6 +289,17 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
                });
 
                await saveConfigCache(state.config.paises, precios);
+            } else {
+               try {
+                  const precios = await fetchPrices(1);
+                  dispatch({
+                     type: "CONFIG_SET",
+                     payload: { precios },
+                  });
+                  await saveConfigCache(state.config.paises, precios);
+               } catch (e) {
+                  // Silenciar error al obtener precios por defecto
+               }
             }
 
             // console.log("\x1b[32m[AppContext] ✅ Login completado");
@@ -418,6 +429,15 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             // Obtener precios del país del usuario si está logueado
             if (userObj?.pais_id && precios.length === 0) {
                precios = await fetchPrices(userObj.pais_id);
+            }
+
+            // Si no hay precios aún, cargar precios por defecto (MX id 1)
+            if (precios.length === 0) {
+               try {
+                  precios = await fetchPrices(1);
+               } catch (e) {
+                  // Silenciar error; se dejará `precios` vacío si falla
+               }
             }
 
             // Guardar en cache si se obtuvieron datos

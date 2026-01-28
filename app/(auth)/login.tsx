@@ -47,9 +47,11 @@ export default function LoginScreen() {
       if (data.success) {
          (async () => {
             login(data.user);
-            if (cartContext?.clearCart) {
-               await cartContext.clearCart();
-            }
+
+            // if (cartContext?.clearCart) {
+            //    await cartContext.clearCart();
+            // }
+
             setAlert({
                type: "success",
                title: "¡Bienvenido de nuevo!",
@@ -175,7 +177,9 @@ export default function LoginScreen() {
             extraScrollHeight={20}
             contentContainerStyle={{ flexGrow: 1 }}
          >
-            <View className="items-center pt-32 pb-8">
+            <View className="items-center pt-20 pb-8">
+               <Feather name="lock" size={48} color={Colors.movapp.primary} />
+
                <Text className="text-white text-2xl font-bold mt-3">Inicia Sesión</Text>
             </View>
             {/* Formulario */}
@@ -249,8 +253,8 @@ export default function LoginScreen() {
                </TouchableOpacity>
             </View>
             {/* ¿No tienes cuenta? */}
-            <View className="flex-row justify-center mt-4">
-               <Text className="text-white text-sm">¿No tienes una cuenta? </Text>
+            <View className="flex-row justify-center mt-2">
+               <Text className="text-white text-md">¿No tienes una cuenta? </Text>
                <TouchableOpacity onPress={() => router.push("/(auth)/register")} activeOpacity={0.7} disabled={loading}>
                   <Text className="text-md font-semibold underline" style={{ color: Colors.movapp.primary }}>
                      Regístrate
@@ -260,7 +264,7 @@ export default function LoginScreen() {
             {/* Acceso sin login */}
             <View className="flex-row justify-center  mb-8 mt-8">
                <TouchableOpacity onPress={() => router.push("/")} activeOpacity={0.7} disabled={loading}>
-                  <Text className="text-sm font-semibold underline" style={{ color: Colors.movapp.primary }}>
+                  <Text className="text-md font-semibold underline" style={{ color: Colors.movapp.primary }}>
                      Puedes explorar el contenido sin crear una cuenta.
                   </Text>
                </TouchableOpacity>

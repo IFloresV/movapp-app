@@ -18,6 +18,9 @@ export default function HackScreen() {
 
    const hasPrices = precios && precios.length > 0;
 
+   console.log("Precios disponibles:", precios);
+   console.log("Precios hasPrices:", hasPrices);
+
    const hackPrice = useMemo(() => {
       if (!hasPrices) return null;
       return (precios ?? []).find((p) => (p.sku || "").toUpperCase() === "PROD-001") || null;
@@ -59,11 +62,7 @@ export default function HackScreen() {
          return;
       }
 
-      // Si no hay usuario logueado pedir login
-      if (!user || !user.infoUser || !isLoggedIn) {
-         setShowLoginModal(true);
-         return;
-      }
+      // Ya no requerimos login para mostrar precios ni para añadir al carrito
 
       // Si hay un precio seleccionado, agregar al carrito solo si no existe aún
       if (hackPrice) {
@@ -95,7 +94,7 @@ export default function HackScreen() {
                   resizeMode="contain"
                />
 
-               {hasPrices && isLoggedIn && (
+               {hasPrices && (
                   <View className="flex-row items-center justify-center mb-6">
                      <TouchableOpacity
                         onPress={decrement}
@@ -124,7 +123,7 @@ export default function HackScreen() {
 
                <View className="h-px bg-movapp-borderCard my-4" />
 
-               {hasPrices && isLoggedIn && (
+               {hasPrices && (
                   <View className="items-center mb-6">
                      <Text className="text-gray-400 text-sm mb-2">Tu pago es de:</Text>
                      <View className="flex-row items-center justify-center">
@@ -143,7 +142,7 @@ export default function HackScreen() {
                   onPress={handleBuy}
                >
                   <Text numberOfLines={1} ellipsizeMode="tail" className="text-white text-lg font-bold">
-                     {!hasPrices || !user?.logged ? "Adquiere el Hack" : "Comprar"}
+                     {!hasPrices ? "Adquiere el Hack" : "Comprar"}
                   </Text>
                </TouchableOpacity>
             </View>

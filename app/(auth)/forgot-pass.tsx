@@ -114,12 +114,11 @@ export default function ForgotPasswordScreen() {
             <View className="items-center pt-32 pb-8">
                <Feather name="lock" size={48} color={Colors.movapp.primary} />
                <Text className="text-white text-2xl font-bold mt-3">Recuperar Contraseña</Text>
-               <Text className="text-gray-400 text-sm text-center mt-2 px-8">Ingresa tu correo electrónico</Text>
             </View>
 
             <View className="px-7">
                <View className="mb-8">
-                  <Text className="text-white text-sm font-semibold mb-2">Correo Electrónico</Text>
+                  <Text className="text-white text-sm font-semibold mb-2 p-2">Correo Electrónico</Text>
                   <TextInput
                      className="bg-gray-800 text-white px-4 py-3 rounded-xl"
                      value={email}
@@ -147,10 +146,10 @@ export default function ForgotPasswordScreen() {
             </View>
 
             <View className="flex-row justify-center mt-10">
-               <Text className="text-white text-sm">¿Recordaste tu contraseña? </Text>
+               {/* <Text className="text-white text-sm">¿Recordaste tu contraseña? </Text> */}
                <TouchableOpacity onPress={() => router.back()}>
                   <Text className="font-semibold underline" style={{ color: Colors.movapp.primary }}>
-                     Inicia Sesión
+                     ¿Recordaste tu contraseña?
                   </Text>
                </TouchableOpacity>
             </View>

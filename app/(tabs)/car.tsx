@@ -15,6 +15,7 @@ export default function CarScreen() {
    const { user } = useApp();
    const userData = user.infoUser;
 
+   const isLoggedIn = user.logged;
    const user_id = userData?.id ?? 0;
    const email = userData?.email ?? "";
    const pais_id = userData?.pais_id ?? 0;
@@ -114,7 +115,7 @@ export default function CarScreen() {
                      <View className="mt-4 mb-4">
                         <TouchableOpacity
                            onPress={() => router.push("/store")}
-                           className="bg-movapp-primary py-3 rounded-xl items-center"
+                           className="bg-movapp-primary py-4 rounded-xl items-center"
                         >
                            <Text className="text-white font-bold text-base">← Volver a la tienda</Text>
                         </TouchableOpacity>
@@ -133,20 +134,31 @@ export default function CarScreen() {
                      <Text className="text-gray-300 text-base">Total</Text>
                      <Text className="text-white text-xl font-bold">{totalFormatted}</Text>
                   </View>
-
-                  <StripeCheckout
-                     cart={cart}
-                     disabled={cart.length === 0}
-                     amountCents={computeAmountCents()}
-                     currency={currency}
-                     userId={parseInt(user_id.toString(), 10)}
-                     paisId={parseInt(pais_id.toString(), 10)}
-                     email={email}
-                     onSuccess={() => {
-                        clearCart();
-                        router.push("/payments/success");
-                     }}
-                  />
+                  {!isLoggedIn && (
+                     <View className="mt-4 mb-4">
+                        <TouchableOpacity
+                           onPress={() => router.push("/payment-access")}
+                           className="bg-movapp-primary py-4 rounded-xl items-center"
+                        >
+                           <Text className="text-white font-bold text-base">Continuar</Text>
+                        </TouchableOpacity>
+                     </View>
+                  )}
+                  {isLoggedIn && (
+                     <StripeCheckout
+                        cart={cart}
+                        disabled={cart.length === 0}
+                        amountCents={computeAmountCents()}
+                        currency={currency}
+                        userId={parseInt(user_id.toString(), 10)}
+                        paisId={parseInt(pais_id.toString(), 10)}
+                        email={email}
+                        onSuccess={() => {
+                           clearCart();
+                           router.push("/payments/success");
+                        }}
+                     />
+                  )}
                </View>
             </View>
          </SafeAreaView>

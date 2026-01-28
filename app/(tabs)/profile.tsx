@@ -401,7 +401,7 @@ export default function ProfileScreen() {
                <View className="flex-row items-center justify-between py-3.5">
                   <View className="flex-row items-center flex-1">
                      <Feather name="bell" size={20} color={Colors.movapp.primary} />
-                     <Text className="text-white text-sm font-medium ml-3">Preferencias de Notificación</Text>
+                     <Text className="text-white text-sm font-medium ml-3">Recibe notificaciones</Text>
                   </View>
                   <View>
                      <Switch

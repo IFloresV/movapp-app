@@ -83,7 +83,7 @@ const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = tr
                   )}
 
                   {/* mostrar icono de carrito solo si usuario logueado y carrito tiene items */}
-                  {showCart && isLoggedIn && itemsCount > 0 && (
+                  {showCart && itemsCount > 0 && (
                      <TouchableOpacity onPress={() => router.push("/car")} style={{ marginLeft: 8 }}>
                         <View>
                            <Ionicons name="cart-outline" size={28} color="white" />

@@ -91,7 +91,7 @@ export default function TabsLayout() {
 
    const filteredDrawerItems = DRAWER_MENU_ITEMS.filter((item) => {
       if (!isLoggedIn && item.name === "profile") return false;
-      if (!isLoggedIn && item.name === "store") return false;
+      // if (!isLoggedIn && item.name === "store") return false;
       if (isLoggedIn && item.name === "register") return false;
       if (isLoggedIn && item.name === "login") return false;
       return true;
@@ -150,6 +150,7 @@ export default function TabsLayout() {
             <Tabs.Screen name="store" options={{ href: null }} />
             <Tabs.Screen name="payments/success" options={{ href: null }} />
             <Tabs.Screen name="notifications" options={{ href: null }} />
+            <Tabs.Screen name="payment-access" options={{ href: null }} />
          </Tabs>
 
          {/* Drawer Menu Component */}

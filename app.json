@@ -2,7 +2,7 @@
    "expo": {
       "name": "Movapp",
       "slug": "movapp-app",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "orientation": "portrait",
       "icon": "./assets/icons/icon.png",
       "scheme": "movapp",
@@ -11,6 +11,7 @@
       "ios": {
          "supportsTablet": true,
          "bundleIdentifier": "com.movapp.mobile",
+         "buildNumber": "20",
          "infoPlist": {
             "UIBackgroundModes": ["remote-notification"],
             "ITSAppUsesNonExemptEncryption": false,
@@ -28,7 +29,7 @@
          },
          "edgeToEdgeEnabled": true,
          "package": "com.movapp.mobile",
-         "versionCode": 21,
+         "versionCode": 22,
          "minSdkVersion": 21,
          "permissions": ["RECEIVE_BOOT_COMPLETED", "VIBRATE", "NOTIFICATIONS"],
          "googleServicesFile": "./google-services.json",

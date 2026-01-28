@@ -314,10 +314,9 @@ export default function ResetPasswordScreen() {
 
             {/* Volver a Inicio de Sesión */}
             <View className="flex-row justify-center mt-10 mb-8">
-               <Text className="text-white text-sm">¿Ya tienes tu contraseña? </Text>
                <TouchableOpacity onPress={() => router.push("/(auth)/login")} activeOpacity={0.7} disabled={loading}>
                   <Text className="text-md font-semibold underline" style={{ color: Colors.movapp.primary }}>
-                     Inicia Sesión
+                     ¿Ya tienes tu contraseña?
                   </Text>
                </TouchableOpacity>
             </View>
