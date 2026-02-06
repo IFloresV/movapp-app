@@ -8,12 +8,14 @@ interface LayoutWithNavigationProps {
    children: React.ReactNode;
    showHeader?: boolean;
    scrollable?: boolean;
+   showLogo?: boolean;
 }
 
 export default function LayoutWithNavigation({
    children,
    showHeader = true,
    scrollable = true,
+   showLogo = true,
 }: LayoutWithNavigationProps) {
    return (
       <LinearGradient
@@ -22,7 +24,7 @@ export default function LayoutWithNavigation({
          end={{ x: 0, y: 0.4 }}
          style={{ flex: 1 }}
       >
-         {showHeader && <Header />}
+         {showHeader && <Header showLogo={showLogo} />}
          {scrollable ? (
             <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
                {children}

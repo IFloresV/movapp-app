@@ -3,7 +3,7 @@ import FAQItem from "@/components/FAQItem";
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 import { useApp } from "@/context/AppContext";
 import React from "react";
-import { Image, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 const HACK_SECTION = [
    {
@@ -107,14 +107,9 @@ export default function FAQsScreen() {
 
    return (
       <LayoutWithNavigation scrollable={true}>
-         <View className="px-4 py-1">
-            <View className="mb-1 flex-row items-center justify-center space-x-3">
-               <Text className="text-white text-2xl font-bold mx-3 text-center">Resuelve tus dudas sobre</Text>
-               <Image
-                  source={require("@/assets/images/elhack.png")}
-                  style={{ width: 72, height: 70 }}
-                  resizeMode="contain"
-               />
+         <View className="px-4 py-1 ">
+            <View className="mb-8 flex-row items-center justify-center space-x-3">
+               <Text className="text-white text-2xl font-bold mx-3 text-center">Preguntas frecuentes</Text>
             </View>
 
             {/* Secciones con título centrado y lista de preguntas desplegables */}

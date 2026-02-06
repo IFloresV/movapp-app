@@ -15,9 +15,15 @@ interface HeaderProps {
    showNotifications?: boolean;
    showCart?: boolean;
    logoType?: 1 | 2;
+   showLogo?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = true, logoType = 1 }) => {
+const Header: React.FC<HeaderProps> = ({
+   showNotifications = true,
+   showCart = true,
+   logoType = 1,
+   showLogo = true,
+}) => {
    const router = useRouter();
 
    const { user } = useApp();
@@ -41,13 +47,17 @@ const Header: React.FC<HeaderProps> = ({ showNotifications = true, showCart = tr
 
                {/* Logo centrado */}
                <View className="items-center justify-center flex-1">
-                  <Image
-                     source={
-                        logoType === 1 ? require("@/assets/images/MovappBl.png") : require("@/assets/images/Movapp.png")
-                     }
-                     style={{ width: 100, height: 40 }}
-                     resizeMode="contain"
-                  />
+                  {showLogo && (
+                     <Image
+                        source={
+                           logoType === 1
+                              ? require("@/assets/images/MovappBl.png")
+                              : require("@/assets/images/Movapp.png")
+                        }
+                        style={{ width: 100, height: 40 }}
+                        resizeMode="contain"
+                     />
+                  )}
                </View>
 
                {/* Iconos a la derecha */}

@@ -2,7 +2,7 @@ import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 import { useRouter } from "expo-router";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
-export default function HackScreen() {
+export default function PaymentAccessScreen() {
    const router = useRouter();
 
    return (

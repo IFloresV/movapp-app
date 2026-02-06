@@ -8,7 +8,7 @@ import { Text, View } from "react-native";
 export default function ColaborationsScreen() {
    return (
       <LayoutWithNavigation scrollable={true}>
-         <Text className="text-white text-2xl font-bold my-4 text-center">Historias reales</Text>
+         <Text className="text-white text-2xl font-bold my-4 text-center">Testimonios</Text>
 
          <View className="px-4 mt-4">
             <View className="w-full h-64 rounded-lg overflow-hidden">
