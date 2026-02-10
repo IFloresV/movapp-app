@@ -2,8 +2,9 @@
 import React, { useState } from "react";
 
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
+import { Colors } from "@/constants/Colors";
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Linking, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Linking, Modal, Text, TouchableOpacity, View } from "react-native";
 
 interface LoanApp {
    name: string;
@@ -13,8 +14,21 @@ interface LoanApp {
    rate: string;
    term: string;
    url: string;
-   country: "MX" | "CO";
+   country: "MX" | "CO" | "PE";
 }
+
+interface CountryOption {
+   value: "MX" | "CO" | "PE" | "ALL";
+   label: string;
+   flag: string;
+}
+
+const countryOptions: CountryOption[] = [
+   { value: "ALL", label: "Todas los paises", flag: "📍" },
+   { value: "MX", label: "México", flag: "🇲🇽" },
+   { value: "CO", label: "Colombia", flag: "🇨🇴" },
+   { value: "PE", label: "Perú", flag: "🇵🇪" },
+];
 
 const loanApps: LoanApp[] = [
    {
@@ -161,11 +175,46 @@ const loanApps: LoanApp[] = [
       url: "https://track.crezu.net/click?pid=7944&offer_id=411",
       country: "CO",
    },
+   {
+      name: "DoctorSol",
+      description:
+         "Doctor Sol es una fintech peruana de micropréstamos en línea que te permite solicitar dinero de forma rápida y sin papeleo desde tu celular o computadora, con proceso 100% digital y desembolso en tu cuenta bancaria o billetera electrónica en minutos.",
+      requirements: [
+         "Mayor de 18 años",
+         "DNI peruano vigente",
+         "Cuenta bancaria a tu nombre",
+         "Teléfono",
+         "Correo electrónico",
+      ],
+      amount: "Hasta S/ 600",
+      rate: "Desde 28% anual",
+      term: "Hasta 30 días",
+      url: "http://doafftracking.tech/doctorsol.pe/8s0cp/1",
+      country: "PE",
+   },
+   {
+      name: "Merité",
+      description:
+         "Merite es una fintech de préstamos personales en línea en Perú que ofrece créditos rápidos y 100% digitales sin papeleo ni avales, con respuesta en minutos y desembolso en menos de 24 h a tu cuenta bancaria. Está registrada en la Superintendencia de Banca, Seguros y AFP (SBS), lo que significa que opera bajo supervisión regulatoria en el país.",
+      requirements: [
+         "Mayor de 21 años",
+         "Residente de Perú con DNI válido",
+         "Cuenta bancaria a tu nombre",
+         "Teléfono",
+         "Correo electrónico",
+      ],
+      amount: "Hasta S/ 1,200",
+      rate: "Desde 35% anual",
+      term: "Hasta 3 meses",
+      url: "https://tds.pdl-profit.com/h/1ur7696bbdc9c1099",
+      country: "PE",
+   },
 ];
 
 export default function TrustedAppsScreen() {
    const [expandedApp, setExpandedApp] = useState<string | null>(null);
-   const [selectedCountry, setSelectedCountry] = useState<"MX" | "CO" | "ALL">("ALL");
+   const [selectedCountry, setSelectedCountry] = useState<"MX" | "CO" | "PE" | "ALL">("ALL");
+   const [showCountryModal, setShowCountryModal] = useState(false);
 
    const filteredApps =
       selectedCountry === "ALL" ? loanApps : loanApps.filter((app) => app.country === selectedCountry);
@@ -196,7 +245,6 @@ export default function TrustedAppsScreen() {
             </View>
          </View>
 
-         {/* What is "Reliable"? */}
          <View className="px-4 mb-4">
             <View className="bg-movapp-linkBackgroundHome rounded-2xl p-5">
                <View className="flex-row items-center mb-3">
@@ -233,39 +281,17 @@ export default function TrustedAppsScreen() {
          </View>
 
          {/* Country Filter */}
-         <View className="px-4 mb-4">
-            <View className="flex-row gap-2">
-               <TouchableOpacity
-                  onPress={() => setSelectedCountry("ALL")}
-                  className={`flex-1 py-3 rounded-xl ${selectedCountry === "ALL" ? "bg-movapp-primary" : "bg-movapp-linkBackgroundHome"}`}
-               >
-                  <Text
-                     className={`text-center font-bold ${selectedCountry === "ALL" ? "text-white" : "text-gray-400"}`}
-                  >
-                     Todas
-                  </Text>
-               </TouchableOpacity>
-               <TouchableOpacity
-                  onPress={() => setSelectedCountry("MX")}
-                  className={`flex-1 py-3 rounded-xl ${selectedCountry === "MX" ? "bg-movapp-primary" : "bg-movapp-linkBackgroundHome"}`}
-               >
-                  <Text
-                     className={`text-center font-bold ${selectedCountry === "MX" ? "text-white" : "text-gray-400"}`}
-                  >
-                     🇲🇽 México
-                  </Text>
-               </TouchableOpacity>
-               <TouchableOpacity
-                  onPress={() => setSelectedCountry("CO")}
-                  className={`flex-1 py-3 rounded-xl ${selectedCountry === "CO" ? "bg-movapp-primary" : "bg-movapp-linkBackgroundHome"}`}
-               >
-                  <Text
-                     className={`text-center font-bold ${selectedCountry === "CO" ? "text-white" : "text-gray-400"}`}
-                  >
-                     🇨🇴 Colombia
-                  </Text>
-               </TouchableOpacity>
-            </View>
+         <View className="px-4 mb-4 mx-1 p-5">
+            <TouchableOpacity
+               onPress={() => setShowCountryModal(true)}
+               className="bg-movapp-linkBackgroundHome px-4 py-3 rounded-xl flex-row items-center justify-between"
+            >
+               <Text className="text-white text-base">
+                  {countryOptions.find((c) => c.value === selectedCountry)?.flag}{" "}
+                  {countryOptions.find((c) => c.value === selectedCountry)?.label}
+               </Text>
+               <Feather name="chevron-down" size={20} color={Colors.movapp.primary} />
+            </TouchableOpacity>
          </View>
 
          {/* Loan Apps List */}
@@ -281,7 +307,7 @@ export default function TrustedAppsScreen() {
                            <View className="flex-1">
                               <Text className="text-white text-lg font-bold">{app.name}</Text>
                               <Text className="text-gray-400 text-xs">
-                                 {app.country === "MX" ? "🇲🇽 México" : "🇨🇴 Colombia"}
+                                 {app.country === "MX" ? "🇲🇽 México" : app.country === "CO" ? "🇨🇴 Colombia" : "🇵🇪 Perú"}
                               </Text>
                            </View>
                         </View>
@@ -343,22 +369,59 @@ export default function TrustedAppsScreen() {
                   <Text className="text-yellow-400 text-lg font-bold ml-3">Descargo de responsabilidad</Text>
                </View>
                <Text className="text-gray-300 text-sm mb-3 font-bold">Aviso Importante</Text>
-               <Text className="text-gray-300 text-sm mb-4">
-                  No somos una institución financiera ni otorgamos préstamos. La información es únicamente informativa y
-                  puede cambiar sin previo aviso. La contratación de cualquier préstamo es responsabilidad del usuario,
-                  quien debe leer y aceptar los términos de cada plataforma.
-               </Text>
-               <Text className="text-gray-300 text-sm mb-3 font-bold">Sobre Nuestros Ingresos</Text>
-               <Text className="text-gray-300 text-sm mb-4">
-                  Algunos enlaces pueden generar una comisión para nosotros sin costo adicional para el usuario. Esto no
-                  influye en nuestras evaluaciones.
-               </Text>
-               <Text className="text-red-400 text-sm font-bold">
-                  ⚠️ Estas apps las puedes utilizar para un imprevisto, tienen intereses altos y sí tienen área de
-                  cobranza. Úsalas solo en caso de emergencia.
+               <Text className="text-gray-300 text-sm mb-4 text">
+                  No somos una institución financiera,fintech o sofoma, solo compartimos información sobre plataformas
+                  de préstamos que consideramos más confiables basándonos en nuestra experiencia y el feedback de
+                  usuarios. No garantizamos la seguridad o calidad de estas apps, ni tenemos relación comercial con
+                  ellas. Siempre investiga por tu cuenta antes de solicitar un préstamo y ten cuidado con tus datos
+                  personales.
                </Text>
             </View>
          </View>
+
+         {/* Modal de Selección de País */}
+         <Modal
+            visible={showCountryModal}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={() => setShowCountryModal(false)}
+         >
+            <View className="flex-1 justify-end bg-black/50">
+               <View className="bg-movapp-background rounded-t-3xl max-h-[70%]">
+                  {/* Header del Modal */}
+                  <View className="flex-row items-center justify-between px-6 py-4 border-b border-gray-800">
+                     <Text className="text-white text-lg font-bold">Selecciona un país</Text>
+                     <TouchableOpacity onPress={() => setShowCountryModal(false)}>
+                        <Feather name="x" size={24} color="#fff" />
+                     </TouchableOpacity>
+                  </View>
+
+                  {/* Lista de Países */}
+                  <FlatList
+                     data={countryOptions}
+                     keyExtractor={(item) => item.value}
+                     renderItem={({ item }) => (
+                        <TouchableOpacity
+                           onPress={() => {
+                              setSelectedCountry(item.value);
+                              setShowCountryModal(false);
+                           }}
+                           className="px-6 py-4 border-b border-gray-800 flex-row items-center justify-between"
+                           activeOpacity={0.7}
+                        >
+                           <View className="flex-row items-center flex-1">
+                              <Text className="text-3xl mr-3">{item.flag}</Text>
+                              <Text className="text-white text-base font-semibold">{item.label}</Text>
+                           </View>
+                           {selectedCountry === item.value && (
+                              <Feather name="check" size={24} color={Colors.movapp.primary} />
+                           )}
+                        </TouchableOpacity>
+                     )}
+                  />
+               </View>
+            </View>
+         </Modal>
       </LayoutWithNavigation>
    );
 }
