@@ -41,6 +41,23 @@ export default function HomeScreen() {
                </View>
                <Ionicons name="arrow-forward" size={20} color="#a855f7" />
             </TouchableOpacity>
+            {/* Aplicaciones confiables */}
+            <TouchableOpacity
+               className="bg-movapp-linkBackgroundHome rounded-2xl p-4 flex-row items-center justify-between mb-3"
+               onPress={() => router.push("/trusted-apps")}
+            >
+               <View className="flex-row items-center flex-1">
+                  <View className="bg-movapp-primary/20 p-2.5 rounded-xl mr-3">
+                     <FontAwesome6 name="credit-card-alt" size={22} color={Colors.movapp.icon} />
+                  </View>
+                  <View className="flex-1">
+                     <Text className="text-white text-base font-bold mb-0.5">Aplicaciones de préstamos confiables</Text>
+                     <Text className="text-gray-400 text-xs">Acceder a sección</Text>
+                  </View>
+               </View>
+               <Ionicons name="arrow-forward" size={20} color="#a855f7" />
+            </TouchableOpacity>
+
             {/* Preguntas frecuentes */}
             <TouchableOpacity
                className="bg-movapp-linkBackgroundHome rounded-2xl p-4 flex-row items-center justify-between mb-3"
@@ -68,22 +85,6 @@ export default function HomeScreen() {
                   </View>
                   <View className="flex-1">
                      <Text className="text-white text-base font-bold mb-0.5">Mente Digital</Text>
-                     <Text className="text-gray-400 text-xs">Acceder a sección</Text>
-                  </View>
-               </View>
-               <Ionicons name="arrow-forward" size={20} color="#a855f7" />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-               className="bg-movapp-linkBackgroundHome rounded-2xl p-4 flex-row items-center justify-between mb-3"
-               onPress={() => router.push("/trusted-apps")}
-            >
-               <View className="flex-row items-center flex-1">
-                  <View className="bg-movapp-primary/20 p-2.5 rounded-xl mr-3">
-                     <FontAwesome6 name="credit-card-alt" size={22} color={Colors.movapp.icon} />
-                  </View>
-                  <View className="flex-1">
-                     <Text className="text-white text-base font-bold mb-0.5">Aplicaciones de préstamos confiables</Text>
                      <Text className="text-gray-400 text-xs">Acceder a sección</Text>
                   </View>
                </View>
