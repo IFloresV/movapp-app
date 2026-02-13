@@ -33,10 +33,14 @@ export default function ContactsScreen() {
    };
 
    const openWhatsApp = async (phone: string, name: string) => {
-      const url = `https://api.whatsapp.com/send/?phone=${phone}&text=Hola ${name}, me gustaría solicitar asesoría`;
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
-         await Linking.openURL(url);
+      const cleanNumber = phone.replace(/\D/g, "");
+      const message = `Hola ${name}, me gustaría solicitar asesoría`;
+      const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
+
+      try {
+         await Linking.openURL(whatsappUrl);
+      } catch (error) {
+         console.log("Error opening WhatsApp:", error);
       }
    };
 
