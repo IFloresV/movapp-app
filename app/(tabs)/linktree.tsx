@@ -45,7 +45,7 @@ const links: LinkItem[] = [
    },
    {
       name: "TikTok",
-      url: "https://m.tiktok.com/@movappbymann",
+      url: "https://tiktok.com/@movappbymann",
       image: "LINKTREE - TIK TOK",
       width: 160,
       height: 22,
