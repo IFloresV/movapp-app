@@ -114,7 +114,7 @@ export default function CarScreen() {
                   ListFooterComponent={
                      <View className="mt-4 mb-4">
                         <TouchableOpacity
-                           onPress={() => router.push("/store")}
+                           onPress={() => router.push("/hack")}
                            className="bg-movapp-primary py-4 rounded-xl items-center"
                         >
                            <Text className="text-white font-bold text-base">← Volver a la tienda</Text>

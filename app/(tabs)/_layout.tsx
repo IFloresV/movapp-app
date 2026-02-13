@@ -43,6 +43,13 @@ const DRAWER_MENU_ITEMS: DrawerMenuItem[] = [
       label: "Tienda",
       route: "/(tabs)/hack",
    },
+   {
+      name: "contacts",
+      type: "feather",
+      icon: "phone",
+      label: "Verifica tu asesor",
+      route: "/(tabs)/contacts",
+   },
 
    {
       name: "register",
@@ -154,6 +161,7 @@ export default function TabsLayout() {
             <Tabs.Screen name="payment-access" options={{ href: null }} />
             <Tabs.Screen name="trusted-apps" options={{ href: null }} />
             <Tabs.Screen name="linktree" options={{ href: null }} />
+            <Tabs.Screen name="contacts" options={{ href: null }} />
          </Tabs>
 
          {/* Drawer Menu Component */}

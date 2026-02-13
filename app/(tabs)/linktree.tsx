@@ -24,7 +24,7 @@ const links: LinkItem[] = [
    },
    {
       name: "Youtube",
-      url: "https://www.youtube.com/@elhackfunciona",
+      url: "https://www.youtube.com/channel/UClEP3O3aNUkL_EPzyfGB6mA",
       image: "LINKTREE - YOUTUBE",
       width: 130,
       height: 30,
@@ -45,7 +45,7 @@ const links: LinkItem[] = [
    },
    {
       name: "TikTok",
-      url: "https://www.tiktok.com/@movappbymann",
+      url: "https://m.tiktok.com/@movappbymann",
       image: "LINKTREE - TIK TOK",
       width: 160,
       height: 22,
@@ -54,9 +54,12 @@ const links: LinkItem[] = [
 
 export default function LinktreeScreen() {
    const openUrl = async (url: string) => {
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
+      try {
+         // En Android, canOpenURL puede fallar sin queries en AndroidManifest
+         // Mejor abrir directamente y dejar que el sistema maneje el intent
          await Linking.openURL(url);
+      } catch (error) {
+         console.log("Error opening URL:", error);
       }
    };
 
