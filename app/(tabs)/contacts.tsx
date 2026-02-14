@@ -21,6 +21,8 @@ const contacts: Contact[] = [
    { name: "Rosaura", phone: "7228017902" },
    { name: "Zoe", phone: "5657175282" },
    { name: "Moni", phone: "7294509488" },
+   { name: "Diego", phone: "5635166009" },
+   { name: "Sol", phone: "7261854700" },
 ];
 
 export default function ContactsScreen() {
