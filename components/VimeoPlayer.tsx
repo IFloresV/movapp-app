@@ -8,6 +8,7 @@ interface VimeoPlayerProps {
    loop?: boolean;
    muted?: boolean;
    controls?: boolean;
+   allowsFullscreenVideo?: boolean;
    style?: ViewStyle;
    aspectRatio?: number; // Default 16:9 = 0.5625 (9/16)
 }
@@ -18,6 +19,7 @@ export default function VimeoPlayer({
    loop = false,
    muted = false,
    controls = true,
+   allowsFullscreenVideo = true,
    style,
    aspectRatio = 0.5625,
 }: VimeoPlayerProps) {
@@ -65,7 +67,7 @@ export default function VimeoPlayer({
                   src="${vimeoUrl}"
                   frameborder="0"
                   allow="autoplay; fullscreen; picture-in-picture"
-                  allowfullscreen
+                  allowfullscreen={allowsFullscreenVideo ? "true" : "false"}
                ></iframe>
             </div>
             <script src="https://player.vimeo.com/api/player.js"></script>
@@ -74,7 +76,7 @@ export default function VimeoPlayer({
    `;
 
    return (
-      <View style={[{ width: "100%", aspectRatio: 16 / 9 }, style]}>
+      <View style={[{ width: "100%", flex: 1 }, style]}>
          {loading && (
             <View
                style={{
@@ -95,7 +97,7 @@ export default function VimeoPlayer({
          <WebView
             source={{ html: embedHTML }}
             style={{ backgroundColor: "#000", flex: 1 }}
-            allowsFullscreenVideo={true}
+            allowsFullscreenVideo={allowsFullscreenVideo}
             mediaPlaybackRequiresUserAction={!autoplay}
             javaScriptEnabled={true}
             domStorageEnabled={true}
