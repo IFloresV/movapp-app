@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import { Dimensions, FlatList, View, ViewToken } from "react-native";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
-const VIDEO_HEIGHT = SCREEN_HEIGHT * 0.75;
+const VIDEO_HEIGHT = SCREEN_HEIGHT * 0.73;
 const VIDEO_WIDTH = SCREEN_WIDTH * 0.92;
 
 export interface VideoItem {
@@ -42,8 +42,7 @@ export default function VideoFeed({ videos }: VideoFeedProps) {
                justifyContent: "center",
                alignItems: "center",
                paddingVertical: 8,
-            }}
-         >
+            }}>
             <View
                style={{
                   width: VIDEO_WIDTH,
@@ -59,9 +58,9 @@ export default function VideoFeed({ videos }: VideoFeedProps) {
                   shadowOpacity: 0.3,
                   shadowRadius: 8,
                   elevation: 8,
-               }}
-            >
+               }}>
                <VimeoPlayer
+                  key={isActive ? item.videoId : undefined}
                   videoId={item.videoId}
                   autoplay={isActive}
                   loop={false}

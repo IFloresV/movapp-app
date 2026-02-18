@@ -19,7 +19,7 @@ export default function VimeoPlayer({
    loop = false,
    muted = false,
    controls = true,
-   allowsFullscreenVideo = true,
+   allowsFullscreenVideo = false,
    style,
    aspectRatio = 0.5625,
 }: VimeoPlayerProps) {
@@ -66,8 +66,7 @@ export default function VimeoPlayer({
                <iframe
                   src="${vimeoUrl}"
                   frameborder="0"
-                  allow="autoplay; fullscreen; picture-in-picture"
-                  allowfullscreen={allowsFullscreenVideo ? "true" : "false"}
+                  allow="autoplay; picture-in-picture"
                ></iframe>
             </div>
             <script src="https://player.vimeo.com/api/player.js"></script>
@@ -89,8 +88,7 @@ export default function VimeoPlayer({
                   alignItems: "center",
                   backgroundColor: "#000",
                   zIndex: 1,
-               }}
-            >
+               }}>
                <ActivityIndicator size="large" color="#fff" />
             </View>
          )}
