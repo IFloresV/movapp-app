@@ -26,6 +26,8 @@ export default function VimeoPlayerVertical({
    style,
    allowsFullscreenVideo = false,
 }: VimeoPlayerVerticalProps) {
+   const isSingleVideo = videos.length === 1;
+
    return (
       <View style={[{ flexDirection: "row", width: "100%", flex: 1 }, style]}>
          {videos.slice(0, 2).map((video, idx) => {
@@ -58,7 +60,12 @@ export default function VimeoPlayerVertical({
             return (
                <View
                   key={video.videoId}
-                  style={{ flex: 1, aspectRatio: 9 / 16, margin: 4, borderRadius: 18, overflow: "hidden" }}>
+                  style={
+                     isSingleVideo
+                        ? { width: "50%", aspectRatio: 9 / 16, margin: 4, borderRadius: 18, overflow: "hidden" }
+                        : { flex: 1, aspectRatio: 9 / 16, margin: 4, borderRadius: 18, overflow: "hidden" }
+                  }
+               >
                   {loading && (
                      <View
                         style={{
@@ -71,7 +78,8 @@ export default function VimeoPlayerVertical({
                            alignItems: "center",
                            backgroundColor: "#000",
                            zIndex: 1,
-                        }}>
+                        }}
+                     >
                         <ActivityIndicator size="large" color="#fff" />
                      </View>
                   )}
