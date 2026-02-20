@@ -29,7 +29,7 @@ export default function ColaborationsScreen() {
 
    return (
       <LayoutWithNavigation scrollable={true}>
-         <Text className="text-white text-2xl font-bold my-1 text-center">Mente Digital</Text>
+         <Text className="text-white text-2xl font-bold my-1 text-center">Testimonios</Text>
          {videoPairs.map((pair, idx) => (
             <View key={idx} className="flex-row px-4 mt-4">
                <VimeoPlayerVertical videos={pair.map((v) => ({ videoId: v.videoId }))} />
