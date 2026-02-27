@@ -83,8 +83,39 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
    }, []);
 
+   // Actualiza los precios del carrito según el listado de precios de un país
+   const updateCartPrices = useCallback((precios: any[]) => {
+      if (!precios || precios.length === 0) return;
+
+      setCart((prev) => {
+         if (prev.length === 0) return prev;
+
+         console.log("\x1b[33m[CartContext] 🔄 Actualizando precios del carrito...", prev.length, "items");
+
+         const updated = prev.map((item) => {
+            const match = precios.find((p) => p.producto_id === item.producto_id);
+            if (!match) {
+               console.log("\x1b[33m[CartContext] ⚠️ Sin precio para producto_id:", item.producto_id, "- se mantiene precio anterior");
+               return item;
+            }
+            const newPrecio = match.precio ?? item.precio;
+            return {
+               ...item,
+               precio: String(newPrecio),
+               precio_mx: match.precio_mx ?? item.precio_mx,
+               moneda: match.moneda || item.moneda,
+               simbolo: match.simbolo || item.simbolo,
+               total: item.quantity * parseFloat(String(newPrecio)),
+            };
+         });
+
+         console.log("\x1b[32m[CartContext] ✅ Precios del carrito actualizados");
+         return updated;
+      });
+   }, []);
+
    return (
-      <CartContext.Provider value={{ cart, addToCart, decreaseQuantity, removeFromCart, clearCart }}>
+      <CartContext.Provider value={{ cart, addToCart, decreaseQuantity, removeFromCart, clearCart, updateCartPrices }}>
          {children}
       </CartContext.Provider>
    );

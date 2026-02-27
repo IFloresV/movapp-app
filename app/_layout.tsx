@@ -20,16 +20,21 @@ import SplashScreen from "@/components/SplashScreen";
 
 import { setLogoutCallback } from "@/api/axiosInstance";
 import { Colors } from "@/constants/Colors";
+import { CartContext } from "@/context/CartContext";
 import { Stack } from "expo-router";
 
 function AppContent() {
    const { logout } = useApp();
+   const { clearCart } = React.useContext(CartContext)!;
    const { addNotification } = useNotificationStore();
 
    useEffect(() => {
       // console.log("\x1b[33m[Layout] 🔧 Registrando logout callback en axios");
-      setLogoutCallback(logout);
-   }, [logout]);
+      setLogoutCallback(async () => {
+         await clearCart();
+         await logout();
+      });
+   }, [logout, clearCart]);
 
    useEffect(() => {
       const subscription = Notifications.addNotificationReceivedListener((notification) => {

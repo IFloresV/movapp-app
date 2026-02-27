@@ -42,7 +42,7 @@ export default function HackScreen() {
    const currency = hackPrice?.moneda ?? "MXN";
    const totalPrice = (hackCount * priceValue).toFixed(2);
 
-   const selectedCountry = paises?.find((p) => p.id === user?.infoUser?.pais_id);
+   const selectedCountry = paises?.find((p) => p.moneda === hackPrice?.moneda) ?? paises?.find((p) => p.id === user?.infoUser?.pais_id);
    const countryCode = selectedCountry?.codigo_pais || "MX";
 
    const increment = () => {
@@ -56,15 +56,12 @@ export default function HackScreen() {
    };
 
    const handleBuy = () => {
-      // Si no hay precios disponibles mostrar modal de login/compra
       if (!hasPrices) {
          setShowLoginModal(true);
          return;
       }
 
-      // Ya no requerimos login para mostrar precios ni para añadir al carrito
 
-      // Si hay un precio seleccionado, agregar al carrito solo si no existe aún
       if (hackPrice) {
          const exists = Array.isArray(cart)
             ? cart.some(

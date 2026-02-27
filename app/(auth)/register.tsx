@@ -7,12 +7,13 @@ import Constants from "expo-constants";
 import * as Device from "expo-device";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Modal, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import Service from "@/api/AuthService";
 import { useApp } from "@/context/AppContext";
+import { CartContext } from "@/context/CartContext";
 import { useRegister } from "@/context/RegisterContext";
 
 import { useAxios } from "@/hooks/useAxios";
@@ -33,6 +34,7 @@ export default function RegisterScreen() {
    } | null>(null);
    const { config, reloadPaises, login } = useApp();
    const { acceptedTerms, setAcceptedTerms, acceptedPrivacy, setAcceptedPrivacy } = useRegister();
+   const cartContext = useContext(CartContext);
 
    const { paises } = config;
    const router = useRouter();
@@ -73,7 +75,13 @@ export default function RegisterScreen() {
 
       if (data.success) {
          (async () => {
-            await login(data.user);
+            const precios = await login(data.user);
+
+            // Actualizar precios del carrito al país del nuevo usuario
+            if (precios.length > 0 && cartContext?.updateCartPrices) {
+               cartContext.updateCartPrices(precios);
+            }
+
             clearStates();
             setAlert({
                type: "success",

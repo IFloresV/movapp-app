@@ -1,5 +1,6 @@
 // src/context/AppContext.tsx
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Localization from "expo-localization";
 import * as SecureStore from "expo-secure-store";
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useState } from "react";
 
@@ -48,7 +49,7 @@ type AppAction =
 // ==================== REDUCER ====================
 
 function appReducer(state: AppState, action: AppAction): AppState {
-   // console.log("\x1b[36m[AppContext Reducer]", action.type);
+   console.log("\x1b[36m[AppContext Reducer]", action.type);
 
    switch (action.type) {
       case "USER_LOGIN":
@@ -125,8 +126,8 @@ type AppContextType = {
    // User state & methods
    user: UserState;
    dispatchUser: React.Dispatch<AppAction>;
-   login: (userObj: any, accessToken?: string, refreshToken?: string) => Promise<void>;
-   logout: () => Promise<void>;
+   login: (userObj: any, accessToken?: string, refreshToken?: string) => Promise<any[]>;
+   logout: () => Promise<any[]>;
    updateUser: (userObj: any) => Promise<void>;
 
    // Config state & methods
@@ -185,9 +186,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
    const saveConfigCache = useCallback(async (paises: any[], precios: any[]) => {
       try {
          await AsyncStorage.setItem(STORAGE_KEYS.CONFIG, JSON.stringify({ paises, precios }));
-         // console.log("\x1b[32m[AppContext] ✅ Config guardada en cache");
+         console.log("\x1b[32m[AppContext] ✅ Config guardada en cache");
       } catch (e) {
-         // console.log("\x1b[31m[AppContext] ❌ Error guardando cache:", e);
+         console.log("\x1b[31m[AppContext] ❌ Error guardando cache:", e);
       }
    }, []);
 
@@ -195,45 +196,47 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
    const fetchCountries = useCallback(async (): Promise<any[]> => {
       try {
-         // console.log("\x1b[33m[AppContext] 🌍 Obteniendo países...");
+         console.log("\x1b[33m[AppContext] 🌍 Obteniendo países...");
          const response = await ConfigService.getCountries();
 
          if (response?.data?.success) {
             const countries = response.data.countries || [];
-            // console.log("\x1b[32m[AppContext] ✅ Países obtenidos:", countries.length);
+            console.log("\x1b[32m[AppContext] ✅ Países obtenidos:", countries.length, 
+               // countries
+            );
             return countries;
          }
 
-         // console.log("\x1b[33m[AppContext] ⚠️ No se pudieron obtener países");
+         console.log("\x1b[33m[AppContext] ⚠️ No se pudieron obtener países");
          return [];
       } catch (error) {
-         // console.log("\x1b[31m[AppContext] ❌ Error obteniendo países:", error);
+         console.log("\x1b[31m[AppContext] ❌ Error obteniendo países:", error);
          return [];
       }
    }, []);
 
    const fetchPrices = useCallback(async (paisId: number): Promise<any[]> => {
       try {
-         // console.log("\x1b[33m[AppContext] 💰 Obteniendo precios para país:", paisId);
+         console.log("\x1b[33m[AppContext] 💰 Obteniendo precios para país:", paisId);
          const response = await ConfigService.getPrices(paisId);
 
          if (response?.data?.success) {
             const prices = response.data.prices || [];
-            // console.log("\x1b[32m[AppContext] ✅ Precios obtenidos:", prices.length);
+            console.log("\x1b[32m[AppContext] ✅ Precios obtenidos:", prices.length, prices);
             return prices;
          }
 
-         // console.log("\x1b[33m[AppContext] ⚠️ No se pudieron obtener precios");
+         console.log("\x1b[33m[AppContext] ⚠️ No se pudieron obtener precios");
          return [];
       } catch (error) {
-         // console.log("\x1b[31m[AppContext] ❌ Error obteniendo precios:", error);
+         console.log("\x1b[31m[AppContext] ❌ Error obteniendo precios:", error);
          return [];
       }
    }, []);
 
    // ✅ Método para recargar países manualmente
    const reloadPaises = useCallback(async () => {
-      // console.log("\x1b[33m[AppContext] 🔄 Recargando países...");
+      console.log("\x1b[33m[AppContext] 🔄 Recargando países...");
       try {
          const paises = await fetchCountries();
 
@@ -244,9 +247,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
          await saveConfigCache(paises, state.config.precios);
 
-         // console.log("\x1b[32m[AppContext] ✅ Países recargados:", paises.length);
+         console.log("\x1b[32m[AppContext] ✅ Países recargados:", paises.length);
       } catch (error) {
-         // console.log("\x1b[31m[AppContext] ❌ Error recargando países:", error);
+         console.log("\x1b[31m[AppContext] ❌ Error recargando países:", error);
       }
    }, [fetchCountries, saveConfigCache, state.config.precios]);
 
@@ -267,10 +270,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
    // ==================== USER METHODS ====================
 
    const login = useCallback(
-      async (userObj: any, accessToken?: string, refreshToken?: string) => {
-         // console.log("\x1b[33m[AppContext] 🔐 Login iniciado");
-         // console.log("  - User:", userObj);
-         // console.log("  - País ID:", userObj?.pais_id);
+      async (userObj: any, accessToken?: string, refreshToken?: string): Promise<any[]> => {
+         console.log("\x1b[33m[AppContext] 🔐 Login iniciado");
+         console.log("  - User:", userObj);
+         console.log("  - País ID:", userObj?.pais_id);
+
+         let preciosCargados: any[] = [];
 
          try {
             // Guardar credenciales
@@ -282,6 +287,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             // Obtener precios del país del usuario (o cargar precios por defecto MX id 1 si no tiene país)
             if (userObj?.pais_id) {
                const precios = await fetchPrices(userObj.pais_id);
+               preciosCargados = precios;
 
                dispatch({
                   type: "CONFIG_SET",
@@ -292,6 +298,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             } else {
                try {
                   const precios = await fetchPrices(1);
+                  preciosCargados = precios;
                   dispatch({
                      type: "CONFIG_SET",
                      payload: { precios },
@@ -302,27 +309,43 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
                }
             }
 
-            // console.log("\x1b[32m[AppContext] ✅ Login completado");
+            console.log("\x1b[32m[AppContext] ✅ Login completado - Precios cargados:", preciosCargados.length);
          } catch (error) {
-            // console.log("\x1b[31m[AppContext] ❌ Error en login:", error);
+            console.log("\x1b[31m[AppContext] ❌ Error en login:", error);
             throw error;
          }
+
+         return preciosCargados;
       },
       [saveCredentials, fetchPrices, saveConfigCache, state.config.paises],
    );
 
-   const logout = useCallback(async () => {
-      // console.log("\x1b[33m[AppContext] 🚪 Logout iniciado");
+   const logout = useCallback(async (): Promise<any[]> => {
+      console.log("\x1b[33m[AppContext] 🚪 Logout iniciado");
+
+      let preciosDefault: any[] = [];
 
       try {
          await clearStorage();
          dispatch({ type: "USER_LOGOUT" });
 
-         // console.log("\x1b[32m[AppContext] ✅ Logout completado");
+         // Recargar precios del país default (MX id=1) para el carrito
+         try {
+            preciosDefault = await fetchPrices(1);
+            dispatch({ type: "CONFIG_SET", payload: { precios: preciosDefault } });
+            await saveConfigCache(state.config.paises, preciosDefault);
+            console.log("\x1b[32m[AppContext] ✅ Logout: precios default restaurados:", preciosDefault.length);
+         } catch (e) {
+            console.log("\x1b[31m[AppContext] ⚠️ Logout: no se pudieron cargar precios default", e);
+         }
+
+         console.log("\x1b[32m[AppContext] ✅ Logout completado");
       } catch (error) {
-         // console.log("\x1b[31m[AppContext] ❌ Error en logout:", error);
+         console.log("\x1b[31m[AppContext] ❌ Error en logout:", error);
       }
-   }, [clearStorage]);
+
+      return preciosDefault;
+   }, [clearStorage, fetchPrices, saveConfigCache, state.config.paises]);
 
    const updateUser = useCallback(
       async (userObj: any) => {
@@ -379,7 +402,11 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
    useEffect(() => {
       const hydrate = async () => {
-         // console.log("\x1b[33m[AppContext] 🔄 Iniciando hydrate...");
+         console.log("\x1b[33m[AppContext] 🔄 Iniciando hydrate...");
+
+         // ⚠️ SOLO PARA PRUEBAS — quitar antes de producción
+         await AsyncStorage.removeItem(STORAGE_KEYS.CONFIG);
+         console.log("\x1b[35m[AppContext] 🧹 Cache de config borrado para pruebas");
 
          try {
             // Cargar datos guardados
@@ -389,10 +416,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
                AsyncStorage.getItem(STORAGE_KEYS.CONFIG),
             ]);
 
-            // console.log("\x1b[35m[AppContext] 📦 Datos en storage:");
-            // console.log("  - User:", storedUser ? "EXISTS" : "NULL");
-            // console.log("  - Access:", storedAccess ? "EXISTS" : "NULL");
-            // console.log("  - Cache:", cachedConfig ? "EXISTS" : "NULL");
+            console.log("\x1b[35m[AppContext] 📦 Datos en storage:");
+            console.log("  - User:", storedUser ? "EXISTS" : "NULL");
+            console.log("  - Access:", storedAccess ? "EXISTS" : "NULL");
+            console.log("  - Cache:", cachedConfig ? "EXISTS" : "NULL");
 
             let userObj = null;
             let paises: any[] = [];
@@ -402,9 +429,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             if (storedUser) {
                try {
                   userObj = JSON.parse(storedUser);
-                  // console.log("\x1b[32m[AppContext] ✅ Usuario restaurado:", userObj.nombre);
+                  console.log("\x1b[32m[AppContext] ✅ Usuario restaurado:", userObj.nombre);
                } catch (e) {
-                  // console.log("\x1b[31m[AppContext] ❌ Error parseando usuario:", e);
+                  console.log("\x1b[31m[AppContext] ❌ Error parseando usuario:", e);
                }
             }
 
@@ -414,29 +441,48 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
                   const parsed = JSON.parse(cachedConfig);
                   paises = parsed.paises ?? [];
                   precios = parsed.precios ?? [];
-                  // console.log("\x1b[32m[AppContext] ✅ Config desde cache");
+                  console.log("\x1b[32m[AppContext] ✅ Config desde cache - Países:", paises.length, "Precios:", precios.length);
                } catch (e) {
-                  // console.log("\x1b[31m[AppContext] ❌ Error parseando cache:", e);
+                  console.log("\x1b[31m[AppContext] ❌ Error parseando cache:", e);
                }
             }
 
             // ✅ SIEMPRE obtener países si no hay en cache
             if (paises.length === 0) {
-               // console.log("\x1b[33m[AppContext] 🌍 No hay países en cache, obteniendo...");
+               console.log("\x1b[33m[AppContext] 🌍 No hay países en cache, obteniendo...");
                paises = await fetchCountries();
             }
 
             // Obtener precios del país del usuario si está logueado
             if (userObj?.pais_id && precios.length === 0) {
+               console.log("\x1b[33m[AppContext] 💰 Usuario logueado - obteniendo precios para país:", userObj.pais_id);
                precios = await fetchPrices(userObj.pais_id);
             }
 
-            // Si no hay precios aún, cargar precios por defecto (MX id 1)
+            // Si no hay precios aún (usuario sin sesión), usar locale del dispositivo
             if (precios.length === 0) {
                try {
-                  precios = await fetchPrices(1);
+                  const locale = Localization.getLocales()[0];
+                  console.log("\x1b[36m[AppContext] 🌐 locale:", locale);
+
+                  const regionCode = locale?.regionCode ?? "MX";
+                  console.log("\x1b[31m[AppContext] 🌐 Locale del dispositivo:", regionCode);
+
+                  // Buscar el país en el listado por código
+                  const paisPorLocale = paises.find(
+                     (p) => p.codigo_pais?.toUpperCase() === regionCode.toUpperCase()
+                  );
+
+                  if (paisPorLocale) {
+                     console.log("\x1b[32m[AppContext] ✅ País por locale encontrado:", paisPorLocale.pais, "id:", paisPorLocale.id);
+                     precios = await fetchPrices(paisPorLocale.id);
+                  } else {
+                     console.log("\x1b[33m[AppContext] ⚠️ País '", regionCode, "' no encontrado en lista, usando MX por defecto");
+                     precios = await fetchPrices(1);
+                  }
                } catch (e) {
-                  // Silenciar error; se dejará `precios` vacío si falla
+                  console.log("\x1b[31m[AppContext] ❌ Error obteniendo locale, usando MX por defecto:", e);
+                  precios = await fetchPrices(1);
                }
             }
 
@@ -463,11 +509,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
                },
             });
 
-            // console.log("\x1b[32m[AppContext] ✅ Hydrate completado");
-            // console.log("\x1b[32m[AppContext] 📊 Países cargados:", paises.length);
-            // console.log("\x1b[32m[AppContext] 📊 Precios cargados:", precios.length);
+            console.log("\x1b[32m[AppContext] ✅ Hydrate completado");
+            console.log("\x1b[32m[AppContext] 📊 Países cargados:", paises.length, 
+               // paises
+            );
+            
          } catch (error) {
-            // console.log("\x1b[31m[AppContext] ❌ Error en hydrate:", error);
+            console.log("\x1b[31m[AppContext] ❌ Error en hydrate:", error);
          } finally {
             setIsHydrated(true);
          }

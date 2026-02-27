@@ -6,6 +6,7 @@ import AlertComponent from "@/components/Alert";
 import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
 import { useApp } from "@/context/AppContext";
+import { useLogOut } from "@/hooks/useLogOut";
 import { getFlag } from "@/utils/Flags";
 import { getImage } from "@/utils/Images";
 import { Feather } from "@expo/vector-icons";
@@ -33,7 +34,8 @@ export default function ProfileScreen() {
       cancelText?: string;
    } | null>(null);
    const router = useRouter();
-   const { user, config, logout } = useApp();
+   const { user, config } = useApp();
+   const { logout } = useLogOut();
 
    const isLoggedIn = user.logged;
    const userData = user.infoUser;
@@ -227,7 +229,6 @@ export default function ProfileScreen() {
                      onAccept: async () => {
                         setAlert(null);
                         await logout();
-                        router.replace("/(auth)/login");
                      },
                   });
                } else {
@@ -249,7 +250,6 @@ export default function ProfileScreen() {
                      onAccept: async () => {
                         setAlert(null);
                         await logout();
-                        router.replace("/(auth)/login");
                      },
                   });
                } else {

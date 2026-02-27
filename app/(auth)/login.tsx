@@ -46,11 +46,12 @@ export default function LoginScreen() {
       if (!data) return;
       if (data.success) {
          (async () => {
-            login(data.user);
+            const precios = await login(data.user);
 
-            // if (cartContext?.clearCart) {
-            //    await cartContext.clearCart();
-            // }
+            // Actualizar precios del carrito al país del usuario (sin borrar el carrito)
+            if (precios.length > 0 && cartContext?.updateCartPrices) {
+               cartContext.updateCartPrices(precios);
+            }
 
             setAlert({
                type: "success",
@@ -91,6 +92,7 @@ export default function LoginScreen() {
    };
 
    const handleLogin = async () => {
+      console.log("formData", formData);
       // Validaciones
       if (!formData.email || !formData.password) {
          setAlert({
@@ -131,7 +133,7 @@ export default function LoginScreen() {
          model,
          appVersion,
       };
-
+      console.log("payload", payload);
       let pushToken: string | undefined = undefined;
       try {
          pushToken = await registerForPushNotificationsAsync();

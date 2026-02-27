@@ -28,7 +28,7 @@ export default function PaymentSuccessScreen() {
             </Text>
 
             <TouchableOpacity
-               onPress={() => router.push("/store")}
+               onPress={() => router.push("/hack")}
                style={{
                   backgroundColor: Colors.movapp.primary,
                   paddingVertical: 12,

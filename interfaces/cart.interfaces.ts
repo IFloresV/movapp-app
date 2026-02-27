@@ -28,4 +28,5 @@ export type CartContextType = {
    decreaseQuantity: (producto_id: number) => void;
    removeFromCart: (producto_id: number) => void;
    clearCart: () => void;
+   updateCartPrices: (precios: any[]) => void;
 };
