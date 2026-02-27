@@ -64,27 +64,27 @@ export default function ProfileScreen() {
    useFocusEffect(
       useCallback(() => {
          if (!deviceId) {
-            console.warn("[Notificaciones] deviceId vacío, no se consulta el estado.");
+            // console.warn("[Notificaciones] deviceId vacío, no se consulta el estado.");
             return;
          }
          setNotifLoading(true);
          NotificationService.getDevice(deviceId)
             .then((res) => {
-               console.log("-----------------");
+               // console.log("-----------------");
 
-               console.log("\x1b[32m", "[Notificaciones] Respuesta getDevice:", res);
+               // console.log("\x1b[32m", "[Notificaciones] Respuesta getDevice:", res);
                if (res && res.success && res.device) {
                   setNotifEnabled(!!res.device.pushEnabled);
-                  console.log("\x1b[33m", "[Notificaciones] Estado pushEnabled:", res.device.pushEnabled);
+                  // console.log("\x1b[33m", "[Notificaciones] Estado pushEnabled:", res.device.pushEnabled);
                } else {
                   setNotifEnabled(false);
-                  console.warn("\x1b[31m", "[Notificaciones] No se encontró el dispositivo o pushEnabled.");
+                  // console.warn("\x1b[31m", "[Notificaciones] No se encontró el dispositivo o pushEnabled.");
                }
             })
             .catch((err) => {
                setNotifEnabled(false);
-               console.log("-----------------");
-               console.log("\x1b[31m", "[Notificaciones] Error al obtener estado del dispositivo:", err);
+               // console.log("-----------------");
+               // console.log("\x1b[31m", "[Notificaciones] Error al obtener estado del dispositivo:", err);
             })
             .finally(() => setNotifLoading(false));
       }, [deviceId]),
@@ -107,11 +107,11 @@ export default function ProfileScreen() {
          if (response.success && response.orders && response.orders.length > 0) {
             setPurchases(response.orders);
          } else {
-            console.log("⚠️ [Profile] No se pudieron cargar las órdenes");
+            // console.log("⚠️ [Profile] No se pudieron cargar las órdenes");
             setPurchases([]);
          }
       } catch (err) {
-         console.log("❌ [Profile] Error al cargar órdenes:", err);
+         // console.log("❌ [Profile] Error al cargar órdenes:", err);
          setError(err instanceof Error ? err.message : "Error desconocido");
          setPurchases([]);
       } finally {
@@ -176,13 +176,13 @@ export default function ProfileScreen() {
          return;
       }
       setNotifLoading(true);
-      console.log("[Notificaciones] Cambiando pushEnabled a:", value);
+      // console.log("[Notificaciones] Cambiando pushEnabled a:", value);
       try {
          const res = await NotificationService.toggle(deviceId, value);
-         console.log("[Notificaciones] Respuesta toggle:", res);
+         // console.log("[Notificaciones] Respuesta toggle:", res);
          if (res && res.success && res.device) {
             setNotifEnabled(!!res.device.pushEnabled);
-            console.log("[Notificaciones] Nuevo estado pushEnabled:", res.device.pushEnabled);
+            // console.log("[Notificaciones] Nuevo estado pushEnabled:", res.device.pushEnabled);
          } else {
             setAlert({
                type: "error",
@@ -193,7 +193,7 @@ export default function ProfileScreen() {
             });
          }
       } catch (err) {
-         console.log("[Notificaciones] Error al cambiar estado:", err);
+         // console.log("[Notificaciones] Error al cambiar estado:", err);
          setAlert({
             type: "error",
             title: "Error",
@@ -359,8 +359,7 @@ export default function ProfileScreen() {
                            key={purchase.id}
                            className={`flex-row items-center py-3 ${
                               index < purchases.length - 1 ? "border-b border-gray-700/50" : ""
-                           }`}
-                        >
+                           }`}>
                            <View className="w-16 h-16 rounded-2xl items-center justify-center mr-3 ">
                               {purchase.sku ? (
                                  <Image
@@ -419,8 +418,7 @@ export default function ProfileScreen() {
             <TouchableOpacity
                className="bg-movapp-logoutButton py-4 rounded-xl items-center mb-3"
                activeOpacity={0.8}
-               onPress={handleLogout}
-            >
+               onPress={handleLogout}>
                <Text className="text-white text-lg font-bold">Cerrar Sesión</Text>
             </TouchableOpacity>
 
@@ -429,8 +427,7 @@ export default function ProfileScreen() {
                className="bg-movapp-text py-4 rounded-xl items-center mb-2"
                activeOpacity={0.8}
                onPress={handleDeleteAccount}
-               disabled={deletingAccount}
-            >
+               disabled={deletingAccount}>
                <Text className="text-movapp-primary text-lg font-bold">
                   {deletingAccount ? "Eliminando cuenta..." : "Eliminar cuenta"}
                </Text>

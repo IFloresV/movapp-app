@@ -55,7 +55,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
       }
 
       const cleanNumber = whatsappNumber.replace(/\D/g, "");
-      const message = "Hola, necesito ayuda con MovApp";
+      const message = "Hola,¿podrían ayudarme?";
       const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
 
       try {
@@ -74,8 +74,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                <Pressable
                   className="absolute bottom-0 left-0 right-0 bg-movapp-linkBackground rounded-t-[20px] overflow-hidden"
                   style={{ height: "100%" }}
-                  onPress={(e) => e.stopPropagation()}
-               >
+                  onPress={(e) => e.stopPropagation()}>
                   <View
                      style={{
                         height: 48,
@@ -103,8 +102,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                         <TouchableOpacity
                            key={item.name}
                            className="flex-row items-center px-6 py-5 active:bg-gray-800 border-b border-gray-800"
-                           onPress={() => handleItemPress(item.route)}
-                        >
+                           onPress={() => handleItemPress(item.route)}>
                            {/* Icono con fondo */}
                            <View className="bg-movapp-linkIcon/20 p-3 rounded-xl mr-4">
                               {item.type === "image" ? (
@@ -135,8 +133,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                         <TouchableOpacity
                            key="whatsapp"
                            className="flex-row items-center px-6 py-5 active:bg-green-900 border-b border-gray-800"
-                           onPress={handleWhatsAppPress}
-                        >
+                           onPress={handleWhatsAppPress}>
                            {/* Icono con fondo */}
                            <View className="bg-green-500/20 p-3 rounded-xl mr-4">
                               <FontAwesome name="whatsapp" size={24} color="#25D366" />
@@ -155,8 +152,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                         <TouchableOpacity
                            key="logout"
                            className="flex-row items-center px-6 py-5 active:bg-red-800"
-                           onPress={handleLogout}
-                        >
+                           onPress={handleLogout}>
                            <View className="bg-red-500/30 p-3 rounded-xl mr-4">
                               <Feather name="log-out" size={24} color="#A60D14" />
                            </View>
