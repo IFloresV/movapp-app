@@ -201,7 +201,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
          if (response?.data?.success) {
             const countries = response.data.countries || [];
-            console.log("\x1b[32m[AppContext] ✅ Países obtenidos:", countries.length, 
+            console.log(
+               "\x1b[32m[AppContext] ✅ Países obtenidos:",
+               countries.length,
                // countries
             );
             return countries;
@@ -329,14 +331,21 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
          await clearStorage();
          dispatch({ type: "USER_LOGOUT" });
 
-         // Recargar precios del país default (MX id=1) para el carrito
          try {
-            preciosDefault = await fetchPrices(1);
+            const locale = Localization.getLocales()[0];
+            const regionCode = locale?.regionCode ?? "MX";
+            const paisPorLocale = state.config.paises.find(
+               (p: any) => p.codigo_pais?.toUpperCase() === regionCode.toUpperCase(),
+            );
+            const paisId = paisPorLocale?.id ?? 1;
+            console.log("\x1b[36m[AppContext] 🌐 Logout: locale detectado:", regionCode, "→ país id:", paisId);
+
+            preciosDefault = await fetchPrices(paisId);
             dispatch({ type: "CONFIG_SET", payload: { precios: preciosDefault } });
             await saveConfigCache(state.config.paises, preciosDefault);
-            console.log("\x1b[32m[AppContext] ✅ Logout: precios default restaurados:", preciosDefault.length);
+            console.log("\x1b[32m[AppContext] ✅ Logout: precios restaurados por locale:", preciosDefault.length);
          } catch (e) {
-            console.log("\x1b[31m[AppContext] ⚠️ Logout: no se pudieron cargar precios default", e);
+            console.log("\x1b[31m[AppContext] ⚠️ Logout: no se pudieron cargar precios por locale", e);
          }
 
          console.log("\x1b[32m[AppContext] ✅ Logout completado");
@@ -405,8 +414,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
          console.log("\x1b[33m[AppContext] 🔄 Iniciando hydrate...");
 
          // ⚠️ SOLO PARA PRUEBAS — quitar antes de producción
-         await AsyncStorage.removeItem(STORAGE_KEYS.CONFIG);
-         console.log("\x1b[35m[AppContext] 🧹 Cache de config borrado para pruebas");
+         // await AsyncStorage.removeItem(STORAGE_KEYS.CONFIG);
+         // console.log("\x1b[35m[AppContext] 🧹 Cache de config borrado para pruebas");
 
          try {
             // Cargar datos guardados
@@ -441,7 +450,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
                   const parsed = JSON.parse(cachedConfig);
                   paises = parsed.paises ?? [];
                   precios = parsed.precios ?? [];
-                  console.log("\x1b[32m[AppContext] ✅ Config desde cache - Países:", paises.length, "Precios:", precios.length);
+                  console.log(
+                     "\x1b[32m[AppContext] ✅ Config desde cache - Países:",
+                     paises.length,
+                     "Precios:",
+                     precios.length,
+                  );
                } catch (e) {
                   console.log("\x1b[31m[AppContext] ❌ Error parseando cache:", e);
                }
@@ -469,15 +483,22 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
                   console.log("\x1b[31m[AppContext] 🌐 Locale del dispositivo:", regionCode);
 
                   // Buscar el país en el listado por código
-                  const paisPorLocale = paises.find(
-                     (p) => p.codigo_pais?.toUpperCase() === regionCode.toUpperCase()
-                  );
+                  const paisPorLocale = paises.find((p) => p.codigo_pais?.toUpperCase() === regionCode.toUpperCase());
 
                   if (paisPorLocale) {
-                     console.log("\x1b[32m[AppContext] ✅ País por locale encontrado:", paisPorLocale.pais, "id:", paisPorLocale.id);
+                     console.log(
+                        "\x1b[32m[AppContext] ✅ País por locale encontrado:",
+                        paisPorLocale.pais,
+                        "id:",
+                        paisPorLocale.id,
+                     );
                      precios = await fetchPrices(paisPorLocale.id);
                   } else {
-                     console.log("\x1b[33m[AppContext] ⚠️ País '", regionCode, "' no encontrado en lista, usando MX por defecto");
+                     console.log(
+                        "\x1b[33m[AppContext] ⚠️ País '",
+                        regionCode,
+                        "' no encontrado en lista, usando MX por defecto",
+                     );
                      precios = await fetchPrices(1);
                   }
                } catch (e) {
@@ -510,10 +531,11 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             });
 
             console.log("\x1b[32m[AppContext] ✅ Hydrate completado");
-            console.log("\x1b[32m[AppContext] 📊 Países cargados:", paises.length, 
+            console.log(
+               "\x1b[32m[AppContext] 📊 Países cargados:",
+               paises.length,
                // paises
             );
-            
          } catch (error) {
             console.log("\x1b[31m[AppContext] ❌ Error en hydrate:", error);
          } finally {

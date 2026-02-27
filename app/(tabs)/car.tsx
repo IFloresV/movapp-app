@@ -28,6 +28,9 @@ export default function CarScreen() {
       return Number.parseFloat(String(raw).replace(",", "")) || 0;
    };
 
+   const formatAmount = (num: number) =>
+      num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
    // Total carrito
    const total = useMemo(() => {
       return cart.reduce((acc, it) => acc + parsePrice(it) * getQty(it), 0);
@@ -35,7 +38,7 @@ export default function CarScreen() {
 
    // Simbolo (si no existe alguno, usa $)
    const symbol = cart[0]?.simbolo ?? "$";
-   const totalFormatted = `${symbol}${total.toFixed(2)}`;
+   const totalFormatted = `${symbol} ${formatAmount(total)}`;
 
    const computeAmountCents = () =>
       Math.round(
@@ -51,7 +54,7 @@ export default function CarScreen() {
       const qty = getQty(item);
       const pricePer = parsePrice(item);
       const symbol = item.simbolo ?? "$";
-      const lineTotal = `${symbol}${(pricePer * qty).toFixed(2)}`;
+      const lineTotal = `${symbol} ${formatAmount(pricePer * qty)}`;
 
       return (
          <View className="bg-movapp-linkBorder rounded-2xl p-4 border border-gray-800 border-opacity-50 mb-2 flex-row items-center">

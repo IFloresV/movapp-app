@@ -12,6 +12,8 @@ export interface OrderItem {
    cantidad: number;
    subtotal: string;
    created_at: string;
+   currency: string;
+   simbolo: string;
 }
 
 export interface PaidOrdersResponse {
@@ -41,7 +43,7 @@ const OrderService = {
             message: "Error al obtener las órdenes",
          };
       } catch (error) {
-         console.log("\x1b[31m[OrderService] Error al obtener órdenes pagadas:", error);
+         console.log("\x1b[31m[OrderService] Error al obtener órdenes :", error);
          return {
             success: false,
             count: 0,

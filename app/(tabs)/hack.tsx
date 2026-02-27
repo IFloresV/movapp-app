@@ -40,9 +40,12 @@ export default function HackScreen() {
    const priceValue = hackPrice?.precio ? Number(hackPrice.precio) : 500;
    const currencySymbol = hackPrice?.simbolo ?? "$";
    const currency = hackPrice?.moneda ?? "MXN";
-   const totalPrice = (hackCount * priceValue).toFixed(2);
+   const formatAmount = (num: number) =>
+      num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+   const totalPrice = formatAmount(hackCount * priceValue);
 
-   const selectedCountry = paises?.find((p) => p.moneda === hackPrice?.moneda) ?? paises?.find((p) => p.id === user?.infoUser?.pais_id);
+   const selectedCountry =
+      paises?.find((p) => p.moneda === hackPrice?.moneda) ?? paises?.find((p) => p.id === user?.infoUser?.pais_id);
    const countryCode = selectedCountry?.codigo_pais || "MX";
 
    const increment = () => {
@@ -60,7 +63,6 @@ export default function HackScreen() {
          setShowLoginModal(true);
          return;
       }
-
 
       if (hackPrice) {
          const exists = Array.isArray(cart)

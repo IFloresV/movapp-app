@@ -41,6 +41,9 @@ export default function ProfileScreen() {
    const userData = user.infoUser;
    const paises = config.paises;
 
+   const formatAmount = (num: number | string) =>
+      Number(num).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
    // Estados para las órdenes
    const [purchases, setPurchases] = useState<OrderItem[]>([]);
    const [loadingOrders, setLoadingOrders] = useState(true);
@@ -351,7 +354,7 @@ export default function ProfileScreen() {
                   <AlertComponent visible={true} type="error" title="Error al cargar las compras" message={error} />
                </View>
             ) : purchases.length > 0 ? (
-               <View className="bg-movapp-card rounded-3xl p-6 mb-2 border border-movapp-borderCard border-opacity-50">
+               <View className="bg-movapp-card rounded-3xl p-4 mb-2 border border-movapp-borderCard border-opacity-50">
                   <Text className="text-white text-base font-bold mb-3">Historial de Compras</Text>
                   <ScrollView showsVerticalScrollIndicator={true} style={{ maxHeight: 190 }} nestedScrollEnabled={true}>
                      {purchases.map((purchase, index) => (
@@ -359,7 +362,8 @@ export default function ProfileScreen() {
                            key={purchase.id}
                            className={`flex-row items-center py-3 ${
                               index < purchases.length - 1 ? "border-b border-gray-700/50" : ""
-                           }`}>
+                           }`}
+                        >
                            <View className="w-16 h-16 rounded-2xl items-center justify-center mr-3 ">
                               {purchase.sku ? (
                                  <Image
@@ -384,8 +388,13 @@ export default function ProfileScreen() {
                               </Text>
                            </View>
                            <View className="items-end">
-                              <Text className="text-purple-400 text-lg font-bold">${purchase.subtotal}</Text>
-                              <Text className="text-gray-500 text-xs">x{purchase.cantidad}</Text>
+                              <View className="flex-row items-baseline">
+                                 <Text className="text-purple-400 text-md font-bold">
+                                    {purchase.simbolo} {formatAmount(purchase.subtotal)}
+                                 </Text>
+                                 <Text className="text-purple-300 text-xs font-medium ml-1">{purchase.currency}</Text>
+                              </View>
+                              <Text className="text-gray-500 text-md"> x {purchase.cantidad}</Text>
                            </View>
                         </View>
                      ))}
@@ -418,7 +427,8 @@ export default function ProfileScreen() {
             <TouchableOpacity
                className="bg-movapp-logoutButton py-4 rounded-xl items-center mb-3"
                activeOpacity={0.8}
-               onPress={handleLogout}>
+               onPress={handleLogout}
+            >
                <Text className="text-white text-lg font-bold">Cerrar Sesión</Text>
             </TouchableOpacity>
 
@@ -427,7 +437,8 @@ export default function ProfileScreen() {
                className="bg-movapp-text py-4 rounded-xl items-center mb-2"
                activeOpacity={0.8}
                onPress={handleDeleteAccount}
-               disabled={deletingAccount}>
+               disabled={deletingAccount}
+            >
                <Text className="text-movapp-primary text-lg font-bold">
                   {deletingAccount ? "Eliminando cuenta..." : "Eliminar cuenta"}
                </Text>
