@@ -23,6 +23,7 @@ const contacts: Contact[] = [
    { name: "Moni", phone: "7294509488" },
    { name: "Diego", phone: "5635166009" },
    { name: "Sol", phone: "7261854700" },
+   { name: "Movapp Principal", phone: "5574360621" },
 ];
 
 export default function ContactsScreen() {
@@ -96,8 +97,7 @@ export default function ContactsScreen() {
                      <TouchableOpacity
                         className="bg-green-500/20 p-4 rounded-xl flex-row items-center justify-center"
                         onPress={() => openWhatsApp(Info.whatsappNumber, "MovApp")}
-                        activeOpacity={0.7}
-                     >
+                        activeOpacity={0.7}>
                         <FontAwesome name="whatsapp" size={32} color="#25D366" style={{ marginRight: 12 }} />
                         <Text className="text-white text-2xl font-bold">{"Chat principal"}</Text>
                      </TouchableOpacity>
@@ -112,8 +112,7 @@ export default function ContactsScreen() {
                      key={index}
                      className="bg-movapp-linkBackgroundHome rounded-2xl p-4 flex-row items-center mb-3"
                      onPress={() => openWhatsApp(contact.phone, contact.name)}
-                     activeOpacity={0.7}
-                  >
+                     activeOpacity={0.7}>
                      <View className="bg-green-500/20 p-3 rounded-xl mr-6">
                         <FontAwesome name="whatsapp" size={24} color="#25D366" />
                      </View>
