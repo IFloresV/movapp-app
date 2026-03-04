@@ -52,6 +52,14 @@ const DRAWER_MENU_ITEMS: DrawerMenuItem[] = [
    },
 
    {
+      name: "debt-repair",
+      type: "feather",
+      icon: "shield",
+      label: "Reparadora de deudas",
+      route: "/(tabs)/debt-repair",
+   },
+
+   {
       name: "register",
       type: "feather",
       icon: "check-circle",
@@ -126,8 +134,7 @@ export default function TabsLayout() {
                   tabBarShowLabel: false,
                   swipeEnabled: true,
                };
-            }}
-         >
+            }}>
             <Tabs.Screen name="index" />
             <Tabs.Screen name="hack" />
 
@@ -162,6 +169,7 @@ export default function TabsLayout() {
             <Tabs.Screen name="trusted-apps" options={{ href: null }} />
             <Tabs.Screen name="linktree" options={{ href: null }} />
             <Tabs.Screen name="contacts" options={{ href: null }} />
+            <Tabs.Screen name="debt-repair" options={{ href: null }} />
          </Tabs>
 
          {/* Drawer Menu Component */}
