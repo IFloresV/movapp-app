@@ -42,24 +42,7 @@ const loanApps: LoanApp[] = [
       url: "https://track.crezu.net/click?pid=7944&offer_id=258",
       country: "MX",
    },
-   {
-      name: "Clicredito",
-      description:
-         "Clicrédito es un prestamista digital en México que otorga préstamos pequeños y a corto plazo, con trámite rápido y en línea; no es un banco y sus créditos suelen tener costos altos, por lo que se usa principalmente para emergencias.",
-      requirements: [
-         "Mayor de 18 años",
-         "Identificación oficial vigente",
-         "Selfie a color",
-         "Número celular",
-         "Cuenta bancaria",
-         "Correo electrónico",
-      ],
-      amount: "Hasta $8,000 MXN",
-      rate: "Desde 1.1% diario",
-      term: "Hasta 30 días",
-      url: "https://track.crezu.net/click?pid=7944&offer_id=855",
-      country: "MX",
-   },
+
    {
       name: "Dineria",
       description:
@@ -321,8 +304,7 @@ export default function TrustedAppsScreen() {
          <View className="px-4 mb-4 mx-1 p-5">
             <TouchableOpacity
                onPress={() => setShowCountryModal(true)}
-               className="bg-movapp-linkBackgroundHome px-4 py-3 rounded-xl flex-row items-center justify-between"
-            >
+               className="bg-movapp-linkBackgroundHome px-4 py-3 rounded-xl flex-row items-center justify-between">
                <Text className="text-white text-base">
                   {countryOptions.find((c) => c.value === selectedCountry)?.flag}{" "}
                   {countryOptions.find((c) => c.value === selectedCountry)?.label}
@@ -387,8 +369,7 @@ export default function TrustedAppsScreen() {
 
                         <TouchableOpacity
                            onPress={() => openUrl(app.url)}
-                           className="bg-movapp-primary py-3 rounded-xl flex-row items-center justify-center"
-                        >
+                           className="bg-movapp-primary py-3 rounded-xl flex-row items-center justify-center">
                            <Text className="text-white font-bold mr-2">IR AL SITIO WEB</Text>
                            <Feather name="external-link" size={16} color="white" />
                         </TouchableOpacity>
@@ -421,8 +402,7 @@ export default function TrustedAppsScreen() {
             visible={showCountryModal}
             animationType="slide"
             transparent={true}
-            onRequestClose={() => setShowCountryModal(false)}
-         >
+            onRequestClose={() => setShowCountryModal(false)}>
             <View className="flex-1 justify-end bg-black/50">
                <View className="bg-movapp-background rounded-t-3xl max-h-[70%]">
                   {/* Header del Modal */}
@@ -444,8 +424,7 @@ export default function TrustedAppsScreen() {
                               setShowCountryModal(false);
                            }}
                            className="px-6 py-4 border-b border-gray-800 flex-row items-center justify-between"
-                           activeOpacity={0.7}
-                        >
+                           activeOpacity={0.7}>
                            <View className="flex-row items-center flex-1">
                               <Text className="text-3xl mr-3">{item.flag}</Text>
                               <Text className="text-white text-base font-semibold">{item.label}</Text>
