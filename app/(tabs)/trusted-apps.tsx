@@ -256,7 +256,7 @@ export default function TrustedAppsScreen() {
          <View className="px-4 mt-4 mb-5">
             <View className="bg-movapp-linkBackgroundHome rounded-2xl p-5">
                <Text className="text-white text-2xl font-bold mb-2 text-center">
-                  Aplicaciones de Préstamos Confiables
+                  Aplicaciones de préstamos confiables
                </Text>
                <Text className="text-gray-300 text-sm mb-4">
                   Solicitar un préstamo no debería ponerte en riesgo. Esta página existe porque ayudamos a personas que
@@ -315,8 +315,8 @@ export default function TrustedAppsScreen() {
 
          {/* Loan Apps List */}
          <View className="px-4 pb-6">
-            {filteredApps.map((app) => (
-               <View key={app.name} className="bg-movapp-linkBackgroundHome rounded-2xl p-5 mb-4">
+            {filteredApps.map((app, index) => (
+               <View key={`${app.name}-${index}`} className="bg-movapp-linkBackgroundHome rounded-2xl p-5 mb-4">
                   <TouchableOpacity onPress={() => toggleExpand(app.name)}>
                      <View className="flex-row items-center justify-between mb-3">
                         <View className="flex-row items-center flex-1">

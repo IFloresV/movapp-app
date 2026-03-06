@@ -52,14 +52,6 @@ const DRAWER_MENU_ITEMS: DrawerMenuItem[] = [
    },
 
    {
-      name: "debt-repair",
-      type: "feather",
-      icon: "shield",
-      label: "Reparadora de deudas",
-      route: "/(tabs)/debt-repair",
-   },
-
-   {
       name: "register",
       type: "feather",
       icon: "check-circle",
