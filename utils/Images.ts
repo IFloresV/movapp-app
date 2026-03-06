@@ -24,6 +24,9 @@ export const getImage = (name: string) => {
       case "LINKTREE - PARRAFO":
          return require("@/assets/images/linktree/LINKTREE - PARRAFO.png");
 
+      case "REPARADORA DEUDA - HERO":
+         return require("@/assets/images/REPARADORA DEUDA - HERO.png");
+
       default:
          return require("@/assets/images/products/PROD-001.png");
    }

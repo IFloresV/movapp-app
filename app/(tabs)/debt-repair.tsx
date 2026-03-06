@@ -2,8 +2,9 @@ import React from "react";
 
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 import { Colors } from "@/constants/Colors";
+import { getImage } from "@/utils/Images";
 import { Feather } from "@expo/vector-icons";
-import { Linking, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Image, Linking, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const DEBT_REPAIR_URL = "https://registro.curadeuda.com/movapp/";
 
@@ -13,6 +14,15 @@ const openUrl = async (url: string) => {
       await Linking.openURL(url);
    }
 };
+
+const DebtRepairButton = () => (
+   <TouchableOpacity
+      onPress={() => openUrl(DEBT_REPAIR_URL)}
+      activeOpacity={0.8}
+      className="bg-movapp-primary py-4 rounded-xl items-center mb-3">
+      <Text className="text-white text-md font-bold ml-2">Comienza ya</Text>
+   </TouchableOpacity>
+);
 
 export default function DebtRepairScreen() {
    return (
@@ -44,7 +54,7 @@ export default function DebtRepairScreen() {
                   "Planes reales de liquidación",
                   "Liquida tus deudas hasta con un 70% de descuento",
                   "Acompañamiento durante el proceso",
-                  "OOrden financiero para comenzar de nuevo",
+                  "Orden financiero para comenzar de nuevo",
                ].map((item, index) => (
                   <View key={index} className="flex-row items-start mb-3">
                      <View className="mt-1 mr-3 bg-movapp-linkIcon/20 rounded-full p-1.5">
@@ -56,8 +66,17 @@ export default function DebtRepairScreen() {
                   </View>
                ))}
             </View>
+
+            <View className="w-11/12 max-w-md self-center items-center mb-6 rounded-xl overflow-hidden">
+               <Image source={getImage("REPARADORA DEUDA - HERO")} className="w-full h-44" resizeMode="cover" />
+            </View>
+
+            <View className="rounded-xl p-6 mb-6">
+               <DebtRepairButton />
+            </View>
+
             {/* Historias de éxito */}
-            <View className="bg-movapp-linkBackground rounded-3xl p-5 mb-5">
+            <View className="bg-movapp-linkBackground rounded-xl p-5 mb-5">
                <Text className="text-white text-lg font-bold mb-4">Historias de éxito</Text>
 
                <ScrollView style={{ maxHeight: 260 }} showsVerticalScrollIndicator={false}>
@@ -139,13 +158,8 @@ export default function DebtRepairScreen() {
                </View>
             </View>
             {/* CTA */}
-            <View className="bg-movapp-linkBackgroundHome rounded-xl p-6">
-               <TouchableOpacity
-                  onPress={() => openUrl(DEBT_REPAIR_URL)}
-                  activeOpacity={0.8}
-                  className="bg-movapp-primary py-4 rounded-xl items-center mb-3">
-                  <Text className="text-white text-md font-bold ml-2">Comienza ya</Text>
-               </TouchableOpacity>
+            <View className=" p-6">
+               <DebtRepairButton />
             </View>
          </View>
       </LayoutWithNavigation>
