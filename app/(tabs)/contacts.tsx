@@ -23,8 +23,21 @@ const contacts: Contact[] = [
    { name: "Moni", phone: "7294509488" },
    { name: "Diego", phone: "5635166009" },
    { name: "Sol", phone: "7261854700" },
+
    { name: "Movapp Principal", phone: "5574360621" },
+   // Hackers
+   { name: "Dante", phone: "99299797" },
+   { name: "Delhi", phone: "5514856625" },
+   { name: "Rodo", phone: "913744119" },
+   { name: "Nat", phone: "5655894519" },
+   { name: "Isabel", phone: "7298056828" },
+   { name: "Gilberto", phone: "5513760371" },
+   { name: "George", phone: "5541342522" },
+   { name: "Arturo", phone: "5519188741" },
+   { name: "Jakelin", phone: "5521958762" },
 ];
+
+const contactsFalse: Contact[] = [{ name: "Peru", phone: "952401035" }];
 
 export default function ContactsScreen() {
    const [searchText, setSearchText] = useState("");
@@ -47,15 +60,18 @@ export default function ContactsScreen() {
       }
    };
 
-   const filteredContacts =
-      searchText.length === 10 ? contacts.filter((contact) => contact.phone.includes(searchText)) : [];
+   const isValidLength = searchText.length >= 9 && searchText.length <= 12;
+
+   const filteredContacts = isValidLength ? contacts.filter((contact) => contact.phone === searchText) : [];
+
+   const isFalseContact = isValidLength ? contactsFalse.some((contact) => contact.phone === searchText) : false;
 
    return (
       <LayoutWithNavigation scrollable={true}>
          {/* Header */}
          <View className="px-4 mt-4 mb-5">
             <View className="bg-movapp-linkBackgroundHome rounded-2xl p-5">
-               <Text className="text-white text-2xl font-bold mb-2 text-center">Confirma el número de tu asesor</Text>
+               <Text className="text-white text-xl font-bold mb-2 text-center">Confirma el número de tu asesor</Text>
             </View>
          </View>
 
@@ -64,13 +80,13 @@ export default function ContactsScreen() {
             <View className="bg-movapp-linkBackgroundHome rounded-2xl p-4 flex-row items-center">
                <FontAwesome name="search" size={22} color="#9CA3AF" style={{ marginRight: 12 }} />
                <TextInput
-                  className="flex-1 text-white text-lg"
-                  placeholder="Ingresa 10 dígitos del teléfono..."
+                  className="flex-1 text-white text-md py-2"
+                  placeholder="Ingresa el número sin código de país"
                   placeholderTextColor="#9CA3AF"
                   value={searchText}
                   onChangeText={handleSearchChange}
                   keyboardType="phone-pad"
-                  maxLength={10}
+                  maxLength={12}
                />
                {searchText.length > 0 && (
                   <TouchableOpacity onPress={() => setSearchText("")}>
@@ -82,7 +98,32 @@ export default function ContactsScreen() {
 
          {/* Contacts List */}
          <View className="px-4 pb-6">
-            {searchText.length === 10 && filteredContacts.length === 0 ? (
+            {isValidLength && isFalseContact ? (
+               <>
+                  <View className="bg-red-900/40 border border-red-600/60 rounded-2xl p-5 mb-4">
+                     <View className="flex-row items-center mb-3">
+                        <Feather name="alert-octagon" size={24} color="#f87171" />
+                        <Text className="text-red-400 text-lg font-bold ml-3">Cuidado: contacto falso</Text>
+                     </View>
+                     <Text className="text-gray-200 text-lg font-bold">
+                        Este número ha sido identificado como falso. No compartas información personal ni realices pagos
+                        con este contacto.
+                     </Text>
+                  </View>
+                  <View className="bg-movapp-linkBackgroundHome rounded-2xl p-5">
+                     <TouchableOpacity
+                        className="bg-green-500/20 p-4 rounded-xl flex-row items-center justify-center"
+                        onPress={() => openWhatsApp(Info.whatsappNumber, "MovApp")}
+                        activeOpacity={0.7}>
+                        <FontAwesome name="whatsapp" size={32} color="#25D366" style={{ marginRight: 12 }} />
+                        <Text className="text-white text-2xl font-bold">{"Chat principal"}</Text>
+                     </TouchableOpacity>
+                     <Text className="text-white text-center mb-4 mt-4 text-lg">
+                        Si tienes dudas, contacta a nuestro chat principal para verificar la información de tu asesor.
+                     </Text>
+                  </View>
+               </>
+            ) : isValidLength && filteredContacts.length === 0 ? (
                <>
                   <View className="bg-yellow-900/30 border border-yellow-600/50 rounded-2xl p-5 mb-4">
                      <View className="flex-row items-center mb-3">
@@ -106,7 +147,7 @@ export default function ContactsScreen() {
                      </Text>
                   </View>
                </>
-            ) : searchText.length === 10 && filteredContacts.length > 0 ? (
+            ) : isValidLength && filteredContacts.length > 0 ? (
                filteredContacts.map((contact, index) => (
                   <TouchableOpacity
                      key={index}

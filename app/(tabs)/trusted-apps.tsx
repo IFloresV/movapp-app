@@ -59,38 +59,7 @@ const loanApps: LoanApp[] = [
       url: "https://track.leadsmatcher.com/click?pid=7944&offer_id=34",
       country: "MX",
    },
-   {
-      name: "Credy",
-      description:
-         "Credy es una plataforma en línea que compara y te ofrece préstamos rápidos en México. No es un banco, sino un intermediario entre tú y varias instituciones que otorgan créditos personales. El proceso es 100% digital: completas tu solicitud en línea, se evalúa y recibes ofertas de préstamos en minutos.",
-      requirements: [
-         "Mayor de 18 años y ser residente en México",
-         "Identificación oficial vigente",
-         "Cuenta bancaria propia",
-         "En algunos casos, comprobantes de ingresos",
-      ],
-      amount: "Hasta $30,000 MXN",
-      rate: "Desde 0%",
-      term: "Hasta 12 meses",
-      url: "https://tracking.adcredy.com/aff_c?offer_id=2816&aff_id=4702",
-      country: "MX",
-   },
-   {
-      name: "Cashpace",
-      description:
-         "Cashspace es una plataforma digital intermediaria que te conecta con diversas entidades financieras que otorgan créditos personales en México. No es un banco ni una institución que preste dinero directamente, sino un broker que compara ofertas para que tú elijas la que más te conviene.",
-      requirements: [
-         "Mayor de 18 años y residente en México",
-         "CURP y RFC válidos",
-         "Cuenta bancaria a tu nombre",
-         "Teléfono y correo electrónico",
-      ],
-      amount: "Hasta $20,000 MXN",
-      rate: "Desde 0%",
-      term: "Hasta 365 días",
-      url: "https://track.leadsmatcher.com/click?pid=7944&offer_id=753",
-      country: "MX",
-   },
+
    {
       name: "BanCoppel",
       description:
@@ -145,23 +114,7 @@ const loanApps: LoanApp[] = [
       url: "https://track.leadsmatcher.com/click?pid=7944&offer_id=959",
       country: "MX",
    },
-   {
-      name: "Credy",
-      description:
-         "Credy en Colombia es una plataforma digital que actúa como intermediaria para ayudarte a encontrar préstamos rápidos en línea ofrecidos por diversas entidades financieras sin tener que ir a una oficina física.",
-      requirements: [
-         "Mayor de 18 años",
-         "Documento de identificación vigente",
-         "Ser residente de colombia",
-         "Cuenta bancaria a tu nombre",
-         "Teléfono y datos personales",
-      ],
-      amount: "Hasta $5,000,000 COP",
-      rate: "Desde 0%",
-      term: "Hasta 120 días",
-      url: "https://tracking.adcredy.com/aff_c?offer_id=1446&aff_id=4702",
-      country: "CO",
-   },
+
    {
       name: "RayoCredit Colombia",
       description:
