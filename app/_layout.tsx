@@ -1,5 +1,5 @@
 // app/_layout.tsx
-import * as Notifications from "expo-notifications";
+import { addNotificationReceivedListener } from "@/utils/notifications";
 import React, { useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -37,7 +37,7 @@ function AppContent() {
    }, [logout, clearCart]);
 
    useEffect(() => {
-      const subscription = Notifications.addNotificationReceivedListener((notification) => {
+      const subscription = addNotificationReceivedListener((notification) => {
          addNotification({
             id: notification.request.identifier,
             title: notification.request.content.title || "",
@@ -71,7 +71,7 @@ export default function RootLayout() {
    const [isAppReady, setIsAppReady] = useState(false);
 
    useEffect(() => {
-      const subscription = Notifications.addNotificationReceivedListener((notification) => {
+      const subscription = addNotificationReceivedListener((notification) => {
          console.log("Notificación recibida:", notification);
       });
 

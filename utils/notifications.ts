@@ -1,19 +1,62 @@
+import Constants from "expo-constants";
 import * as Device from "expo-device";
-import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 
-// Configurar el handler PRIMERO con TODAS las propiedades requeridas
-Notifications.setNotificationHandler({
-   handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: false,
-      shouldShowBanner: true, // ⚠️ Faltaba esta
-      shouldShowList: true, // ⚠️ Faltaba esta
-   }),
-});
+// Detectar si corre en Expo Go: en SDK 53+ removieron push remoto de Android.
+// Importar `expo-notifications` en ese contexto tira un error a nivel de módulo,
+// así que cargamos el paquete dinámicamente sólo cuando NO estamos en Expo Go Android.
+const isExpoGo = Constants.executionEnvironment === "storeClient";
+export const pushDisabled = isExpoGo && Platform.OS === "android";
+
+type NotificationsModule = typeof import("expo-notifications");
+
+let cachedNotifications: NotificationsModule | null = null;
+function loadNotifications(): NotificationsModule | null {
+   if (pushDisabled) return null;
+   if (cachedNotifications) return cachedNotifications;
+   cachedNotifications = require("expo-notifications");
+   return cachedNotifications;
+}
+
+let handlerConfigured = false;
+function ensureHandlerConfigured(Notifications: NotificationsModule) {
+   if (handlerConfigured) return;
+   Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+         shouldShowAlert: true,
+         shouldPlaySound: true,
+         shouldSetBadge: false,
+         shouldShowBanner: true,
+         shouldShowList: true,
+      }),
+   });
+   handlerConfigured = true;
+}
+
+/**
+ * Wrapper de `Notifications.addNotificationReceivedListener` que es no-op
+ * cuando el push está deshabilitado (Expo Go Android). Devuelve un objeto
+ * compatible con `{ remove(): void }` para que el caller pueda hacer cleanup.
+ */
+export function addNotificationReceivedListener(
+   listener: Parameters<NotificationsModule["addNotificationReceivedListener"]>[0],
+): { remove: () => void } {
+   const Notifications = loadNotifications();
+   if (!Notifications) {
+      return { remove: () => {} };
+   }
+   return Notifications.addNotificationReceivedListener(listener);
+}
 
 export async function registerForPushNotificationsAsync() {
+   const Notifications = loadNotifications();
+   if (!Notifications) {
+      console.log("[notifications] Push remoto deshabilitado en Expo Go (Android, SDK 53+).");
+      return;
+   }
+
+   ensureHandlerConfigured(Notifications);
+
    // Crear el canal PRIMERO
    if (Platform.OS === "android") {
       await Notifications.setNotificationChannelAsync("default", {

@@ -3,23 +3,32 @@
 import { useRouter } from "expo-router";
 import React from "react";
 
-import { Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
 import VimeoPlayer from "@/components/VimeoPlayer";
 import { Feather, FontAwesome6, Ionicons } from "@expo/vector-icons";
 
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
 import { Colors } from "@/constants/Colors";
+import { useModuleVideos } from "@/hooks/useModuleVideos";
 
 export default function HomeScreen() {
    const router = useRouter();
+   const { videos, loading } = useModuleVideos("home");
+   const bannerVideoId = videos[0]?.videoId;
 
    return (
       <LayoutWithNavigation scrollable={true}>
          {/* Video Banner - Vimeo */}
          <View className="px-4 mt-2">
-            <View className="w-full h-56 rounded-lg overflow-hidden">
-               <VimeoPlayer videoId="1147159129" autoplay={false} loop={false} muted={false} controls={true} />
+            <View className="w-full h-56 rounded-lg overflow-hidden bg-black">
+               {loading || !bannerVideoId ? (
+                  <View className="flex-1 justify-center items-center">
+                     <ActivityIndicator size="large" color="#fff" />
+                  </View>
+               ) : (
+                  <VimeoPlayer videoId={bannerVideoId} autoplay={false} loop={false} muted={false} controls={true} />
+               )}
             </View>
          </View>
 

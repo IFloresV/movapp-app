@@ -1,40 +1,44 @@
 // app/(tabs)/colaborations.tsx
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
-import { VideoItem } from "@/components/VideoFeed";
 import VimeoPlayerVertical from "@/components/VimeoPlayerVertical";
+import { useModuleVideos } from "@/hooks/useModuleVideos";
 import React from "react";
-import { Text, View } from "react-native";
-
-const mindVideos: VideoItem[] = [
-   { id: "1", videoId: "1166399438" },
-   { id: "2", videoId: "1166399565" },
-   { id: "3", videoId: "1166404006" },
-   { id: "4", videoId: "1166404194" },
-   { id: "5", videoId: "1166404382" },
-   { id: "6", videoId: "1166404548" },
-   { id: "7", videoId: "1166404748" },
-   { id: "8", videoId: "1166404979" },
-   { id: "9", videoId: "1166405267" },
-   { id: "10", videoId: "1166405419" },
-   { id: "11", videoId: "1166405577" },
-   { id: "12", videoId: "1166405733" },
-   { id: "13", videoId: "1166405909" },
-];
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 
 export default function ColaborationsScreen() {
-   const videoPairs = [];
-   for (let i = 0; i < mindVideos.length; i += 2) {
-      videoPairs.push(mindVideos.slice(i, i + 2));
+   const { module, videos, loading, error, reload } = useModuleVideos("collaborations");
+
+   const videoPairs: { videoId: string }[][] = [];
+   for (let i = 0; i < videos.length; i += 2) {
+      videoPairs.push(videos.slice(i, i + 2).map((v) => ({ videoId: v.videoId })));
    }
 
    return (
       <LayoutWithNavigation scrollable={true}>
-         <Text className="text-white text-2xl font-bold my-1 text-center">Testimonios</Text>
-         {videoPairs.map((pair, idx) => (
-            <View key={idx} className="flex-row px-4 mt-4">
-               <VimeoPlayerVertical videos={pair.map((v) => ({ videoId: v.videoId }))} />
+         <Text className="text-white text-2xl font-bold my-1 text-center">{module?.nombre ?? "Testimonios"}</Text>
+
+         {loading && (
+            <View className="py-12 items-center">
+               <ActivityIndicator size="large" color="#a855f7" />
             </View>
-         ))}
+         )}
+
+         {!loading && error && (
+            <View className="py-12 items-center px-6">
+               <Text className="text-white text-base text-center mb-4">{error}</Text>
+               <Pressable onPress={reload}>
+                  <Text className="text-movapp-icon underline">Reintentar</Text>
+               </Pressable>
+            </View>
+         )}
+
+         {!loading &&
+            !error &&
+            videoPairs.map((pair, idx) => (
+               <View key={idx} className="flex-row px-4 mt-4">
+                  <VimeoPlayerVertical videos={pair} />
+               </View>
+            ))}
       </LayoutWithNavigation>
    );
 }

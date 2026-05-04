@@ -1,38 +1,44 @@
 // app/(tabs)/mind.tsx
 import LayoutWithNavigation from "@/components/LayoutWithNavigation";
-import { VideoItem } from "@/components/VideoFeed";
 import VimeoPlayerVertical from "@/components/VimeoPlayerVertical";
+import { useModuleVideos } from "@/hooks/useModuleVideos";
 import React from "react";
-import { Text, View } from "react-native";
-
-const mindVideos: VideoItem[] = [
-   { id: "1", videoId: "1164577391" },
-   { id: "2", videoId: "1164575176" },
-   { id: "3", videoId: "1164576426" },
-   { id: "5", videoId: "1165530376" },
-   { id: "6", videoId: "1165531010" },
-   { id: "7", videoId: "1165531039" },
-   { id: "8", videoId: "1165531088" },
-   { id: "9", videoId: "1165547099" },
-   { id: "10", videoId: "1165547542" },
-   { id: "11", videoId: "1165547598" },
-];
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 
 export default function MindScreen() {
-   // Agrupar videos de a pares para 2 columnas
-   const videoPairs = [];
-   for (let i = 0; i < mindVideos.length; i += 2) {
-      videoPairs.push(mindVideos.slice(i, i + 2));
+   const { module, videos, loading, error, reload } = useModuleVideos("mind");
+
+   const videoPairs: { videoId: string }[][] = [];
+   for (let i = 0; i < videos.length; i += 2) {
+      videoPairs.push(videos.slice(i, i + 2).map((v) => ({ videoId: v.videoId })));
    }
 
    return (
       <LayoutWithNavigation scrollable={true}>
-         <Text className="text-white text-2xl font-bold my-1 text-center">Mente Digital</Text>
-         {videoPairs.map((pair, idx) => (
-            <View key={idx} className="flex-row px-4 mt-4">
-               <VimeoPlayerVertical videos={pair.map((v) => ({ videoId: v.videoId }))} />
+         <Text className="text-white text-2xl font-bold my-1 text-center">{module?.nombre ?? "Mente Digital"}</Text>
+
+         {loading && (
+            <View className="py-12 items-center">
+               <ActivityIndicator size="large" color="#a855f7" />
             </View>
-         ))}
+         )}
+
+         {!loading && error && (
+            <View className="py-12 items-center px-6">
+               <Text className="text-white text-base text-center mb-4">{error}</Text>
+               <Pressable onPress={reload}>
+                  <Text className="text-movapp-icon underline">Reintentar</Text>
+               </Pressable>
+            </View>
+         )}
+
+         {!loading &&
+            !error &&
+            videoPairs.map((pair, idx) => (
+               <View key={idx} className="flex-row px-4 mt-4">
+                  <VimeoPlayerVertical videos={pair} />
+               </View>
+            ))}
       </LayoutWithNavigation>
    );
 }
