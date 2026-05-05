@@ -31,17 +31,17 @@ const countryOptions: CountryOption[] = [
 ];
 
 const loanApps: LoanApp[] = [
-   {
-      name: "Abea",
-      description:
-         "ABEA es una empresa mexicana que ofrece préstamos personales pequeños y digitales, de aprobación rápida y sin trámites presenciales; no es un banco, sino un prestamista privado que otorga créditos a corto plazo con pagos programados y tasas de interés según el perfil del usuario.",
-      requirements: ["Mayor de edad", "Nacionalidad mexicana", "INE o pasaporte", "Teléfono", "Correo electrónico"],
-      amount: "Hasta $24,000 MXN",
-      rate: "Desde 17% mensual",
-      term: "Hasta 180 días",
-      url: "https://track.crezu.net/click?pid=7944&offer_id=258",
-      country: "MX",
-   },
+   // {
+   //    name: "Abea",
+   //    description:
+   //       "ABEA es una empresa mexicana que ofrece préstamos personales pequeños y digitales, de aprobación rápida y sin trámites presenciales; no es un banco, sino un prestamista privado que otorga créditos a corto plazo con pagos programados y tasas de interés según el perfil del usuario.",
+   //    requirements: ["Mayor de edad", "Nacionalidad mexicana", "INE o pasaporte", "Teléfono", "Correo electrónico"],
+   //    amount: "Hasta $24,000 MXN",
+   //    rate: "Desde 17% mensual",
+   //    term: "Hasta 180 días",
+   //    url: "https://track.crezu.net/click?pid=7944&offer_id=258",
+   //    country: "MX",
+   // },
 
    {
       name: "Dineria",
