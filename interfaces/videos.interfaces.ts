@@ -9,7 +9,6 @@ export interface Module {
 export interface Video {
    id: number;
    videoId: string;
-   titulo: string | null;
    orden: number;
 }
 
