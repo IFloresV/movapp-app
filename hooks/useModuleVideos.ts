@@ -1,7 +1,8 @@
 // hooks/useModuleVideos.ts
 import VideosService from "@/api/VideosService";
 import type { Module, Video } from "@/interfaces/videos.interfaces";
-import { useCallback, useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import { useCallback, useRef, useState } from "react";
 
 interface UseModuleVideosResult {
    module: Module | null;
@@ -16,9 +17,13 @@ export function useModuleVideos(slug: string): UseModuleVideosResult {
    const [videos, setVideos] = useState<Video[]>([]);
    const [loading, setLoading] = useState<boolean>(true);
    const [error, setError] = useState<string | null>(null);
+   const hasLoadedOnce = useRef(false);
 
    const load = useCallback(async () => {
-      setLoading(true);
+      // Spinner sólo en la primera carga; refrescos por foco actualizan en background.
+      if (!hasLoadedOnce.current) {
+         setLoading(true);
+      }
       setError(null);
       const response = await VideosService.getByModule(slug);
       if (response.success && response.module) {
@@ -26,15 +31,23 @@ export function useModuleVideos(slug: string): UseModuleVideosResult {
          setVideos(response.videos);
       } else {
          setError(response.message ?? "No se pudieron cargar los videos");
-         setModule(null);
-         setVideos([]);
+         // No limpiamos `module`/`videos`: si ya teníamos data, mantenerla evita parpadeo.
+         if (!hasLoadedOnce.current) {
+            setModule(null);
+            setVideos([]);
+         }
       }
+      hasLoadedOnce.current = true;
       setLoading(false);
    }, [slug]);
 
-   useEffect(() => {
-      load();
-   }, [load]);
+   // Refresca cada vez que la pantalla recibe foco (no solo al montar).
+   // Necesario en tabs de Expo Router porque las pantallas no se desmontan al cambiar de tab.
+   useFocusEffect(
+      useCallback(() => {
+         load();
+      }, [load]),
+   );
 
    return { module, videos, loading, error, reload: load };
 }
