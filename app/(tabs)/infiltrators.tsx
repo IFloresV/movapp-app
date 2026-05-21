@@ -10,7 +10,7 @@ export default function InfiltratorsScreen() {
 
    return (
       <LayoutWithNavigation scrollable={true}>
-         <Text className="text-white text-2xl font-bold my-1 text-center">{module?.nombre ?? "Testimonios"}</Text>
+         <Text className="text-white text-2xl font-bold my-1 text-center">{module?.nombre ?? "Investigaciones especiales"}</Text>
 
          {loading && (
             <View className="py-12 items-center">
