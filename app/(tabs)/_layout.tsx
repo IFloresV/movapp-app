@@ -162,6 +162,7 @@ export default function TabsLayout() {
             <Tabs.Screen name="linktree" options={{ href: null }} />
             <Tabs.Screen name="contacts" options={{ href: null }} />
             <Tabs.Screen name="debt-repair" options={{ href: null }} />
+            <Tabs.Screen name="infiltrators" options={{ href: null }} />
          </Tabs>
 
          {/* Drawer Menu Component */}
