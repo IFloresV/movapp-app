@@ -29,7 +29,7 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.movapp.mobile",
-      "versionCode": 26,
+      "versionCode": 28,
       "minSdkVersion": 21,
       "permissions": [
         "RECEIVE_BOOT_COMPLETED",

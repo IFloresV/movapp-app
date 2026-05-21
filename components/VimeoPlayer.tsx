@@ -93,12 +93,15 @@ export default function VimeoPlayer({
             </View>
          )}
          <WebView
-            source={{ html: embedHTML }}
+            source={{ html: embedHTML, baseUrl: "https://player.vimeo.com" }}
+            originWhitelist={["*"]}
             style={{ backgroundColor: "#000", flex: 1 }}
             allowsFullscreenVideo={allowsFullscreenVideo}
+            allowsInlineMediaPlayback={true}
             mediaPlaybackRequiresUserAction={!autoplay}
             javaScriptEnabled={true}
             domStorageEnabled={true}
+            mixedContentMode="always"
             onLoadEnd={() => setLoading(false)}
             scrollEnabled={false}
             bounces={false}

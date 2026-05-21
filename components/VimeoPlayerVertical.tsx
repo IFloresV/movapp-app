@@ -84,9 +84,12 @@ export default function VimeoPlayerVertical({
                      </View>
                   )}
                   <WebView
-                     source={{ html: embedHTML }}
+                     source={{ html: embedHTML, baseUrl: "https://player.vimeo.com" }}
+                     originWhitelist={["*"]}
                      style={{ backgroundColor: "#000", flex: 1, borderRadius: 18, overflow: "hidden" }}
                      allowsFullscreenVideo={true}
+                     allowsInlineMediaPlayback={true}
+                     mixedContentMode="always"
                      androidHardwareAccelerationDisabled={false}
                      setSupportMultipleWindows={true}
                      mediaPlaybackRequiresUserAction={true}

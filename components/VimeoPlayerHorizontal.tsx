@@ -107,13 +107,14 @@ export default function VimeoPlayerHorizontal({
 
          <WebView
             ref={webViewRef}
-            source={{ html: embedHTML }}
+            source={{ html: embedHTML, baseUrl: "https://player.vimeo.com" }}
             originWhitelist={["*"]}
             style={{ backgroundColor: "#000", flex: 1, borderRadius: 18, overflow: "hidden" }}
             allowsFullscreenVideo={allowsFullscreenVideo}
             setSupportMultipleWindows={false}
             mediaPlaybackRequiresUserAction={!autoplay}
             allowsInlineMediaPlayback={true}
+            mixedContentMode="always"
             javaScriptEnabled={true}
             domStorageEnabled={true}
             onLoadEnd={() => setLoading(false)}
