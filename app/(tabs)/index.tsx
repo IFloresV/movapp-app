@@ -70,7 +70,7 @@ export default function HomeScreen() {
                <Ionicons name="arrow-forward" size={20} color="#a855f7" />
             </TouchableOpacity>
             {/* Aplicaciones confiables */}
-            <TouchableOpacity
+            {/* <TouchableOpacity
                className="bg-movapp-linkBackgroundHome rounded-2xl p-4 flex-row items-center justify-between mb-3"
                onPress={() => router.push("/trusted-apps")}>
                <View className="flex-row items-center flex-1">
@@ -83,10 +83,10 @@ export default function HomeScreen() {
                   </View>
                </View>
                <Ionicons name="arrow-forward" size={20} color="#a855f7" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {/* Reparadora de deuda */}
-            <TouchableOpacity
+            {/* <TouchableOpacity
                className="bg-movapp-linkBackgroundHome rounded-2xl p-4 flex-row items-center justify-between mb-3"
                onPress={() => router.push("/debt-repair")}>
                <View className="flex-row items-center flex-1">
@@ -99,7 +99,7 @@ export default function HomeScreen() {
                   </View>
                </View>
                <Ionicons name="arrow-forward" size={20} color="#a855f7" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {/* Preguntas frecuentes */}
             <TouchableOpacity
