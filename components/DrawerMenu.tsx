@@ -45,10 +45,10 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
    };
 
    const handleWhatsAppPress = async () => {
-      if (!isLoggedIn) {
-         Alert.alert("Inicia Sesión", "Debes iniciar sesión para contactarnos por WhatsApp");
-         return;
-      }
+      // if (!isLoggedIn) {
+      //    Alert.alert("Inicia Sesión", "Debes iniciar sesión para contactarnos por WhatsApp");
+      //    return;
+      // }
 
       if (!whatsappNumber) {
          Alert.alert("Error", "Número de WhatsApp no configurado");
@@ -132,7 +132,7 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                      ))}
 
                      {/* WhatsApp Button */}
-                     {isLoggedIn && (
+              
                         <TouchableOpacity
                            key="whatsapp"
                            className="flex-row items-center px-6 py-5 active:bg-green-900 border-b border-gray-800"
@@ -149,7 +149,6 @@ export default function DrawerMenu({ visible, onClose, items }: DrawerMenuProps)
                            {/* Flecha */}
                            <Feather name="chevron-right" size={20} color="#25D366" />
                         </TouchableOpacity>
-                     )}
 
                      {/* Logout */}
                      {isLoggedIn && (
