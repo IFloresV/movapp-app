@@ -26,7 +26,7 @@ const contacts: Contact[] = [
 
    { name: "Movapp Principal", phone: "5574360621" },
    // Hackers
-   { name: "Dante", phone: "99299797" },
+   { name: "Dante", phone: "399299797" },
    { name: "Delhi", phone: "5514856625" },
    { name: "Rodo", phone: "913744119" },
    { name: "Nat", phone: "5655894519" },
@@ -35,6 +35,14 @@ const contacts: Contact[] = [
    { name: "George", phone: "5541342522" },
    { name: "Arturo", phone: "5519188741" },
    { name: "Jakelin", phone: "5521958762" },
+
+   // Team Enigmático
+   { name: "Enigmático", phone: "5658043753" },
+   { name: "Diana", phone: "5614321466" },
+   { name: "Andrea", phone: "5626884276" },
+   { name: "Emmanuel", phone: "5610471906" },
+   { name: "Gloria", phone: "5521387107" },
+   { name: "Jess", phone: "3112684304" },
 ];
 
 const contactsFalse: Contact[] = [{ name: "Peru", phone: "952401035" }];
@@ -43,9 +51,26 @@ export default function ContactsScreen() {
    const [searchText, setSearchText] = useState("");
 
    const handleSearchChange = (text: string) => {
-      // Solo permite números
-      const numericText = text.replace(/[^0-9]/g, "");
-      setSearchText(numericText);
+      // Permite números, espacios y el símbolo "+" (para la lada, ej. +52)
+      const sanitizedText = text.replace(/[^0-9+\s]/g, "");
+      setSearchText(sanitizedText);
+   };
+
+   // Solo dígitos del texto ingresado (sin lada +, espacios ni caracteres especiales)
+   const digitsOnly = searchText.replace(/\D/g, "");
+
+   // Busca un contacto cuyo teléfono coincida con los últimos `length` dígitos del input.
+   // Se compara por sufijo para ignorar la lada del país (ej. +52, 52, +55).
+   // Con `exactLength` se restringe a contactos cuyo teléfono guardado tenga justo esa
+   // cantidad de dígitos (evita falsos positivos al usar el fallback de 9 dígitos).
+   const findBySuffix = (list: Contact[], length: number, exactLength = false): Contact | undefined => {
+      if (digitsOnly.length < length) return undefined;
+      const suffix = digitsOnly.slice(-length);
+      return list.find((contact) => {
+         const phoneDigits = contact.phone.replace(/\D/g, "");
+         if (exactLength && phoneDigits.length !== length) return false;
+         return phoneDigits.slice(-length) === suffix;
+      });
    };
 
    const openWhatsApp = async (phone: string, name: string) => {
@@ -60,11 +85,22 @@ export default function ContactsScreen() {
       }
    };
 
-   const isValidLength = searchText.length >= 9 && searchText.length <= 12;
+   // Requiere al menos 9 dígitos para empezar a validar
+   const isValidLength = digitsOnly.length >= 9;
 
-   const filteredContacts = isValidLength ? contacts.filter((contact) => contact.phone === searchText) : [];
+   // Primero intenta coincidir con los últimos 10 dígitos; si no encuentra, con los últimos 9
+   // (el fallback de 9 solo aplica a teléfonos guardados de exactamente 9 dígitos)
+   const matchedContact = isValidLength
+      ? findBySuffix(contacts, 10) ?? findBySuffix(contacts, 9, true)
+      : undefined;
 
-   const isFalseContact = isValidLength ? contactsFalse.some((contact) => contact.phone === searchText) : false;
+   const matchedFalseContact = isValidLength
+      ? findBySuffix(contactsFalse, 10) ?? findBySuffix(contactsFalse, 9, true)
+      : undefined;
+
+   const filteredContacts = matchedContact ? [matchedContact] : [];
+
+   const isFalseContact = !!matchedFalseContact;
 
    return (
       <LayoutWithNavigation scrollable={true}>
@@ -86,7 +122,7 @@ export default function ContactsScreen() {
                   value={searchText}
                   onChangeText={handleSearchChange}
                   keyboardType="phone-pad"
-                  maxLength={12}
+                  maxLength={18}
                />
                {searchText.length > 0 && (
                   <TouchableOpacity onPress={() => setSearchText("")}>
