@@ -65,6 +65,13 @@ const DRAWER_MENU_ITEMS: DrawerMenuItem[] = [
       label: "Login",
       route: "/(auth)/login",
    },
+   {
+      name: "privacy",
+      type: "feather",
+      icon: "shield",
+      label: "Política de Privacidad",
+      route: "/(tabs)/privacy",
+   },
 ];
 
 const renderTabIcon = (config: TabIconConfig & { width?: number; height?: number }, color: string, size: number) => {
@@ -163,6 +170,7 @@ export default function TabsLayout() {
             <Tabs.Screen name="contacts" options={{ href: null }} />
             <Tabs.Screen name="debt-repair" options={{ href: null }} />
             <Tabs.Screen name="infiltrators" options={{ href: null }} />
+            <Tabs.Screen name="privacy" options={{ href: null }} />
          </Tabs>
 
          {/* Drawer Menu Component */}
