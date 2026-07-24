@@ -24,17 +24,18 @@ const contacts: Contact[] = [
    { name: "Diego", phone: "5635166009" },
    { name: "Sol", phone: "7261854700" },
 
-   { name: "Movapp Principal", phone: "5574360621" },
+   { name: "Movapp Principal", phone: "5578767442" },
    // Hackers
-   { name: "Dante", phone: "399299797" },
    { name: "Delhi", phone: "5514856625" },
    { name: "Rodo", phone: "913744119" },
    { name: "Nat", phone: "5655894519" },
    { name: "Isabel", phone: "7298056828" },
    { name: "Gilberto", phone: "5513760371" },
-   { name: "George", phone: "5541342522" },
-   { name: "Arturo", phone: "5519188741" },
+   { name: "George", phone: "5511437577" },
+   { name: "Arturo", phone: "5534791346" },
    { name: "Jakelin", phone: "5521958762" },
+   { name: "Patricia", phone: "5635777816" },
+   { name: "Dayana", phone: "5648744402" },
 
    // Team Enigmático
    { name: "Enigmático", phone: "5658043753" },
